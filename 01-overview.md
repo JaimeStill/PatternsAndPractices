@@ -129,7 +129,7 @@ Package | Version | Type
 **Microsoft.AspNetCore.Authentication** | 2.2.0 | Package
 **Microsoft.AspNetCore.Authentication.Cookies** | 2.2.0 | Package
 **Microsoft.AspNetCore.Http** | 2.2.2 | Package
-**{Project}.Identity} | N/A | Reference  
+**{Project}.Identity** | N/A | Reference  
 
 ### {Project}.Web
 

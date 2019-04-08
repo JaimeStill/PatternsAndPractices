@@ -1,0 +1,28 @@
+<div class="mat-typography mat-app-background app-panel"
+     fxLayout="column"
+     [ngClass]="themeClass">
+  <ng-container *ngIf="banner.config$ | async as config else loading">
+    <banner [label]="config.label"
+            [background]="config.background"
+            [color]="config.color"></banner>
+    <mat-toolbar color="primary">
+      <span fxFlex>Title</span>
+      <button mat-icon-button
+              [matMenuTriggerFor]="menu">
+        <mat-icon>format_color_fill</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item
+                *ngFor="let t of theme.themes$ | async"
+                (click)="theme.setTheme(t)">{{t.display}}</button>
+      </mat-menu>
+    </mat-toolbar>
+    <section class="app-body">
+      <router-outlet></router-outlet>
+    </section>
+  </ng-container>
+</div>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>

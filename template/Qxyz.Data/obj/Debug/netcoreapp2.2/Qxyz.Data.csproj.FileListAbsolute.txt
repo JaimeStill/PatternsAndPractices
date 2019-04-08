@@ -1,0 +1,16 @@
+D:\Desktop\Environment\Project\Qxyz.Data\bin\Debug\netcoreapp2.2\Qxyz.Data.deps.json
+D:\Desktop\Environment\Project\Qxyz.Data\bin\Debug\netcoreapp2.2\Qxyz.Data.runtimeconfig.json
+D:\Desktop\Environment\Project\Qxyz.Data\bin\Debug\netcoreapp2.2\Qxyz.Data.runtimeconfig.dev.json
+D:\Desktop\Environment\Project\Qxyz.Data\bin\Debug\netcoreapp2.2\Qxyz.Data.dll
+D:\Desktop\Environment\Project\Qxyz.Data\bin\Debug\netcoreapp2.2\Qxyz.Data.pdb
+D:\Desktop\Environment\Project\Qxyz.Data\bin\Debug\netcoreapp2.2\Qxyz.Core.dll
+D:\Desktop\Environment\Project\Qxyz.Data\bin\Debug\netcoreapp2.2\Qxyz.Identity.dll
+D:\Desktop\Environment\Project\Qxyz.Data\bin\Debug\netcoreapp2.2\Qxyz.Core.pdb
+D:\Desktop\Environment\Project\Qxyz.Data\bin\Debug\netcoreapp2.2\Qxyz.Identity.pdb
+D:\Desktop\Environment\Project\Qxyz.Data\obj\Debug\netcoreapp2.2\Qxyz.Data.csprojAssemblyReference.cache
+D:\Desktop\Environment\Project\Qxyz.Data\obj\Debug\netcoreapp2.2\Qxyz.Data.csproj.CoreCompileInputs.cache
+D:\Desktop\Environment\Project\Qxyz.Data\obj\Debug\netcoreapp2.2\Qxyz.Data.AssemblyInfoInputs.cache
+D:\Desktop\Environment\Project\Qxyz.Data\obj\Debug\netcoreapp2.2\Qxyz.Data.AssemblyInfo.cs
+D:\Desktop\Environment\Project\Qxyz.Data\obj\Debug\netcoreapp2.2\Qxyz.Data.csproj.CopyComplete
+D:\Desktop\Environment\Project\Qxyz.Data\obj\Debug\netcoreapp2.2\Qxyz.Data.dll
+D:\Desktop\Environment\Project\Qxyz.Data\obj\Debug\netcoreapp2.2\Qxyz.Data.pdb

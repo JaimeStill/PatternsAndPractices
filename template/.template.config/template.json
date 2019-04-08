@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Jaime Still",
+    "classifications": ["Web", "MVC", "SPA"],
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "identity": "Stack",
+    "groupIdentity": "Stack",
+    "name": "Stack",
+    "shortName": "stack",
+    "sourceName": "Qxyz",
+    "preferNameDirectory": true,
+    "sources": [{
+        "modifiers": [{
+            "exclude": [
+                ".git/**/*",
+                ".vs/**/*",
+                ".vscode/**/*",
+                "**/node_modules/**",
+                "**/bin/**",
+                "**/obj/**"
+            ]
+        }]
+    }]
+}

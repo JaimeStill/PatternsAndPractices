@@ -1,0 +1,9 @@
+D:\Desktop\Environment\Project\Qxyz.Core\bin\Debug\netcoreapp2.2\Qxyz.Core.deps.json
+D:\Desktop\Environment\Project\Qxyz.Core\bin\Debug\netcoreapp2.2\Qxyz.Core.dll
+D:\Desktop\Environment\Project\Qxyz.Core\bin\Debug\netcoreapp2.2\Qxyz.Core.pdb
+D:\Desktop\Environment\Project\Qxyz.Core\obj\Debug\netcoreapp2.2\Qxyz.Core.csproj.CoreCompileInputs.cache
+D:\Desktop\Environment\Project\Qxyz.Core\obj\Debug\netcoreapp2.2\Qxyz.Core.AssemblyInfoInputs.cache
+D:\Desktop\Environment\Project\Qxyz.Core\obj\Debug\netcoreapp2.2\Qxyz.Core.AssemblyInfo.cs
+D:\Desktop\Environment\Project\Qxyz.Core\obj\Debug\netcoreapp2.2\Qxyz.Core.dll
+D:\Desktop\Environment\Project\Qxyz.Core\obj\Debug\netcoreapp2.2\Qxyz.Core.pdb
+D:\Desktop\Environment\Project\Qxyz.Core\obj\Debug\netcoreapp2.2\Qxyz.Core.csprojAssemblyReference.cache

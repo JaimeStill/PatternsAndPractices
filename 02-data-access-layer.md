@@ -4,8 +4,8 @@
 * [Building the Data Layer](#building-the-data-layer)
     * [One to Many](#one-to-many)
     * [Many to Many](#many-to-many)
-    * [DbContext](#dbcontext)
     * [Multiple One to Many Using the Same Table](#multiple-one-to-many-using-the-same-table)
+    * [DbContext](#dbcontext)
 * [Registering Entity Framework with .NET Core](#registering-entity-framework-with-net-core)
 * [Database Management Workflow](#database-management-workflow)  
 

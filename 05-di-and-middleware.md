@@ -550,6 +550,8 @@ namespace Demo.Identity
 
 The remainder of the contents of **{Project}.Identity** are relevant to the genuine Active Directory provider used for integrating with an Active Directory domain.  
 
+#### IdentityExtensions
+
 There are two extension methods that are defined that simplify the functionality of the `GetDomainUsers()` and `FindDomainUser()` implementation methods of `IUserProvider`. They are defined in **{Project}.Identity\\Extensions\\IdentityExtensions.cs**.  
 
 **`IdentityExtensions`**  
@@ -574,6 +576,8 @@ namespace Demo.Identity.Extensions
 `FilterUsers` is used to retrieve only `UserPrincipal` objects where `Guid.HasValue` is true.  
 
 `SelectAdUsers` is used to effectively cast the `UserPrincipal` objects in the queried collection to `AdUser` objects.  
+
+#### AdUserProvider Implementation
 
 `AdUserProvider` provides the implementation details for the `IUserProvider` interface. It leverages the necessary features of the `System.DirectoryServices.AccountManagement` library for working with Active Directory. For detailed information, see the [System.DirectoryServices.AccountManagement](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.accountmanagement?view=netframework-4.7.2) namespace documentation.  
 
@@ -738,6 +742,8 @@ The `AddIdentity()` and `Create(string samAccountName)` methods are not implemen
 
 `FindDomainUser(string search)` retrieves all `UserPrincipal` objects in the domain where the object is enabled, the `UserPrincipal.SamAccountName` contains the value of `search`, and `UserPrincipal.Guid.HasValue` is true. The results are then returned as a `List<AdUser>`.  
 
+#### AdUserMiddleware Implementation
+
 With the provider written, a middleware class can now be written to create the `IUserProvider` instance. **{Project}.Identity\\AdUserMiddleware.cs** contains the definition of the middleware implementation.  
 
 **`AdUserMiddleware`**  
@@ -774,6 +780,8 @@ namespace Demo.Identity
 
 When the `Invoke` method is called by the middleware pipeline, the `Create` method of the injected `IUserProvider` instance is called.  
 
+#### AdUserMiddleware Convenience Method
+
 **{Project}.Identity\\Extensions\\MiddlewareExtensions.cs** contains the convenience method for registering `AdUserMiddleware` to the middleware pipeline.  
 
 **`MiddlewareExtensions`**  
@@ -791,11 +799,13 @@ namespace Microsoft.AspNetCore.Builder
 }
 ```  
 
+#### Startup Configuration
+
 Now, the service and middleware can be registered in `Startup`.  
 
 **`Startup`**  
 
-> Details have been omitted for simplicity
+> Unrelated details have been omitted for simplicity
 
 ```cs
 public void ConfigureServices(IServiceCollection services)
@@ -823,9 +833,11 @@ public void Configure(IApplicationBuilder app)
 
 ### [Mock Provider](#dependency-injection-and-middleware)
 
-Because we took the care of building an `IUserProvider` interface, we aren't locked into working with `IUserProvider` in an Active Directory domain. This section will outline all of the resources necessary for setting up Cookie Authentication and building the implementation of `IUserProvider` around mocking some Active Directory User Principal objects.  
+The following classes are defined in the `{Project}.Identity.Mock` library, and make use of the `AdUser` class and `IUserProvider` interface defined above.  
 
-The following classes are defined in the `{Project}.Identity.Mock` library, and make use of the `AdUser` class and `IUserProvider` interface defined above.
+#### MockProvider Implementation
+
+Because we took the care of building an `IUserProvider` interface, we aren't locked into working with `IUserProvider` in an Active Directory domain. This implementation defines all of the interactions necessary for setting up Cookie Authentication and building the implementation of `IUserProvider` around mocking some Active Directory User Principal objects.
 
 **`MockProvider`**  
 
@@ -948,72 +960,136 @@ namespace Demo.Identity.Mock
                 UserPrincipalName = "ehowell@mock.net",
                 VoiceTelephoneNumber = "555.555.0002"
             },
-            new AdUser
-            {
-                DisplayName = "Bauch, Clementine",
-                DistinguishedName = $"CN=cbauch,{baseDn}",
-                EmailAddress = "cbauch@mock.net",
-                Enabled = true,
-                GivenName = "Clementine",
-                Guid = Guid.Parse("f6eaba45-1b3e-494e-95e7-89894c6c7c5e"),
-                SamAccountName="cbauch",
-                Surname = "Bauch",
-                UserPrincipalName = "cbauch@mock.net",
-                VoiceTelephoneNumber = "555.555.0003"
-            },
-            new AdUser
-            {
-                DisplayName = "Lebsack, Patricia",
-                DistinguishedName = $"CN=plebsack,{baseDn}",
-                EmailAddress = "plebsack@mock.net",
-                Enabled = true,
-                GivenName = "Patricia",
-                Guid = Guid.Parse("f6d6fe1d-ae07-4e33-9ef5-f377e79f3a8b"),
-                SamAccountName = "plebsack",
-                Surname = "Lebsack",
-                UserPrincipalName = "plebsack@mock.net",
-                VoiceTelephoneNumber = "555.555.0004"
-            },
-            new AdUser
-            {
-                DisplayName = "Dietrich, Chelsey",
-                DistinguishedName = $"CN=cdietrich,{baseDn}",
-                EmailAddress = "cdietrch@mock.net",
-                Enabled = true,
-                GivenName = "Chelsey",
-                Guid = Guid.Parse("710f21e9-ef86-45f5-95cc-339e73cb8e8a"),
-                SamAccountName = "cdietrich",
-                Surname = "Dietrich",
-                UserPrincipalName = "cdietrich@mock.net",
-                VoiceTelephoneNumber = "555.555.0005"
-            },
-            new AdUser
-            {
-                DisplayName = "Schulist, Dennis",
-                DistinguishedName = $"CN=dschulist,{baseDn}",
-                EmailAddress = "dschulist@mock.net",
-                Enabled = true,
-                GivenName = "Dennis",
-                Guid = Guid.Parse("854c25c1-d0dc-454a-9152-3db2c246f591"),
-                SamAccountName = "dschulist",
-                Surname = "Schulist",
-                UserPrincipalName = "dschulist@mock.net",
-                VoiceTelephoneNumber = "555.555.0006"
-            },
-            new AdUser
-            {
-                DisplayName = "Weissnat, Kurtis",
-                DistinguishedName = $"CN=kweissnat,{baseDn}",
-                EmailAddress = "kweissnat@mock.net",
-                Enabled = true,
-                GivenName = "Kurtis",
-                Guid = Guid.Parse("0f50dc7d-7ff9-4f18-be91-add0665e8078"),
-                SamAccountName = "kweissnat",
-                Surname = "Weissnat",
-                UserPrincipalName = "kweissnat@mock.net",
-                VoiceTelephoneNumber = "555.555.0007"
-            }
+            // Additional users removed for brevity
         }.AsQueryable();
     }
 }
+```  
+
+The `Create(HttpContext context, IConfiguration config)` method overload is not implemented as it is specific to the `AdUserProvider` implementation.  
+
+The `Create(string samAccountName)` method overload receives a string representing the `SamAccountName` of an account. It executes the `GetAdUser(string samAccountName)` method overload and assigns the result to the `MockProvider.CurrentUser` property.  
+
+The `AddIdentity` method configures the `ClaimsIdentity` for the mock user based on the currently selected account, and activates cookie authentication based on that identity. For detailed information, see [Use cookie authentication without ASP.NET Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-2.2).  
+
+The `GetUser(IIdentity identity)` method overload is not implemented as it is specific to the `AdUserProvider` implementation.  
+
+The `GetAdUser(string samAccountName)` and `GetAdUser(Guid guid)` method overloads simply use LINQ with their provided arguments against the built-in collection of user objects to return a user.  
+
+`GetDomainUsers()` simply returns the built-in collection of user objects as a `List<AdUser>`.  
+
+`FindDomainUser(string search)` uses LINQ to compare the provided `search` argument against the `SamAccountName`, `UserPrincipalName`, and `DisplayName` of the built-in collection of user objects, and returns the matching results, ordered by `Surname`, as a `List<AdUser>`.  
+
+#### MockMiddleware Implementation
+
+With the provider defined, `MockMiddleware` can now be created to manage the mock authentication pipeline.  
+
+**`MockMiddleware`**  
+
+```cs
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+
+namespace Demo.Identity.Mock
+{
+    public class MockMiddleware
+    {
+        private readonly RequestDelegate next;
+
+        public MockMiddleware(RequestDelegate next)
+        {
+            this.next = next;
+        }
+
+        public async Task Invoke(HttpContext context, IUserProvider provider, IConfiguration config)
+        {
+            if (!(provider.Initialized))
+            {
+                await provider.Create(config.GetValue<string>("CurrentUser"));
+
+                if (!(context.User.Identity.IsAuthenticated))
+                {
+                    await provider.AddIdentity(context);
+                }
+            }
+
+            await next(context);
+        }
+    }
+}
+```  
+
+The `Invoke` method of the middleware class retrieves the `CurrentUser` variable out of the `IConfiguration` container that is injected. This is set in **appsettings.Development.json**. Then, if the identity on the `HttpContext` instance isn't authenticated, the cookie authentication is executed using the `AddIdentity` method.  
+
+#### UseMockMiddleware Convenience Method
+
+Just as a convenience method for `AdUserMiddleware` was created for registering the middleware with the pipeline, a method is created for `MockMiddleware` in **{Project}.Identity.Mock\\MiddlewareExtensions.cs**.  
+
+**`MiddlewareExtensions`**  
+
+```cs
+using Demo.Identity.Mock;
+
+namespace Microsoft.AspNetCore.Builder
+{
+    public static class MiddlewareExtensions
+    {
+        public static IApplicationBuilder UseMockMiddleware(this IApplicationBuilder builder) => builder.UseMiddleware<MockMiddleware>();
+    }
+}
+```  
+
+#### Startup Configuration
+
+With the library now complete, it's time to hook everything up in `Startup`. We only want to use the `MockProvider` when we're in the Development environment, and `AdUserProvider` otherwise. The changes shown in the service registration and middleware configuration below demonstrate how to accomplish this.  
+
+**`Startup`**  
+
+> Unrelated details have been omitted for simplicity
+
+```cs
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // services registered before IUserProvider
+
+        if (Environment.IsDevelopment())
+        {
+            services
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            services.AddScoped<IUserProvider, MockProvider>();
+        }
+        else
+        {
+            services.AddScoped<IUserProvider, AdUserProvider>();
+        }
+
+        // services registered after IUserProvider
+    }
+
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    {
+        // middleware configured before identity
+
+        if (env.IsDevelopment())
+        {
+            app.UseAuthentication();
+            app.UseMockMiddleware();
+        }
+        else
+        {
+            app.UseAdMiddleware();
+        }
+
+        // middleware configured after identity
+    }
+}
 ```
+
+If we're in the Development environment, we add the cookie authentication services in service registration using the default cookie authentication scheme. Then, we add a scoped instance of `IUserProvider` resolved as `MockProvider`. Otherwise, we just use the `AdUserProvider` implementation.  
+
+In the middleware pipeline, if we're in the Development environment, we setup the authentication middleware, then `MockMiddleware`. Cookie authentication needs to be configured first in the pipeline, or when `MockMiddleware` attempts to add the cookie authentication, it will throw an exception. If we're not in the Development environment, `AdUserMiddleware` is registered in the pipeline.

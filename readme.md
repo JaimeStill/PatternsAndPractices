@@ -5,6 +5,7 @@
 * [Overview](#overview)
 * [Installing the App Stack Template](#installing-the-app-stack-template)
 * [Creating an App Stack Project](#creating-an-app-stack-project)
+* [Building and Running](#building-and-running)
 * [Visual Studio Code Extensions](#visual-studio-code-extensions)
 * [Visual Studio](#visual-studio)
 
@@ -65,6 +66,18 @@ From a command prompt resolved to the created directory, execute the following:
 ```
 dotnet new stack -n {project-name} -o {project-name}
 ```  
+
+## [Building and Running](#patterns-and-practices)  
+
+Once the project has been created, run the following sequence of commands:  
+
+```
+{Project}>dotnet build
+{Project}>cd {Project}.Web
+{Project}.Web>dotnet run
+```  
+
+When the `dotnet run` command is called, the server will spin up at http://localhost:5000, and the Angular app will compile.
 
 ## [Visual Studio Code Extensions](#patterns-and-practices)  
 

@@ -220,7 +220,7 @@ public static async Task<bool> Validate(this Entity entity, AppDbContext db)
 }
 ```  
 
-You'll notice that in both of these validation methods, it only ever returns `true`, and otherwise throws an exception. The way that the exception handling middleware is configured in the app stack, the message provided by the exception is forwarded to the client in the form of a snackbar notification. This way, we can provide feedback when a validation error occurs, and not cause the application to crash. More details of the middleware configuration can be found in the [Dependency Injection and Middleware](.\05-di-and-middleware.md) section.  
+You'll notice that in both of these validation methods, it only ever returns `true`, and otherwise throws an exception. The way that the exception handling middleware is configured in the app stack, the message provided by the exception is forwarded to the client in the form of a snackbar notification. This way, we can provide feedback when a validation error occurs, and not cause the application to crash. More details of the middleware configuration can be found in the [Core Configuration](./04-core-configuration.md) and [Dependency Injection and Middleware](./05-di-and-middleware.md) sections.  
 
 The asyncrhonous validation method can be used for both Add and Update because when adding a new `Entity`, the `Entity.Id` property will be `0`, and no existing item in the database will have an ID less than 1. This allows us to ensure that the name of the entity is unique, but if we're updating an existing `Entity` and the `Entity.Name` property hasn't changed, it can still be updated without throwing an exception.
 

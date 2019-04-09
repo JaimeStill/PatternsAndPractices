@@ -99,7 +99,7 @@ public void ConfigureServices(IServiceCollection services)
 
 An example of this would be retrieving a `Category` and including all of the `Items` that the category contains. If the `Category` of the item is then included in the `Items` collection defined on the root `Category`, an infinite graph would continue to be drawn unless the category in the `Items` collection is ignored. To illustrate this:  
 
-``` json
+``` js
 {
     id: 1,
     name: 'Category A',
@@ -127,7 +127,7 @@ An example of this would be retrieving a `Category` and including all of the `It
 
 Using `ReferenceLoopHandling.Ignore`, the above example would become:
 
-``` json
+``` js
 {
     id: 1,
     name: 'Category A',

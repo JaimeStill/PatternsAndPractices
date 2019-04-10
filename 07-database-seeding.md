@@ -229,7 +229,7 @@ namespace Demo.Data.Extensions
                     }
                 };
 
-                await db.ItemTags.AddRangeAsync();
+                await db.ItemTags.AddRangeAsync(itemTags);
                 await db.SaveChangesAsync();
             }
             else

@@ -9,7 +9,7 @@
 > It is highly recommended that you spend time getting familiar with the official documentation. It is very well written and will serve as the greatest point of reference when running into design questions or issues.  
 
 * [**ASP.NET Core**](https://docs.microsoft.com/en-us/aspnet/core/)
-    * [ASP.NET Core Middleware](docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware)
+    * [ASP.NET Core Middleware](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-2.2)
     * [GitHub - aspnet/JavaScriptServices](https://github.com/aspnet/JavaScriptServices)
 * [**Entity Framework Core**](https://docs.microsoft.com/en-us/ef/core)
     * [SQL Server Database Provider](https://docs.microsoft.com/en-us/ef/core/providers/sql-server/)

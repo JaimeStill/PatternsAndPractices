@@ -33,6 +33,8 @@ Software | Notes | Mandatory?
 
 > The following provides an overview of the app stack. Greater detail of the configuration and capabilities of each part will be covered in their relevant sections throughout the documentation.  
 
+> All of the links throughout this guide, as well as some additional helpful links, are provided in [References - Links](./r1-links.md).
+
 The current app stack is based on the `dotnet new angular` template provided by the [.NET Core SDK](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-new).
 
 The major modifications are as follows:

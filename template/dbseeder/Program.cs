@@ -12,13 +12,13 @@ namespace dbseeder
     {
         static async Task Main(string[] args)
         {
-            while (string.IsNullOrEmpty(args.ToString()))
+            if (args.Length < 1)
             {
                 Console.WriteLine("Arguments must be provided to seed the database. Your options are as follows:");
                 Console.WriteLine("[environmentVariable] - an environment variable that points to a connection string");
                 Console.WriteLine("-c [connectionString] - Option -c with the connection string directly specified");
-                args = Console.ReadLine().Split(' ');
                 Console.WriteLine();
+                throw new Exception("No connection string provided");
             }
 
             var arg = args.FirstOrDefault();
@@ -26,7 +26,7 @@ namespace dbseeder
 
             if (arg.ToLower() == "-c")
             {
-                connection = args.Skip(1).ToString();
+                connection = args.Skip(1).FirstOrDefault();
 
                 while (string.IsNullOrEmpty(connection))
                 {
@@ -49,11 +49,17 @@ namespace dbseeder
 
             try
             {
+                Console.WriteLine($"Connection: {connection}");
+
                 var builder = new DbContextOptionsBuilder<AppDbContext>()
                     .UseSqlServer(connection);
 
                 using (var db = new AppDbContext(builder.Options))
                 {
+                    Console.WriteLine("Verifying DB Connection");
+                    await db.Database.CanConnectAsync();
+                    Console.WriteLine("Connection Succeeded");
+                    Console.WriteLine();
                     await db.Initialize();
                 }
 

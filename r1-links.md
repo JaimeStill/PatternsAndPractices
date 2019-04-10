@@ -55,6 +55,8 @@ A curated list of external links, organized by topic, provided throughout this r
 * [Routing in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/routing?view=aspnetcore-2.2)
 * [Use cookie authentication without ASP.NET Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-2.2)
 * [Controllers](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/actions?view=aspnetcore-2.2)
+* [Use the Angular project template with ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/angular?view=aspnetcore-2.2&tabs=visual-studio#additional-resources)
+* [Use JavaScriptServices to Create Single Page Applications in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa-services?view=aspnetcore-2.2)
 * [GitHub - aspnet/AspNetCore](https://github.com/aspnet/AspNetCore)
 * [GitHub - aspnet/JavaScriptServices](https://github.com/aspnet/JavaScriptServices)
 
@@ -66,3 +68,31 @@ A curated list of external links, organized by topic, provided throughout this r
 * [Fluent API](https://docs.microsoft.com/en-us/ef/core/modeling/relationships#fluent-api)
 * [Migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/)
 * [Entity Framework Core tools reference - .NET CLI](https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/dotnet)
+
+## Web Technologies  
+
+* [HTML](https://developer.mozilla.org/en-US/docs/Glossary/HTML)
+* [CSS](https://developer.mozilla.org/en-US/docs/Glossary/CSS)
+* [JavaScript](https://developer.mozilla.org/en-US/docs/Glossary/JavaScript)
+* [TypeScript](https://www.typescriptlang.org/docs/home.html)
+
+## Angular
+
+* [Angular Docs](https://angular.io/docs)
+* [Architecture Overview](https://angular.io/guide/architecture)
+* [Template Syntax](https://angular.io/guide/template-syntax)
+* [Lifecycle Hooks](https://angular.io/guide/lifecycle-hooks)
+* [Component Interaction](https://angular.io/guide/component-interaction)
+* [Component Styles](https://angular.io/guide/component-styles)
+* [Attribute Directives](https://angular.io/guide/attribute-directives)
+* [Structural Directives](https://angular.io/guide/structural-directives)
+* [Pipes](https://angular.io/guide/pipes)
+* [Observables](https://angular.io/guide/observables)
+* [Observables in Angular](https://angular.io/guide/observables-in-angular)
+* [Practical Usage of Observables](https://angular.io/guide/practical-observable-usage)
+* [NgModules](https://angular.io/guide/ngmodules)
+* [Dependency Injection](https://angular.io/guide/dependency-injection)
+* [HttpClient](https://angular.io/guide/http)
+* [Routing and Navigation](https://angular.io/guide/router)
+* [Animations](https://angular.io/guide/animations)
+* [Style Guide](https://angular.io/guide/styleguide)

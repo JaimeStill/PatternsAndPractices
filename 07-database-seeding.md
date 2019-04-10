@@ -378,6 +378,8 @@ dbseeder>dotnet run -- {environmentVariable}
 dbseeder>dotnet run -- -c {connectionString}
 ```  
 
+> When specifying a connection string on the command line, do not escape backslashes. For instance, `"Server=(localdb)\\ProjectsV13` will throw a timeout error, but `Server=(localdb)\ProjectsV13...` will work. You only need to escape backslashes in JSON configuration files.
+
 The `--` after `run` specifies that anything that follows will be provided as arguments to the application being run.  
 
 If you want to debug the application in Visual Studio Code and step through the sequence of events, perform the following actions:

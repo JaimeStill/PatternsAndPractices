@@ -300,7 +300,7 @@ Command | Description
 `yarn add {package}@{version}` | Adds the specified version of the package to `dependencies`
 `yarn remove {package}` | Removes the package specified and rebuild the dependency graph
 `yarn install` | Install any missing dependencies and rebuild the dependency graph
-`npm view {package} versions --json` | View all avaiable version of the package specified.  
+`npm view {package} versions --json` | View all avaiable versions of the package specified.  
 
 All of the specified packages are listed in **{Project}.Web\\ClientApp\\package.json**:
 

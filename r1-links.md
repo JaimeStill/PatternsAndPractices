@@ -75,6 +75,7 @@ A curated list of external links, organized by topic, provided throughout this r
 * [CSS](https://developer.mozilla.org/en-US/docs/Glossary/CSS)
 * [JavaScript](https://developer.mozilla.org/en-US/docs/Glossary/JavaScript)
 * [TypeScript](https://www.typescriptlang.org/docs/home.html)
+    * [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
 
 ## Angular
 
@@ -96,3 +97,8 @@ A curated list of external links, organized by topic, provided throughout this r
 * [Routing and Navigation](https://angular.io/guide/router)
 * [Animations](https://angular.io/guide/animations)
 * [Style Guide](https://angular.io/guide/styleguide)
+
+### [Angular CLI](https://cli.angular.io)
+* [Angular CLI Command Reference](https://angular.io/cli)
+* [Angular Workspace Configuration](https://angular.io/guide/workspace-config)
+* [angular.json Schema](https://github.com/angular/angular-cli/wiki/)

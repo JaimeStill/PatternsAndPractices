@@ -226,7 +226,7 @@ The asyncrhonous validation method can be used for both Add and Update because w
 
 ## [Example Extension Class](#business-logic)  
 
-The below example extensions are built on the `Item` entity that was defined in the [Data Access Layer](./02-data-access-layer.md) section. The documentation above is meant as a primer to the concepts expressed as code below, and as such, will be expressed as code alone.  
+The below example extensions are built on the `Item` entity that was defined in the [Data Access Layer](./02-data-access-layer.md) article. The documentation above is meant as a primer to the concepts expressed as code below, and as such, will be expressed as code alone.  
 
 ```cs
 using Demo.Data.Entities;

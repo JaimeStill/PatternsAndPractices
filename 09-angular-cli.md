@@ -121,7 +121,7 @@ This section will take a look at how important Angular infrastructure is specifi
 
 `sourceRoot` is set to `src` and specifies that the `web-app` project's source is located at **{Project}.Web\\ClientApp\\src**. Because **angular.json** is located at **{Project}.Web\\ClientApp**, all URLs specified in this workspace are relative to that directory being the root.
 
-`outputPath` is set to `dist` and specifies that the compiled Angular app will be output to **{Project}.Web\\ClientApp\\dist**. If you recall from the [Angular Overview](./08-angular-overview.md) section, this is the directory that is specified in the `AddSpaStaticFiles` service registration in the `Startup` class.
+`outputPath` is set to `dist` and specifies that the compiled Angular app will be output to **{Project}.Web\\ClientApp\\dist**. If you recall from the [Angular Overview](./08-angular-overview.md) article, this is the directory that is specified in the `AddSpaStaticFiles` service registration in the `Startup` class.
 
 `index` is set to `src/index.html`, and specifies the index HTML file for the Angular app.
 
@@ -135,7 +135,7 @@ This section will take a look at how important Angular infrastructure is specifi
 
 `styles` is an array that specifies any imported styles. In this case, the stylesheets for the **Material Icons** and **Roboto** fonts are specified, as well as the root stylesheet for the **{Project}.Web\\ClientApp\\src\\theme** directory.
 
-> Theming will be covered in the [Material](./11-material.md) section.
+> Theming will be covered in the [Material](./11-material.md) article.
 
 `scripts` is an array of any third-party libraries that are used by the app, but not able to be imported via an Angular module. In this case, `hammer.js` is specified because Angular Material specifies it as an optional dependency to enable touch-based features.
 

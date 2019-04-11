@@ -16,7 +16,7 @@
 
 ## [Overview](#modules)
 
-The idea of modularity deals with breaking a complex system down into self-contained, reusable components and building the system based on the public API made avaiable by these components. Both TypeScript and Angular support the concept of modules, and the app stack takes advantage of both systems. This section will walk through how each module system is implemented.
+The idea of modularity deals with breaking a complex system down into self-contained, reusable components and building the system based on the public API made avaiable by these components. Both TypeScript and Angular support the concept of modules, and the app stack takes advantage of both systems. This article will walk through how each module system is implemented.
 
 > For detailed information on both module systems, check out the following documentation:
 > * [TypeScript Modules](https://www.typescriptlang.org/docs/handbook/modules.html)

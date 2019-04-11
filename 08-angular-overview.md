@@ -26,7 +26,7 @@ An understanding of the following languages will be crucial to success in Angula
 * [JavaScript](https://developer.mozilla.org/en-US/docs/Glossary/JavaScript)
 * [TypeScript](https://www.typescriptlang.org/docs/home.html)
 
-> It is highly recommended that you read through the Angular documentation. It's very well written, and covers crucial details that, if not understood, will make the Angular portion of this guide very confusing. There's a full section of recommended reading in [References - Links](./r1-links.md#angular).
+> It is highly recommended that you read through the Angular documentation. It's very well written, and covers crucial details that, if not understood, will make the Angular portion of this guide very confusing. There's a full list of recommended reading in the [Links](./r1-links.md#angular) article.
 
 ## [Integration](#angular)  
 
@@ -206,8 +206,8 @@ The components that are bootstrapped and available to be loaded into this file a
 
 * An `AppModule` is bootstrapped using `bootstrapModule` in `main.ts`
     * Any component that is in the `bootstrap` array of the `AppModule` metadata definition can be rendered in the **index.html** view (in this case, `AppComponent`)
-        * Modules will be covered in the [Modules](./10-modules.md) section
-        * Components (including `AppComponent`) will be covered in the [Components](./14-components.md) section
+        * Modules will be covered in the [Modules](./10-modules.md) article
+        * Components (including `AppComponent`) will be covered in the [Components](./14-components.md) article
 
 ### [Main](#angular)
 

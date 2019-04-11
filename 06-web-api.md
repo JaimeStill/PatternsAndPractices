@@ -6,7 +6,7 @@
     * [Posting Data](#posting-data)
 * [Item Controller](#item-controller)
 
-The previous two sections took a deep dive on configuration, services, and middleware in <span>ASP.NET</span> Core. This section picks back up where [Business Logic]() left off. That detour needed to happen so that you can understand how constructor injection works and where the `AppDbContext` instance is coming from (in addition to needing a place to put the other wealth of information those sections provide).
+The previous two sections took a deep dive on configuration, services, and middleware in <span>ASP.NET</span> Core. This article picks back up where [Business Logic]() left off. That detour needed to happen so that you can understand how constructor injection works and where the `AppDbContext` instance is coming from (in addition to needing a place to put the other wealth of information those sections provide).
 
 ## [Controller Signature](#web-api)
 

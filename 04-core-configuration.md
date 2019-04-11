@@ -6,7 +6,7 @@
 
 ## [Overview](#core-configuration)
 
-The purpose of the **{Project}.Core** project is to define core infrastructure and functionality for the back end of the app stack. This section will outline two key features that illustrate the intent of this project:
+The purpose of the **{Project}.Core** project is to define core infrastructure and functionality for the back end of the app stack. This article will outline two key features that illustrate the intent of this project:
 
 * Core Extensions that enable functionality throughout the app stack
 * Logging as a demonstration of service configuration for use with Dependency Injection and Middleware`
@@ -71,9 +71,9 @@ There are many places that you may want to use these methods throughout the appl
 
 ## [Logging](#core-configuration)
 
-The **Logging** feature is written to provide a means of capturing exceptions that occur in log files on the server, as well as providing the details of the exceptions that occurred to the calling client. An example of how being able to communicate these exceptions to the client is useful is demonstrated in the [Business Logic - Validation](./03-business-logic.md#validation) section.  
+The **Logging** feature is written to provide a means of capturing exceptions that occur in log files on the server, as well as providing the details of the exceptions that occurred to the calling client. An example of how being able to communicate these exceptions to the client is useful is demonstrated in the [Business Logic - Validation](./03-business-logic.md#validation) article.  
 
-> The primary infrastructure of this feature will be outline here, then the configuration and registration will be discussed in the following [Dependency Injection and Middleware](./05-di-and-middleware.md) section.  
+> The primary infrastructure of this feature will be outline here, then the configuration and registration will be discussed in the following [Dependency Injection and Middleware](./05-di-and-middleware.md) article.  
 
 To facilitate the desired functionality of the `LogProvider` class, extension methods need to be written against the core objects that the provider needs to interact with. All of these extensions are written in the **{Project}.Core\\Extensions\\LogExtensions.cs** static class.  
 
@@ -142,7 +142,7 @@ public static async Task WriteLog(this StringBuilder message, string path)
 }
 ```  
 
-Finally, we want to be able to forward the recursive exception message to the calling client so that they are able to detect when an error occurs. This is written as middleware to be placed in the middleware pipeline (the implementation of which will be captured in the [Dependency Injection and Middleware](./05-di-and-middleware.md) section):  
+Finally, we want to be able to forward the recursive exception message to the calling client so that they are able to detect when an error occurs. This is written as middleware to be placed in the middleware pipeline (the implementation of which will be captured in the [Dependency Injection and Middleware](./05-di-and-middleware.md) article):  
 
 ```cs
 public static void HandleError(this IApplicationBuilder app, LogProvider logger)
@@ -218,4 +218,4 @@ Member | Description
 
 There is a bit more going on in the **{Project}.Core** project, but this provides the details necessary to understand how the rest works.  
 
-> With the exception of the **{Project}.Core\\Sockets** features, which will be discussed in the [SignalR](./a7-signalr.md) section.
+> With the exception of the **{Project}.Core\\Sockets** features, which will be discussed in the [SignalR](./a7-signalr.md) article.

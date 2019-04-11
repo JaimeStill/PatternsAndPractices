@@ -13,7 +13,7 @@ The `DbIntializer` static class is written as an extension class at **{Project}.
 * Ensuring the database has been created with the latest migration
 * Ensuring that seeded data exists in the database  
 
-To illustrate how to appropriately accomplish this, it's best to look at an example that works with the entities defined in the [Data Access Layer](./07-database-seeding.md) section:  
+To illustrate how to appropriately accomplish this, it's best to look at an example that works with the entities defined in the [Data Access Layer](./07-database-seeding.md) article:  
 
 **`DbInitializer`**
 

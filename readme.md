@@ -12,7 +12,7 @@
 
 ## [Format](#patterns-and-practices)  
 
-Throughout this documentation, each major section will be linked at the top of the document. Clicking the header of each major section will bring you back to the top of this document.  
+Throughout this documentation, each major section will be linked at the top of the article. Clicking the header of each major section will bring you back to the top of this article.  
 
 Anywhere you see something referenced inside curly braces, i.e. - `{value}`, this means that the value isn't specific to the documentation and could be something that you come up with on your own. For example, a project name, a directory, etc.
 

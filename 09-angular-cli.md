@@ -1,5 +1,7 @@
 # Angular CLI
 
+[Table of Contents](./toc.md)
+
 * [Overview](#overview)
 * [Angular Workspace](#angular-workspace)
 
@@ -140,3 +142,6 @@ This section will take a look at how important Angular infrastructure is specifi
 `scripts` is an array of any third-party libraries that are used by the app, but not able to be imported via an Angular module. In this case, `hammer.js` is specified because Angular Material specifies it as an optional dependency to enable touch-based features.
 
 `configurations` allows you to specify additional build configurations that differ from the base configuration.
+
+
+[Back to Top](#angular-cli)

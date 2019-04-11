@@ -1,5 +1,7 @@
 # Dependency Injection and Middleware
 
+[Table of Contents](./toc.md)
+
 * [Overview](#overview)
 * [Dependency Injection](#dependency-injection)
     * [Dependency Lifetime](#dependency-lifetime)
@@ -1091,3 +1093,5 @@ public class Startup
 If we're in the Development environment, we add the cookie authentication services in service registration using the default cookie authentication scheme. Then, we add a scoped instance of `IUserProvider` resolved as `MockProvider`. Otherwise, we just use the `AdUserProvider` implementation.  
 
 In the middleware pipeline, if we're in the Development environment, we setup the authentication middleware, then `MockMiddleware`. Cookie authentication needs to be configured first in the pipeline, or when `MockMiddleware` attempts to add the cookie authentication, it will throw an exception. If we're not in the Development environment, `AdUserMiddleware` is registered in the pipeline.
+
+[Back to Top](#dependency-injection-and-middleware)

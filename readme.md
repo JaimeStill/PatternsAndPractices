@@ -1,5 +1,7 @@
 # Patterns and Practices  
 
+[Table of Contents](./toc.md)
+
 * [Format](#format)
 * [Prerequisites](#prerequisites)
 * [Overview](#overview)
@@ -110,3 +112,5 @@ Only the following [**workloads**](https://visualstudio.microsoft.com/vs/visual-
 * [Web development](https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community?view=vs-2019#aspnet-and-web-development)
 * [Windows Desktop Development with C++](https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community?view=vs-2019#desktop-development-with-c)
 * [Data storage and processing](https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community?view=vs-2019#data-storage-and-processing)
+
+[Back to Top](#patterns-and-practices)

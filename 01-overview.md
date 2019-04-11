@@ -1,5 +1,7 @@
 # .NET Core Overview  
 
+[Table of Contents](./toc.md)
+
 * [Docs](#docs)
 * [Overview](#overview)
 * [Dependencies](#dependencies)
@@ -134,3 +136,5 @@ Package | Version | Type
 **{Project}.Data** | N/A | Reference
 **{Project}.Identity** | N/A | Reference
 **{Project}.Identity.Mock** | N/A | Reference
+
+[Back to Top](#net-core-overview)

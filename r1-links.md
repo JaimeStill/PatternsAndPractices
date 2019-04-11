@@ -1,5 +1,7 @@
 # Links  
 
+[Table of Contents](./toc.md)
+
 A curated list of external links, organized by topic, provided throughout this repository or deemed helpful.
 
 * [Software](#software)
@@ -143,3 +145,5 @@ A curated list of external links, organized by topic, provided throughout this r
 ### [Angular Flex Layout](#links)
 * [GitHub - Flex Layout](https://github.com/angular/flex-layout)
 * [Wiki](https://github.com/angular/flex-layout/wiki)
+
+[Back to Top](#links)

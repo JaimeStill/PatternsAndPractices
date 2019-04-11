@@ -1,5 +1,7 @@
 # Database Seeding
 
+[Table of Contents](./toc.md)
+
 * [DbInitializer](#dbinitializer)
 * [dbseeder](#dbseeder)
     * [Debug](#debug)
@@ -488,3 +490,5 @@ To run these specific examples, I'd open a command prompt pointed at the **D:\\D
 D:\Desktop\Commands\Demo>publish-dbseeder
 D:\Desktop\Commands\Demo>seed-database
 ```
+
+[Back to Top](#database-seeding)

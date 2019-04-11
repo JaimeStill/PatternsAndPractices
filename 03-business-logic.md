@@ -1,5 +1,7 @@
 # Business Logic  
 
+[Table of Contents](./toc.md)
+
 * [Extension Methods](#extension-methods)
 * [Asynchronous Operations](#asynchronous-operations)
 * [Retrieving Data](#retrieving-data)
@@ -336,3 +338,5 @@ namespace Demo.Data.Extensions
     }
 }
 ```
+
+[Back to Top](#business-logic)

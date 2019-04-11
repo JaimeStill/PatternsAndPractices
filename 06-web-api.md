@@ -1,5 +1,7 @@
 # Web API  
 
+[Table of Contents](./toc.md)
+
 * [Controller Signature](#controller-signature)
     * [HTTP Conventions](#http-conventions)
     * [Getting Data](#getting-data)
@@ -151,3 +153,5 @@ Things to note:
 * The same is accomplished with the `SearchItems()` extension method called by the `SearchItems()` and `SearchDeletedItems()` action methods.
 * All of the action methods are executed as asynchronous tasks. Multiple clients calling multiple action methods simultaneously will not lock up the main thread of execution and will allow for efficient distributed method execution.
 * The signature of the controller is super light because all of the business logic is offloaded to extension methods. The controller simply maps HTTP endpoints to the extension methods they are associated with. Each controller should correspond to an extension class that contains the logic for the endpoints it exposes.
+
+[Back to Top](#web-api)

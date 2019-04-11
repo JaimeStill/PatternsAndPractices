@@ -1,5 +1,7 @@
 # Angular
 
+[Table of Contents](./toc.md)
+
 * [Overview](#overview)
 * [Integration](#integration)
     * [Startup](#startup)
@@ -354,3 +356,5 @@ All of the specified packages are listed in **{Project}.Web\\ClientApp\\package.
   }
 }
 ```
+
+[Back to Top](#angular)

@@ -1,5 +1,7 @@
 # Modules
 
+[Table of Contents](./toc.md)
+
 * [Overview](#overview)
 * [TypeScript Modules](#typescript-modules)
     * [Components](#components)
@@ -12,7 +14,7 @@
     * [App Stack Modules](#app-stack-modules)
     * [Material Module](#material-module)
     * [Services Module](#services-module)
-    * [App Module]()
+    * [App Module](#app-module)
 
 ## [Overview](#modules)
 
@@ -686,3 +688,5 @@ export class AppModule { }
 ```
 
 Thanks to all of the plumbing that was put in place using TypeScript modules and separate Angular modules for self-contained functionality, the `AppModule` is now scalable and substantially smaller than it would have been if we tried to cram everything into it.
+
+[Back to Top](#modules)

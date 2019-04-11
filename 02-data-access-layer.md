@@ -1,5 +1,7 @@
 # Data Access Layer  
 
+[Table of Contents](./toc.md)
+
 * [Project Infrastructure](#project-infrastructure)
 * [Building the Data Layer](#building-the-data-layer)
     * [One to Many](#one-to-many)
@@ -309,3 +311,5 @@ Whenever the entity schema is modified and you want the database to reflect the 
 ```  
 
 The `-s` flag indicates the startup project since `AppDbContext` is configured outside of the EF project. For a complete CLI reference, see the [Entity Framework Core tools reference](https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/dotnet).
+
+[Back to Top](#data-access-layer)

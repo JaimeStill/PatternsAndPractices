@@ -91,6 +91,9 @@ A curated list of external links, organized by topic, provided throughout this r
 
 * [HTML](https://developer.mozilla.org/en-US/docs/Glossary/HTML)
 * [CSS](https://developer.mozilla.org/en-US/docs/Glossary/CSS)
+* [Sass](https://sass-lang.com/guide)
+    * [SCSS](https://sass-lang.com/documentation/file.SCSS_FOR_SASS_USERS.html)
+    * [map-get](https://sass-lang.com/documentation/Sass/Script/Functions.html#map_get-instance_method)
 * [JavaScript](https://developer.mozilla.org/en-US/docs/Glossary/JavaScript)
 * [TypeScript](https://www.typescriptlang.org/docs/home.html)
     * [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
@@ -136,6 +139,7 @@ A curated list of external links, organized by topic, provided throughout this r
 * [Guides](https://material.angular.io/guides)
 * [Component Development Kit - CDK](https://material.angular.io/cdk/categories)
 * [GitHub - Angular Material](https://github.com/angular/material2)
+    * [Core Library](https://github.com/angular/material2/tree/master/src/lib/core)
     * [Color Palette](https://github.com/angular/material2/blob/master/src/lib/core/theming/_palette.scss)
     * [Theming](https://github.com/angular/material2/blob/master/src/lib/core/theming/_theming.scss)
     * [Typography](https://github.com/angular/material2/blob/master/src/lib/core/typography/_typography.scss)

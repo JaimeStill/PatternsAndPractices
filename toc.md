@@ -103,9 +103,15 @@
     * [Services Module](./10-modules.md#services-module)
     * [App Module](./10-modules.md#app-module)
 
-### [Material](./11-material.md)
+### [Material](./11-material.md#material)
 
-
+* [Overview](./11-material.md#overview)
+* [Theming](./11-material.md#theming)
+    * [Material Styles](./11-material.md#material-styles)
+    * [Material Themes](./11-material.md#material-themes)
+* [Components](./11-material.md#components)
+    * [Menu](./11-material.md#menu)
+    * [Slider](./11-material.md#slider)
 
 ### [Models](./12-models.md)
 

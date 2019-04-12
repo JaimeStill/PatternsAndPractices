@@ -114,7 +114,7 @@ In order to access the `filter` property, you need to explicitly assign the obje
 ```ts
 getExamples() => this.http.get<Example[]>('/api/example/getExamples')
     .subscribe(
-        data => this.examples.next(data.map(x => Object.assign(new Example(), x))),
+        data => this.examples.next(data.map(x => Object.assign(new Example, x))),
         err => this.snacker.sendErrorMessage(err.error)
     )
 ```

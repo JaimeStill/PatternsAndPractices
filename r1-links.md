@@ -98,6 +98,7 @@ A curated list of external links, organized by topic, provided throughout this r
     * [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array#)
     * [Arrow Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)    
     * [Immediately Invoked Function Expression](https://developer.mozilla.org/en-US/docs/Glossary/IIFE)
+    * [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
 * [TypeScript](https://www.typescriptlang.org/docs/home.html)
     * [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
     * [Interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html)
@@ -109,6 +110,12 @@ A curated list of external links, organized by topic, provided throughout this r
 * [GitHub - TypeScript](https://github.com/Microsoft/TypeScript)
     * [Wiki](https://github.com/Microsoft/TypeScript/wiki)
     * [Type Erasure](https://github.com/Microsoft/TypeScript/wiki/FAQ#what-is-type-erasure)
+* [RxJS](https://rxjs.dev/guide/overview)
+    * [Observables]()
+    * [Subscription]()
+    * [Subjects]()
+    * [RxMarbles](https://rxmarbles.com/)
+    * [RxJS Operators In Depth](https://stackblitz.com/edit/rxjs-operators-in-depth)
 
 ## [Angular](#links)
 

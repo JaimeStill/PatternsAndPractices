@@ -115,7 +115,10 @@
 
 ### [Models](./12-models.md)
 
-
+* [Overview](./12-models.md#overview)
+    * [Transpiled JavaScript](./12-models.md#traspiled-javascript)
+    * [Mapping Classes](./12-models.md#mapping-classes)
+* [Implementation](./12-models.md#implementation)
 
 ### [Services](./13-services.md)
 

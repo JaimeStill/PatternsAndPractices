@@ -103,7 +103,7 @@
     * [Services Module](./10-modules.md#services-module)
     * [App Module](./10-modules.md#app-module)
 
-### [Material](./11-material.md#material)
+### [Material](./11-material.md)
 
 * [Overview](./11-material.md#overview)
 * [Theming](./11-material.md#theming)
@@ -122,7 +122,15 @@
 
 ### [Services](./13-services.md)
 
-
+* [Overview](./13-services.md#overview)
+* [Service Scope](./13-services.md#service-scope)
+* [Observables](./13-services.md#observables)
+* [Core Services](./13-services.md#core-services)
+    * [ObjectMapService](./13-services.md#object-map-service)
+    * [ThemeService](./13-services.md#theme-service)
+    * [SnackerService](./13-services.md#snacker-service)
+* [API Services](./13-services.md#api-services)
+    * [ItemService](./13-services.md#item-service)
 
 ### [Components](./14-components.md)
 

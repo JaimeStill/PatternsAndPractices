@@ -2,6 +2,15 @@
 
 ## [README](./readme.md)
 
+* [Format](./readme.md#format)
+* [Prerequisites](./readme.md#prerequisites)
+* [Overview](./readme.md#overview)
+* [Installing the App Stack Template](./readme.md#installing-the-app-stack-template)
+* [Creating an App Stack Project](./readme.md#creating-an-app-stack-project)
+* [Building and Running](./readme.md#building-and-running)
+* [Visual Studio Code Extensions](./readme.md#visual-studio-code-extensions)
+* [Visual Studio](./readme.md#visual-studio)
+
 ## .NET Core
 
 ### [.NET Core Overview](./01-overview.md)
@@ -134,7 +143,28 @@
 
 ### [Components](./14-components.md)
 
-
+* [Overview](./14-components.md#overview)
+* [Anatomy](./14-components.md#anatomy)
+* [Interpolation](./14-components.md#interpolation)
+* [Binding Syntax](./14-components.md#binding-syntax)
+    * [Property Binding](./14-components.md#property-binding)
+    * [Attribute Binding](./14-components.md#attribute-binding)
+    * [Event Binding](./14-components.md#event-binding)
+    * [Two-way Binding](./14-components.md#two-way-binding)
+* [Directives](./14-components.md#directives)
+    * [Attribute Directives](./14-components.md#attribute-directives)
+    * [Structural Directives](./14-components.md#structural-directives)
+* [Template Reference Variables](./14-components.md#template-reference-variables)
+* [Template Expression Operators](./14-components.md#template-expression-operators)
+* [Input and Output Properties](./14-components.md#input-and-output-properties)
+* [ViewChild](./14-components.md#viewchild)
+* [Flex Layout](./14-components.md#flex-layout)
+* [AppComponent](./14-components.md#appcomponent)
+* [Display Components](./14-components.md#display-components)
+    * [BannerComponent](./14-components.md#banner-component)
+    * [FileUploadComponent](./14-components.md#fileuploadcomponent)
+    * [ItemListComponent](./14-components.md#itemlistcomponent)
+    * [ItemCardComponent](./14-components.md#itemcardcomponent)
 
 ### [Routes](./15-routes.md)
 

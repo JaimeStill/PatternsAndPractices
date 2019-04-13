@@ -9,7 +9,7 @@
     * [Property Binding](#property-binding)
     * [Attribute Binding](#attribute-binding)
     * [Event Binding](#event-binding)
-    * [Two-Way Binding](#two-way-binding)
+    * [Two-way Binding](#two-way-binding)
 * [Directives](#directives)
     * [Attribute Directives](#attribute-directives)
     * [Structural Directives](#structural-directives)
@@ -37,7 +37,7 @@
 
 ### [Event Binding](#components)
 
-### [Two-Way Binding](#components)
+### [Two-way Binding](#components)
 
 ## [Directives](#components)
 

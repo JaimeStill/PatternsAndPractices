@@ -38,6 +38,19 @@ A curated list of external links, organized by topic, provided throughout this r
     * [Windows Desktop Development with C++](https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community?view=vs-2019#desktop-development-with-c)
     * [Data storage and processing](https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community?view=vs-2019#data-storage-and-processing)
 
+## [Awesome Web Apps](#links)
+
+> The following links point to apps that are really helpful for development
+
+* [GitHub](https://github.com) - `git`-based source control repository app.
+* [GitHub - Gists](https://gist.github.com) - Write code snippets and markdown documents.
+* [StackBlitz](https://stackblitz.com/) - Great for prototyping front-end concepts. Added benefit of maintaining a history of these prototypes by registering with a GitHub account.
+* [Repl.it](https://repl.it/) - Great for prototyping basic concepts in a variety of languages (including C#). Added benefit of maintaining a history of these prototypes by registering with a GitHub account.
+* [Glitch](https://glitch.com/) - Explore and build web-based prototypes.
+* [Adobe Color](https://color.adobe.com/create) - Robust color wheel tool. Color themes can be saved with an Adobe Creative Cloud account.
+* [Adobe Fonts](https://fonts.adobe.com/fonts) - Fonts from the Adobe ecosystem (licensed for Personal & Commercial use with an Adobe Creative Cloud account).
+* [Google Fonts](https://fonts.google.com) - Open source fonts from the Google ecosystem.
+
 ## [C#](#links)
 
 * [C# Programming Guide](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/index)

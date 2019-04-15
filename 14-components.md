@@ -12,8 +12,8 @@
         * [Attribute Directives](#attribute-directives)
         * [Structural Directives](#structural-directives)
     * [Template Reference Variables](#template-reference-variables)
-    * [Template Expression Operators](#template-expression-operators)
     * [Input and Output Properties](#input-and-output-properties)
+    * [Template Expression Operators](#template-expression-operators)
     * [ViewChild](#viewchild)
     * [Flex Layout](#flex-layout)
 * [AppComponent](#appcomponent)
@@ -165,7 +165,7 @@ export class ExampleComponent {
 <p>Interpolated property: {{value}}</p>
 ```
 
-[StackBlitz - Interpolation](https://stackblitz.com/edit/docs-interpolation)
+[StackBlitz - Interpolation](https://stackblitz.com/edit/docs-interpolation?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.html)
 
 ### [Binding Syntax](#components)
 
@@ -350,19 +350,464 @@ export class HomeComponent {
 </div>
 ```
 
-[Stackblitz - Binding Syntax Overview]()
+[Stackblitz - Binding Syntax Overview](https://stackblitz.com/edit/docs-binding-syntax?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.html)
 
 ### [Directives](#components)
 
+[Built-in Directives](https://angular.io/guide/template-syntax#built-in-directives) documentation
+
+Components are directives that define template-oriented features. The `@Component` decoratore extends the `@Directive` decorator. Directives exist to simplify complex tasks. Angular ships with built-in directives, and you can define your own with the `@Directive` decorator.
+
+> In my time working with Angular, I have yet to encounter a scenario where I've needed to write a directive. The directives provided by Angular, Angular Material, and Flex Layout have always provided a fit the problem at hand. That's not to say you many never end up needing to write your own Directive, it's just that the need is extremely rare. The following sections will purely focus on demonstrating the built-in directives.
+
 #### [Attribute Directives](#components)
+
+[Attribute Directives](https://angular.io/guide/attribute-directives) documentation
+
+Attirbute directives listen to and modify the behavior of other HTML elements, attributes, properties, and components. They are usually applied to elemenst as if they were HTML attributes, hence the name.
+
+> Many Angular Modules, such as the [RouterModule]() and the [FormsModule] define their own attribute directives. This section will discuss the most commonly used attribute directives.
+
+**NgClass**
+
+**`home.component.ts`**
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
+})
+export class HomeComponent {
+  fontClasses: {};
+  isSerif = false;
+  isBold = false;
+
+  setFontClasses() {
+    this.fontClasses = {
+      'serif': this.isSerif,
+      'bold': this.isBold
+    };
+  }
+}
+```
+
+**`home.component.css`**
+
+```css
+p.serif {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+p.bold {
+  font-weight: 700;
+}
+```
+
+**`home.component.html`**
+```html
+<mat-toolbar>NgClass</mat-toolbar>
+<mat-checkbox [(ngModel)]="isSerif" 
+              (change)="setFontClasses()"
+              [style.margin.px]="12">Serif</mat-checkbox>
+<mat-checkbox [(ngModel)]="isBold" 
+              (change)="setFontClasses()"
+              [style.margin.px]="12">Bold</mat-checkbox>
+<p [ngClass]="fontClasses" 
+   [style.margin.px]="12">
+	Style is dynamically determined using the NgClass attribute directive.
+</p>
+```
+
+**NgStyle**
+
+**`home.component.ts`**
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html'
+})
+export class HomeComponent {
+  styles: {};
+  fontColor = "#333333";
+  isUppercase = false;
+
+  setStyles() {
+    this.styles = {
+      'color': this.fontColor,
+      'text-transform': this.isUppercase ? 'uppercase' : 'none'
+    };
+  }
+}
+```
+
+**`home.component.html`**
+
+```html
+<mat-toolbar>NgStyle</mat-toolbar>
+<section [style.margin.px]="12">
+  <mat-checkbox [(ngModel)]="isUppercase"
+                (change)="setStyles()">Uppercase</mat-checkbox>
+</section>
+<section>
+  <p [style.margin.px]="12">Font Color</p>
+  <mat-radio-group [(ngModel)]="fontColor" (change)="setStyles()">
+    <mat-radio-button value="#333333"
+                      [style.margin.px]="12">Black</mat-radio-button>
+    <mat-radio-button value="#00ff88"
+                      [style.margin.px]="12">Teal</mat-radio-button>
+  </mat-radio-group>
+</section>
+<p [ngStyle]="styles">
+  Style is dynamically applied using the NgStyle attribute directive.
+</p>
+```
+
+**NgModel**
+
+**`home.component.ts`**
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
+})
+export class HomeComponent {
+  colors = [
+    'Red',
+    'Orange',
+    'Yellow',
+    'Green',
+    'Blue',
+    'Indigo',
+    'Violet'
+  ];
+
+  color = 'Green';
+}
+```
+
+**`home.component.html`**
+
+```html
+<mat-toolbar>NgModel</mat-toolbar>
+<mat-form-field [style.margin.px]="12">
+  <mat-label>Color</mat-label>
+  <mat-select [(ngModel)]="color">
+    <mat-option *ngFor="let c of colors" [value]="c">{{c}}</mat-option>
+  </mat-select>
+</mat-form-field>
+<p [style.margin.px]="12">Selected Color: <span [style.color]="color">{{color}}</span></p>
+```
+
+[StackBlitz - Attribute Directives](https://stackblitz.com/edit/docs-attribute-directives?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.html)
 
 #### [Structural Directives](#components)
 
+[Structural Directives](https://angular.io/guide/structural-directives) documentation
+
+Structural directives are responsible for HTML layout. They shape or reshape the DOM's *structure*, typically by adding, removing, and manipulating the host elements to which they are attached.
+
+**NgIf**
+
+**`home.component.ts`**
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html',
+})
+export class HomeComponent {
+  showDetails = false;
+}
+```
+
+**`home.component.html`**
+
+```html
+<mat-toolbar>NgIf</mat-toolbar>
+<h2>Topic</h2>
+<button (click)="showDetails = !showDetails"
+        mat-button
+        color="accent"
+        [style.margin.px]="8">
+  <span *ngIf="showDetails">Hide Details</span>
+  <span *ngIf="!showDetails">Show Details</span>
+</button>
+<p *ngIf="showDetails">Details of the topic described</p>
+```
+
+**NgFor**
+
+**`home.component.ts`**
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html',
+})
+export class HomeComponent {
+  articles = [
+    { title: 'Services', description: 'A deep-dive into Angular Services' },
+    { title: 'Components', description: 'Demonstrate how to build Angular Components' },
+    { title: 'Routing', description: 'Angular Routing in a nutshell' }
+  ]
+}
+```
+
+**`home.component.html`**
+
+```html
+<mat-toolbar>NgFor</mat-toolbar>
+<section fxLayout="row | wrap"
+         fxLayoutAlign="space-evenly start"
+         class="container">
+  <section *ngFor="let a of articles"
+           class="background card elevated clickable"
+           [style.width.px]="180">
+    <h3>{{a.title}}</h3>
+    <p>{{a.description}}</p>
+  </section>           
+</section>
+```
+
+**NgSwitch**
+
+**`home.component.ts`**
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html',
+})
+export class HomeComponent {
+  meal: string;
+
+  meals = [
+    'breakfast',
+    'lunch'
+  ];
+
+  breakfasts = [
+    { price: 4, name: 'Oatmeal' },
+    { price: 6, name: 'Bacon & Eggs' },
+    { price: 10, name: 'Chicken & Waffles' }
+  ];
+
+  lunches = [
+    { price: 5, name: 'Reuben' },
+    { price: 3, name: 'BLT' },
+    { price: 8, name: 'Cuban' }
+  ];
+}
+```
+
+**`home.component.html`**
+
+```html
+<mat-toolbar>NgSwitch</mat-toolbar>
+<mat-form-field [style.margin.px]="12">
+  <mat-label>Meal</mat-label>
+  <mat-select [(ngModel)]="meal">
+    <mat-option *ngFor="let m of meals"
+                [value]="m">{{m}}</mat-option>
+  </mat-select>
+</mat-form-field>
+<div [ngSwitch]="meal" 
+     [style.margin.px]="12">
+  <div *ngSwitchCase="'breakfast'"
+       fxLayout="row | wrap"
+       fxLayoutAlign="space-evenly start"
+       class="container">
+    <section *ngFor="let b of breakfasts"
+             class="background card elevated clickable"
+             [style.width.px]="180"
+             fxLayout="row"
+             fxLayoutAlign="start center">
+      <p fxFlex>{{b.name}}</p>
+      <p>{{b.price}}</p>
+    </section>
+  </div>
+  <div *ngSwitchCase="'lunch'"
+       fxLayout="row | wrap"
+       fxLayoutAlign="space-evenly start"
+       class="container">
+    <section *ngFor="let l of lunches"
+             class="background card elevated clickable"
+             [style.width.px]="180"
+             fxLayout="row"
+             fxLayoutAlign="start center">
+      <p fxFlex>{{l.name}}</p>
+      <p>{{l.price}}</p>
+    </section>
+  </div>
+  <div *ngSwitchDefault>Select a meal</div>
+</div>
+```
+
+[StackBlitz - Structural Directives](https://stackblitz.com/edit/docs-structural-directives?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.ts)
+
 ### [Template Reference Variables](#components)
 
-### [Template Expression Operators](#components)
+[Template Reference Variables](https://angular.io/guide/template-syntax#template-reference-variables--var-) documentation
+
+Template reference variables allow you to reference a DOM element, Component, Directive, or Web Component.
+
+Use the hash symbol, `#`, to declare a reference variable:
+
+```html
+<input #search placeholder="Search">
+```
+
+`#search` declares a `search` variable on an `<input>` element.
+
+A template reference variable can be refered to *anywhere* in the template:
+
+```html
+<button (click)="searchItems(search.value)">Search</button>
+```
+
+[StackBlitz - Template Reference Variables](https://stackblitz.com/edit/docs-template-reference-variables?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.html)
 
 ### [Input and Output Properties](#components)
+
+[Input and Output Property](https://angular.io/guide/template-syntax#input-and-output-properties) documentation
+
+An *Input* property is a *settable* property annotated with an `@Input` decorator. Values flow *into* the property when it is data bound with a [property binding](https://angular.io/guide/template-syntax#property-binding).
+
+An *Output* property is an *observable* property annotated with an `@Output` decorator. The property almost always return an Angular [EventEmitter](https://angular.io/api/core/EventEmitter). Values flow *out* of the component as events bound with an [event binding](https://angular.io/guide/template-syntax#event-binding).
+
+The following example is a bit more involved than any of the previous examples, so I will take a moment to discuss how it uses Input and Output properties:
+
+* A `CardComponent` is defined with:
+  * an `@Input item` property of type `Item`.
+  * an `@Output select` property of type `EventEmitter<Item>`.
+    * This means that whenever `select.emit(item)` is called, the listener will receive an object of type `Item` from the event call.
+  * In the `CardComponent`, when the root `<section>` element is clicked, it calls `select.emit(item)`, which passes the `item` input property to the caller through the `select` output event.
+* The `CardService` is defined with:
+  * a `cards` property that is an array of `Item` objects.
+* `HomeComponent` registers `CardService` with its `providers` array.
+* `HomeComponent` injects an instance of type `CardService` into its constructor as `cardService`.
+* `HomeComponent` defines a `selectCard` function with an `Item` parameter. The function calls `window.alert` and provides a message indicating the item that was selected.
+* The `HomeComponent` template iterates through each `cardService.cards` and, for each `Item` in the array, renders a `CardComponent`.
+  * The `item` input property is set to the card in the iteration.
+  * The `select` output event is linked to the `selectCard` function.
+    * The `$event` argument in the template indicates the object received by the `EventEmitter` defined on the `CardComponent`.
+
+> Remember that items defined in a TypeScript module in the app stack should be handled appropriately in the `index.ts` file.
+
+**`item.ts`**
+
+```ts
+export class Item {
+  name: string;
+  description: string;
+}
+```
+
+**`card.component.ts`**
+
+```ts
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
+
+import { Item } from '../models';
+
+@Component({
+  selector: 'card',
+  templateUrl: 'card.component.html'
+})
+export class CardComponent {
+  @Input() item: Item;
+  @Output() select = new EventEmitter<Item>();
+}
+```
+
+**`card.component.html`**
+
+```html
+<section (click)="select.emit(item)"
+         fxLayout="column"
+         fxLayoutAlign="start stretch"
+         class="background card elevated clickable">
+  <p class="background accent" 
+     [style.padding.px]="8"
+     [style.margin]="0">{{item.name}}</p>
+  <p [style.padding.px]="4">{{item.description}}</p>
+</section>
+```
+
+**`card.service.ts`**
+
+```ts
+import { Injectable } from '@angular/core';
+
+import { Item } from '../models';
+
+@Injectable()
+export class CardService {
+  cards = new Array<Item>(
+    { name: 'Item A', description: 'A description of Item A' },
+    { name: 'Item B', description: 'A description of Item B' },
+    { name: 'Item C', description: 'A description of Item C' }
+  );
+}
+```
+
+**`home.component.ts`**
+
+```ts
+import { Component } from '@angular/core';
+import { CardService } from '../../services';
+import { Item } from '../../models';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html',
+  providers: [CardService]
+})
+export class HomeComponent {
+  constructor(
+    public cardService: CardService
+  ) { }
+
+  selectCard = (item: Item) => window.alert(`${item.name} selected!`);
+}
+```
+
+**`home.component.html`**
+
+```html
+<mat-toolbar>Input and Output Properties</mat-toolbar>
+<section class="container"
+         fxLayout="row | wrap"
+         fxLayoutAlign="start start">
+  <card *ngFor="let c of cardService.cards" 
+        [item]="c" 
+        (select)="selectCard($event)"></card>
+</section>
+```
+
+[StackBlitz - Input and Output Properties](https://stackblitz.com/edit/docs-input-output-properties?file=src%2Fapp%2Fcomponents%2Fcard.component.ts)
+
+### [Template Expression Operators](#components)
 
 ### [ViewChild](#components)
 

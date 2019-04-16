@@ -209,7 +209,7 @@ The components that are bootstrapped and available to be loaded into this file a
 * An `AppModule` is bootstrapped using `bootstrapModule` in `main.ts`
     * Any component that is in the `bootstrap` array of the `AppModule` metadata definition can be rendered in the **index.html** view (in this case, `AppComponent`)
         * Modules will be covered in the [Modules](./10-modules.md) article
-        * Components (including `AppComponent`) will be covered in the [Components](./14-components.md) article
+        * Components (including `AppComponent`) will be covered in the [Components](./14-components.md) through [Routes](./17-routes.md) articles.
 
 ### [Main](#angular)
 

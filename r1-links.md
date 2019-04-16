@@ -7,6 +7,7 @@ A curated list of external links, organized by topic, provided throughout this r
 * [Software](#software)
 * [Visual Studio Code](#visual-studio-code)
 * [Visual Studio](#visual-studio)
+* [Awesome Web Apps](#awesome-web-apps)
 * [C#](#c)
 * [.NET Core](#net-core)
     * [ASP.NET Core](#aspnet-core)

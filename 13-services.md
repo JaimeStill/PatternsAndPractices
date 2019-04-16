@@ -281,7 +281,7 @@ The `compare` functions you can define deal with optimizing collections bound to
 
 The `trackBy` functions you can define deal with optimizing `*ngFor` iterations when working with large collections, keeping it from tracking entire object graphs when detecting changes.
 
-> These last two features will be demonstrated in the [Components](./14-components.md) and [Routes](./15-routes.md) articles.
+> These last two features will be demonstrated in the [Components](./14-components.md) through [Routes](./17-routes.md) articles.
 
 ### [ThemeService](#services)
 
@@ -352,7 +352,7 @@ export class ThemeService {
 5. A `setTheme` function is provided with a `Theme` parameter, and updates the current app theme.
 6. The `setOverlayContainerTheme` function is defined and accepts potentially two arguments: the new theme to be applied, and optionally the old theme to remove. If an `oldTheme` argument is provided, it is removed from the `OverlayContainer` instance. Then, the `newTheme` argument is added to the class list for the `OverlayContainer`. This function is called in both the constructor, and whenever the `setTheme` function is called.
 
-> The implementation of this service will be described in the [Components](./14-components.md) article.
+> The implementation of this service will be described in the [Root Component](./15-root-component.md) article.
 
 ### [SnackerService](#services)  
 

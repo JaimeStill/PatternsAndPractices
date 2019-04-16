@@ -146,28 +146,43 @@
 
 * [Overview](./14-components.md#overview)
 * [Anatomy](./14-components.md#anatomy)
+  * [Component Decorator](./14-components.md#component-decorator)
 * [Interpolation](./14-components.md#interpolation)
 * [Binding Syntax](./14-components.md#binding-syntax)
 * [Directives](./14-components.md#directives)
-    * [Attribute Directives](./14-components.md#attribute-directives)
-    * [Structural Directives](./14-components.md#structural-directives)
+  * [Attribute Directives](./14-components.md#attribute-directives)
+  * [Structural Directives](./14-components.md#structural-directives)
 * [Template Reference Variables](./14-components.md#template-reference-variables)
 * [Input and Output Properties](./14-components.md#input-and-output-properties)
 * [Template Expression Operators](./14-components.md#template-expression-operators)
+  * [Safe Navigation](./14-components.md#safe-navigation)
+  * [Non-Null Assertion](./14-components.md#non-null-assertion)
+  * [Pipes](./14-components.md#pipes)
+    * [Numeric Pipes](./14-components.md#numeric-pipes)
+    * [Casing Pipes](./14-components.md#casing-pipes)
+    * [Json Pipe](./14-components.md#json-pipe)
+    * [Date Pipe](./14-components.md#date-pipe)
+    * [KeyValue Pipe](./14-components.md#keyvalue-pipe)
+    * [Slice Pipe](./14-components.md#slice-pipe)
+    * [Async Pipe](./14-components.md#async-pipe)
+* [Lifecycle Hooks](./14-components.md#lifecycle-hooks)
 * [ViewChild](./14-components.md#viewchild)
 * [Flex Layout](./14-components.md#flex-layout)
-* [AppComponent](./14-components.md#appcomponent)
-* [Display Components](./14-components.md#display-components)
-    * [BannerComponent](./14-components.md#banner-component)
-    * [FileUploadComponent](./14-components.md#fileuploadcomponent)
-    * [ItemListComponent](./14-components.md#itemlistcomponent)
-    * [ItemCardComponent](./14-components.md#itemcardcomponent)
 
-### [Routes](./15-routes.md)
+### [Root Component](./15-root-component.md)
 
 
 
-### [Pipes](./16-pipes.md)
+### [Display Components](./16-display-components.md)
+
+
+
+### [Routes](./17-routes.md)
+
+
+
+### [Pipes](./18-pipes.md)
+
 
 
 ## Appendix
@@ -204,5 +219,19 @@
 ## References
 
 ### [Links](./r1-links.md)
+
+* [Software](./r1-links.md#software)
+* [Visual Studio Code](./r1-links.md#visual-studio-code)
+* [Visual Studio](./r1-links.md#visual-studio)
+* [Awesome Web Apps](./r1-links.md#awesome-web-apps)
+* [C#](./r1-links.md#c)
+* [.NET Core](./r1-links.md#net-core)
+    * [ASP.NET Core](./r1-links.md#aspnet-core)
+    * [Entity Framework Core](./r1-links.md#entity-framework-core)
+* [Web Technologies](./r1-links.md#web-technologies)
+* [Angular](./r1-links.md#angular)
+    * [Angular CLI](./r1-links.md#angular-cli)
+    * [Angular Material](./r1-links.md#angular-material)
+    * [Angular Flex Layout](./r1-links.md#angular-flex-layout)
 
 [Back to Top](#table-of-contents)

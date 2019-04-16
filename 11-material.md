@@ -21,7 +21,7 @@ There are two important aspects to using Angular Material:
 
 These aspects are what this documentation will cover in detail.
 
-> Although some of the Material components will be introduced here, they will be discussed in detail in the [Components](./14-components.md) and [Routes](./15-routes.md) articles.
+> Although some of the Material components will be introduced here, they will be discussed in detail in the [Components](./14-components.md) through [Routes](./17-routes.md) articles.
 
 ## [Theming](#material)
 

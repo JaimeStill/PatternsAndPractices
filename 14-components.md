@@ -6,23 +6,27 @@
 * [Anatomy](#anatomy)
   * [Component Decorator](#component-decorator)
 * [Usage](#usage)
-  * [Interpolation](#interpolation)
-  * [Binding Syntax](#binding-syntax)
-  * [Directives](#directives)
-    * [Attribute Directives](#attribute-directives)
-    * [Structural Directives](#structural-directives)
-  * [Template Reference Variables](#template-reference-variables)
-  * [Input and Output Properties](#input-and-output-properties)
-  * [Template Expression Operators](#template-expression-operators)
-  * [Lifecycle Hooks](#lifecycle-hooks)
-  * [ViewChild](#viewchild)
-  * [Flex Layout](#flex-layout)
-* [AppComponent](#appcomponent)
-* [Display Components](#display-components)
-  * [BannerComponent](#bannercomponent)
-  * [FileUploadComponent](#fileuploadcomponent)
-  * [ItemListComponent](#itemlistcomponent)
-  * [ItemCardComponent](#itemcardcomponent)
+* [Interpolation](#interpolation)
+* [Binding Syntax](#binding-syntax)
+* [Directives](#directives)
+  * [Attribute Directives](#attribute-directives)
+  * [Structural Directives](#structural-directives)
+* [Template Reference Variables](#template-reference-variables)
+* [Input and Output Properties](#input-and-output-properties)
+* [Template Expression Operators](#template-expression-operators)
+  * [Safe Navigation](#safe-navigation)
+  * [Non-Null Assertion](#non-null-assertion)
+  * [Pipes](#pipes)
+    * [Numeric Pipes](#numeric-pipes)
+    * [Casing Pipes](#casing-pipes)
+    * [Json Pipe](#json-pipe)
+    * [Date Pipe](#date-pipe)
+    * [KeyValue Pipe](#keyvalue-pipe)
+    * [Slice Pipe](#slice-pipe)
+    * [Async Pipe](#async-pipe)
+* [Lifecycle Hooks](#lifecycle-hooks)
+* [ViewChild](#viewchild)
+* [Flex Layout](#flex-layout)
 
 ## [Overview](#components)
 
@@ -40,17 +44,11 @@ This is the `AppComponent`, located at **{Project}.Web\\ClientApp\\src\\app**. I
 
 These components can be resolved to a route via the Angular router. They are able to interact with services and manage the overall state of the view through that service interaction. It orchestrates the layout of *Display Components*, providing them with data retrieved through services. Any events triggered through user interaction with a Display Component is managed by the parent Route Component. Route Components are defined in the **{Project}.Web\\ClientApp\\src\\app\\routes** module.
 
-> Route Components will be covered in detail in the [Routes](./15-routes.md) article.
-
 **Display Components**
 
 Display Components can be thought of as extending the HTML specification. In the same way that a `<p>` or `<input>` tag has attributes, properties, and events, so too do Display Components. They do not interact with services; they exclusively rely on an external source for their properties to be set, and for their events to be responded to.
 
-This article is concerned with detailing the following topics:
-
-* Structure and details of working with Components
-* The root `AppComponent`
-* Display Component concepts and examples
+> This article is concerned with covering the structure and details of working with Components. Root Component, Route Components, and Display Components will be covered in the articles that follow.
 
 ## [Anatomy](#components)
 
@@ -120,7 +118,7 @@ The majority of the features described in the following sections is directly der
 * an example
 * a link to a [StackBlitz](https://stackblitz.com/) demo.
 
-### [Interpolation](#components)
+## [Interpolation](#components)
 
 [Interpolation](https://angular.io/guide/template-syntax#interpolation) documentation
 
@@ -168,7 +166,7 @@ export class ExampleComponent {
 
 [StackBlitz - Interpolation](https://stackblitz.com/edit/docs-interpolation?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.html)
 
-### [Binding Syntax](#components)
+## [Binding Syntax](#components)
 
 [Binding Syntax](https://angular.io/guide/template-syntax#binding-syntax-an-overview) documentation
 
@@ -353,7 +351,7 @@ export class HomeComponent {
 
 [Stackblitz - Binding Syntax Overview](https://stackblitz.com/edit/docs-binding-syntax?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.html)
 
-### [Directives](#components)
+## [Directives](#components)
 
 [Built-in Directives](https://angular.io/guide/template-syntax#built-in-directives) documentation
 
@@ -361,7 +359,7 @@ Components are directives that define template-oriented features. The `@Componen
 
 > In my time working with Angular, I have yet to encounter a scenario where I've needed to write a directive. The directives provided by Angular, Angular Material, and Flex Layout have always provided a fit the problem at hand. That's not to say you many never end up needing to write your own Directive, it's just that the need is extremely rare. The following sections will purely focus on demonstrating the built-in directives.
 
-#### [Attribute Directives](#components)
+### [Attribute Directives](#components)
 
 [Attribute Directives](https://angular.io/guide/attribute-directives) documentation
 
@@ -510,7 +508,7 @@ export class HomeComponent {
 
 [StackBlitz - Attribute Directives](https://stackblitz.com/edit/docs-attribute-directives?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.html)
 
-#### [Structural Directives](#components)
+### [Structural Directives](#components)
 
 [Structural Directives](https://angular.io/guide/structural-directives) documentation
 
@@ -661,7 +659,7 @@ export class HomeComponent {
 
 [StackBlitz - Structural Directives](https://stackblitz.com/edit/docs-structural-directives?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.ts)
 
-### [Template Reference Variables](#components)
+## [Template Reference Variables](#components)
 
 [Template Reference Variables](https://angular.io/guide/template-syntax#template-reference-variables--var-) documentation
 
@@ -683,7 +681,7 @@ A template reference variable can be refered to *anywhere* in the template:
 
 [StackBlitz - Template Reference Variables](https://stackblitz.com/edit/docs-template-reference-variables?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.html)
 
-### [Input and Output Properties](#components)
+## [Input and Output Properties](#components)
 
 [Input and Output Property](https://angular.io/guide/template-syntax#input-and-output-properties) documentation
 
@@ -808,21 +806,39 @@ export class HomeComponent {
 
 [StackBlitz - Input and Output Properties](https://stackblitz.com/edit/docs-input-output-properties?file=src%2Fapp%2Fcomponents%2Fcard.component.ts)
 
-### [Template Expression Operators](#components)
+## [Template Expression Operators](#components)
 
 [Template Expression Operators](https://angular.io/guide/template-syntax#template-expression-operators) documentation
 
 The template expression language (relevant to interpolation) employs a superset of JavaScript syntax supplemented with a few special operators for specific scenarios.
 
-#### Pipe Operator: `|`
+### [Safe Navigation](#components)
 
-> Pipes are covered in depth in the [Pipes](./16-pipes.md) article. This section will discuss some of the built-in pipes.
+Safe Navigation Operator: `?.`
+
+> [Safe Navigation Operator](https://angular.io/guide/template-syntax#the-safe-navigation-operator----and-null-property-paths) documentation
+
+### [Non-Null Assertion](#components)
+
+Non-Null Assertion Operator: `!`
+
+> [Non-Null Assertion Operator](https://angular.io/guide/template-syntax#the-non-null-assertion-operator---) documentation
+
+### [Pipes](#components)
+
+Pipe Operator: `|`
+
+> [Pipe Operator](https://angular.io/guide/template-syntax#the-pipe-operator---) documentation
+
+> Pipes are covered in depth in the [Pipes](./18-pipes.md) article. This section will discuss some of the built-in pipes.
 
 The result of an expression might require some transformation before you're ready to use it in a binding. For example, you might display a number as a currency, force text to uppercase, or display an object in JSON format.
 
 > [Built-in Pipes](https://angular.io/api?type=pipe)
 
-**Numeric Pipes**
+> All of the following pipes are demonstrated in a [StackBlitz - Built-In Pipes](https://stackblitz.com/edit/docs-built-in-pipes?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.ts) example.
+
+#### [Numeric Pipes](#components)
 
 * [DecimalPipe](https://angular.io/api/common/DecimalPipe)
 * [CurrencyPipe](https://angular.io/api/common/CurrencyPipe)
@@ -897,7 +913,7 @@ Examples:
 <p>{{.86 | percent:'1.2'}}
 ```
 
-**Casing Pipes**
+#### [Casing Pipes](#components)
 
 * [LowerCasePipe](https://angular.io/api/common/LowerCasePipe)
 * [UpperCasePipe](https://angular.io/api/common/UpperCasePipe)
@@ -927,7 +943,7 @@ Example:
 <p>{{'some kind of string' | titlecase}}</p>
 ```
 
-**Json Pipe**
+#### [Json Pipe](#components)
 
 * [JsonPipe](https://angular.io/api/common/JsonPipe)
 
@@ -969,7 +985,7 @@ Output:
 }
 ```
 
-**Date Pipe**
+#### [Date Pipe](#components)
 
 * [DatePipe](https://angular.io/api/common/DatePipe)
 
@@ -997,7 +1013,7 @@ Examples:
 {{now | date:'yyyy MMM dd HH:mm:ss'}}
 ```
 
-**KeyValue Pipe**
+#### [KeyValue Pipe](#components)
 
 Transforms an `Object` or a `Map` into an array of key value pairs.
 
@@ -1033,7 +1049,7 @@ Output:
 1: bar  
 2: foo
 
-**Slice Pipe**
+#### [Slice Pipe](#components)
 
 * [SlicePipe](https://angular.io/api/common/SlicePipe)
 
@@ -1076,7 +1092,7 @@ Examples:
 <p>{{str | slice:-6:-3}}</p>
 ```
 
-**Async Pipe**
+#### [Async Pipe](#components)
 
 * [AsyncPipe](https://angular.io/api/common/AsyncPipe)
 
@@ -1154,22 +1170,10 @@ export class HomeComponent implements OnInit {
 </ng-container>
 ```
 
-### [Lifecycle Hooks](#components)
+## [Lifecycle Hooks](#components)
 
-### [ViewChild](#components)
+## [ViewChild](#components)
 
-### [Flex Layout](#components)
-
-## [AppComponent](#components)
-
-## [Display Components](#components)
-
-### [BannerComponent](#components)
-
-### [FileUploadComponent](#components)
-
-### [ItemListComponent](#components)
-
-### [ItemCardComponent](#components)
+## [Flex Layout](#components)
 
 [Back to Top](#components)

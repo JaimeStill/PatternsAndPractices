@@ -6,6 +6,7 @@
 * [Service Scope](#service-scope)
 * [Observables](#observables)
 * [Core Services](#core-services)
+    * [CoreService](#coreservice)
     * [ObjectMapService](#objectmapservice)
     * [ThemeService](#themeservice)
     * [SnackerService](#snackerservice)
@@ -139,6 +140,73 @@ Here are the important things to understand about this service:
 Not all services are really complex and deal with managing state with Observables. As the introduction said, they should be small and serve a single purpose. There are three services built into the app stack that provide reusable functionality, and they will be demonstrated in the following sections.
 
 > All of the services in this article are defined in the **services** module at **{Project}.Web\\ClientApp\\src\\app\\services**
+
+### [CoreService](#services)
+
+`CoreService` is a place where reusable functions can be defined that don't really fit into a particular feature set. When populated from the template, it provides the following functions:
+
+* `getUploadOptions(): HttpHeaders` -  Retrieve the headers necessary to send an HTTP POST request with upload data.
+* `getTextOptions(): HttpHeaders` - Retrieve the headers necessary to send an HTTP POST request with text data.
+* `urlEncode(value: string): string` - Return a URL-encoded version of the provided string.
+* `generateInputObservable(input: ElementRef): Observable<string>` - Setup an `Observable` that is bound to the `keyup` event of the provided `input: ElementRef`. The `Observable` is setup with a `debounceTime` of `300`, maps the value to the actual text value of the input element, and triggers only when it is distinct from its previous value.
+
+> Dealing with upload data will be covered in the [Attachments](./a3-attachments.md) article.
+
+> RxJS will be covered in detail in the [RxJS](./a2-rxjs.md) article. The use case for the `generateInputObservable` function will be shown in the [Components](./14-components.md) article.
+
+**`core.service.ts`**
+
+```ts
+import { HttpHeaders } from '@angular/common/http';
+
+import {
+  Injectable,
+  ElementRef
+} from '@angular/core';
+
+import {
+  fromEvent,
+  Observable
+} from 'rxjs';
+
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map
+} from 'rxjs/operators';
+
+@Injectable()
+export class CoreService {
+  getUploadOptions = (): HttpHeaders => {
+    const headers = new HttpHeaders();
+    headers.set('Accept', 'application/json');
+    headers.delete('Content-Type');
+    return headers;
+  }
+
+  getTextOptions = (): HttpHeaders => {
+    const headers = new HttpHeaders();
+    headers.set('Content-Type', 'text/plain');
+    headers.delete('Pragma');
+    return headers;
+  }
+
+  urlEncode = (value: string): string => {
+    var regex = /[^a-zA-Z0-9-.]/gi;
+    let newValue = value.replace(/\s/g, '-').toLowerCase();
+    newValue = newValue.replace(regex, '');
+    return newValue;
+  }
+
+  generateInputObservable = (input: ElementRef): Observable<string> =>
+    fromEvent(input.nativeElement, 'keyup')
+      .pipe(
+        debounceTime(300),
+        map((event: any) => event.target.value),
+        distinctUntilChanged()
+      );
+}
+```
 
 ### [ObjectMapService](#services)
 

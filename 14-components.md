@@ -4,24 +4,25 @@
 
 * [Overview](#overview)
 * [Anatomy](#anatomy)
-    * [Component Decorator](#component-decorator)
+  * [Component Decorator](#component-decorator)
 * [Usage](#usage)
-    * [Interpolation](#interpolation)
-    * [Binding Syntax](#binding-syntax)
-    * [Directives](#directives)
-        * [Attribute Directives](#attribute-directives)
-        * [Structural Directives](#structural-directives)
-    * [Template Reference Variables](#template-reference-variables)
-    * [Input and Output Properties](#input-and-output-properties)
-    * [Template Expression Operators](#template-expression-operators)
-    * [ViewChild](#viewchild)
-    * [Flex Layout](#flex-layout)
+  * [Interpolation](#interpolation)
+  * [Binding Syntax](#binding-syntax)
+  * [Directives](#directives)
+    * [Attribute Directives](#attribute-directives)
+    * [Structural Directives](#structural-directives)
+  * [Template Reference Variables](#template-reference-variables)
+  * [Input and Output Properties](#input-and-output-properties)
+  * [Template Expression Operators](#template-expression-operators)
+  * [Lifecycle Hooks](#lifecycle-hooks)
+  * [ViewChild](#viewchild)
+  * [Flex Layout](#flex-layout)
 * [AppComponent](#appcomponent)
 * [Display Components](#display-components)
-    * [BannerComponent](#bannercomponent)
-    * [FileUploadComponent](#fileuploadcomponent)
-    * [ItemListComponent](#itemlistcomponent)
-    * [ItemCardComponent](#itemcardcomponent)
+  * [BannerComponent](#bannercomponent)
+  * [FileUploadComponent](#fileuploadcomponent)
+  * [ItemListComponent](#itemlistcomponent)
+  * [ItemCardComponent](#itemcardcomponent)
 
 ## [Overview](#components)
 
@@ -808,6 +809,352 @@ export class HomeComponent {
 [StackBlitz - Input and Output Properties](https://stackblitz.com/edit/docs-input-output-properties?file=src%2Fapp%2Fcomponents%2Fcard.component.ts)
 
 ### [Template Expression Operators](#components)
+
+[Template Expression Operators](https://angular.io/guide/template-syntax#template-expression-operators) documentation
+
+The template expression language (relevant to interpolation) employs a superset of JavaScript syntax supplemented with a few special operators for specific scenarios.
+
+#### Pipe Operator: `|`
+
+> Pipes are covered in depth in the [Pipes](./16-pipes.md) article. This section will discuss some of the built-in pipes.
+
+The result of an expression might require some transformation before you're ready to use it in a binding. For example, you might display a number as a currency, force text to uppercase, or display an object in JSON format.
+
+> [Built-in Pipes](https://angular.io/api?type=pipe)
+
+**Numeric Pipes**
+
+* [DecimalPipe](https://angular.io/api/common/DecimalPipe)
+* [CurrencyPipe](https://angular.io/api/common/CurrencyPipe)
+* [PercentPipe](https://angular.io/api/common/PercentPipe)
+
+**Decimal Pipe**
+
+Usage:
+
+```
+{{value | number:'minInteger.minDecimal-maxDecimal'}}
+```
+
+`minInteger` specifies the minimum number of digits to show before the decimal. `minDecimal` specifies the minimum number of digits to show after the decimal. `maxDecimal`, which is optional, specifies the maximum number of digits to show after the decimal.
+
+Example:
+
+```html
+<!-- renders: 3.142 -->
+<p>{{pi | number}}</p>
+
+<!-- renders 3.1 -->
+<p>{{pi | number:'1.1-1'}}</p>
+
+<!-- renders 3.14159 -->
+<p>{{pi | number:'1.5'}}</p>
+```
+
+**Currency Pipe**
+
+Shows a number in currency format.
+
+Usage:
+
+```
+{{value | currency}}
+{{value | currency:'CUR'}}
+```
+
+Where `CUR` is the currency region. `GBP`, for example, will show the currency in Great Brittain Pounds and `EUR` will show the currency in Euros. The default is locale-based. I'm in the United States, so for me, the default would be `USD`.
+
+Examples:
+
+```html
+<!-- Renders $1,500.00 in the US -->
+<p>{{1500 | currency}}</p>
+
+<!-- Renders £1,500.00 -->
+<p>{{1500 | currency:'GBP'}}</p>
+```
+
+**Percent Pipe**
+
+Shows a number in percentage format.
+
+Usage:
+
+```
+{{value | percent}}
+{{value | percent:'minInteger.minDecimal-maxDecimal'}}
+```
+
+`minInteger` specifies the minimum number of digits to show before the decimal. `minDecimal` specifies the minimum number of digits to show after the decimal. `maxDecimal`, which is optional, specifies the maximum number of digits to show after the decimal.
+
+Examples:
+
+```html
+<!-- renders: 86% -->
+<p>{{.86 | percent}}</p>
+
+<!-- renders: 86.00% -->
+<p>{{.86 | percent:'1.2'}}
+```
+
+**Casing Pipes**
+
+* [LowerCasePipe](https://angular.io/api/common/LowerCasePipe)
+* [UpperCasePipe](https://angular.io/api/common/UpperCasePipe)
+* [TitleCasePipe](https://angular.io/api/common/TitleCasePipe)
+
+
+These pipes are used to transform the casing of a string.
+
+Usage:
+
+```
+{{value | lowercase}}
+{{value | uppercase}}
+{{value | titlecase}}
+```
+
+Example:
+
+```html
+<!-- renders: some kind of string -->
+<p>{{'SOME KIND OF STRING' | lowercase}}</p>
+
+<!-- renders: SOME KIND OF STRING -->
+<p>{{'some kind of string' | uppercase}}</p>
+
+<!-- renders: Some Kind Of String -->
+<p>{{'some kind of string' | titlecase}}</p>
+```
+
+**Json Pipe**
+
+* [JsonPipe](https://angular.io/api/common/JsonPipe)
+
+Renders a JavaScript object in JSON format.
+
+Usage:
+
+```
+{{object | json}}
+```
+
+Example:
+
+```ts
+data = {
+  name: 'Jaime',
+  position: 'Full Stack Engineer',
+  contact: {
+    cell: '555-555-0001',
+    office: '555-555-0002'
+  }
+}
+```
+
+```
+<pre><code>{{data | json}}</code></pre>
+```
+
+Output:
+
+```json
+{
+  "name": "Jaime",
+  "position": "Full Stack Engineer",
+  "contact": {
+    "cell": "555-555-0001",
+    "office": "555-555-0002"
+  }
+}
+```
+
+**Date Pipe**
+
+* [DatePipe](https://angular.io/api/common/DatePipe)
+
+Renders the date in a particular format
+
+Usage:
+
+```
+{{now | date}}
+{{now | date:'format'}}
+```
+
+`format` can be any of the [pre-defined format options](https://angular.io/api/common/DatePipe#pre-defined-format-options) or a [custom format option](https://angular.io/api/common/DatePipe#custom-format-options).
+
+Examples:
+
+```
+<!-- renders: Apr 15, 2019 (or equivalent date) -->
+{{now | date}}
+
+<!-- renders: 4:05 PM (or equivalent time) -->
+{{now | date:'shortTime'}}
+
+<!-- renders: 2019 Apr 15 16:05:36 (or equivalent datetime) -->
+{{now | date:'yyyy MMM dd HH:mm:ss'}}
+```
+
+**KeyValue Pipe**
+
+Transforms an `Object` or a `Map` into an array of key value pairs.
+
+Usage:
+
+``` html
+<p *ngFor="let d of data | keyvalue">{{d.key}}: {{d.value}}</p>
+```
+
+Where `data` is a JavaScript `Object` or a `Map`.
+
+Example:
+
+```ts
+obj: {[key: number]: string} = { 2: 'foo', 1: 'bar' };
+map = new Map([[2, 'foo'], [1, 'bar']]);
+```
+
+```html
+<h2>Object Piped</h2>
+<p *ngFor="let item of obj | keyvalue">{{item.key}}: {{item.value}}</p>
+<h2>Map Piped</h2>
+<p *ngFor="let item of map | keyvalue">{{item.key}}: {{item.value}}</p>
+```
+
+Output:
+
+**Object Piped**  
+1: bar  
+2: foo
+
+**Map Piped**  
+1: bar  
+2: foo
+
+**Slice Pipe**
+
+* [SlicePipe](https://angular.io/api/common/SlicePipe)
+
+Creates a new `Array` or `String` containing a subset (slice) of the elements.
+
+Usage:
+
+```
+{{arr | slice:start:end}}
+```
+
+`start` - the starting index of the subset to return:
+  * **a positive integer**: return the item at `start` index and all items after in the list or string expression.
+  * **a negative integer**: return the item at `start` index from the end of all items after in the list or string expression.
+  * **if positive and greater than the size of the expression**: return an empty list or string
+  * **if negative and greater than the size of the expression**: return entire list or string.
+
+`end` - the ending index of the subset to return:
+  * **omitted**: return all items until the end.
+  * **if positive**: return all items before `end` index of the list or string.
+  * **if negative** return all items before `end` index from the end of the list or string.
+
+Examples:
+
+```html
+<!-- str = slice this string to pieces -->
+<!-- renders: slice -->
+<p>{{str | slice:0:5}}</p>
+
+<!-- renders: this string -->
+<p>{{str | slice:6:17}}</p>
+
+<!-- renders: to pieces -->
+<p>{{str | slice:18}}</p>
+
+<!-- renders: pieces -->
+<p>{{str | slice:-6}}</p>
+
+<!-- renders: pie -->
+<p>{{str | slice:-6:-3}}</p>
+```
+
+**Async Pipe**
+
+* [AsyncPipe](https://angular.io/api/common/AsyncPipe)
+
+Unwraps a value from an asynchronous primitive
+
+The `async` pipe subscribes to an `Observable` or `Promise` and returns the latest value emitted. When a new value is emitted, the `async` pipe marks the component to be checked for changes. When the component gets destroyed, the `async` pipe unsubscribes automatically to avoid potential memory leaks.
+
+Usage:
+
+The use case for the `async` pipe is a bit different than the other pipes because it doesn't immediately resolve a value (due to the asynchronous nature of the value it is called against). For that reason, there's a pattern that I like to use when working with `async` to ensure that the view is appropriately conditioned:
+
+```html
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-template>
+<ng-container *ngIf="stream$ | async as stream else loading">
+  <!-- work with the unwrapped stream value here -->
+</ng-container>
+```
+
+* [ng-template](https://angular.io/guide/structural-directives#the-ng-template)
+* [ng-container](https://angular.io/guide/structural-directives#ng-container-to-the-rescue)
+
+The `<ng-template>` is an Angular element that is never directly displayed. In this case, the `<mat-progress-bar>` will only be displayed whenever the `loading` case is encountered in the `*ngIf` statement. `loading` in `*ngIf` points to the **template reference variable** defined on the `<ng-template #loading>` element.
+
+`<ng-container>` is a grouping element that doesn't interfere with styles or layout because Angular *doesn't put it in the DOM*. I tend to use them a lot in places where I just want to do a conditional check and not have the element that contains the conditional to be rendered. In the example above, I use it to check for when the resolved value of `stream$` is available. When it has a value, it will render the contents inside of `<ng-container>` as if `<ng-container>` never existed.
+
+`stream$ | async as stream else loading` essentially says:
+* Subscribe to the `stream$` Observable \ `await` the `stream$` promise asynchronously and place the wrapped value into the `stream` property.
+* While there is not value available, render the `loading` template, specified by `<ng-template #loading>`.
+* When resolved, render the contents inside of the `<ng-container>`.
+
+> Note that you still have to call whatever function actually executes the asynchronous action that will occur. This should always be done in the `OnInit` component lifecycle hook. Lifecycle Hooks are covered in the next section.
+
+Example:
+
+**`home.component.ts`**
+
+```ts
+import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html',
+  styleUrls: ['home.component.css']
+})
+export class HomeComponent implements OnInit {
+  private stream = new BehaviorSubject<string>(null);
+
+  stream$ = this.stream.asObservable();
+  promise: Promise<string>|null = null;
+
+  ngOnInit() {
+    setTimeout(() => this.stream.next('Observable stream resolved'), 1000);
+    this.promise = new Promise<string>((resolve) => {
+      setTimeout(() => resolve('Promise resolved'), 2000);
+    });
+  }
+}
+```
+
+**`home.component.html`**
+
+```html
+<mat-toolbar>Async Pipe</mat-toolbar>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+</ng-template>
+<ng-container *ngIf="stream$ | async as s else loading">
+  <p>{{s}}</p>
+</ng-container>
+<ng-container *ngIf="promise | async as p else loading">
+  <p>{{p}}</p>
+</ng-container>
+```
+
+### [Lifecycle Hooks](#components)
 
 ### [ViewChild](#components)
 

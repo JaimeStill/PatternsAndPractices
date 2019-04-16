@@ -135,11 +135,12 @@
 * [Service Scope](./13-services.md#service-scope)
 * [Observables](./13-services.md#observables)
 * [Core Services](./13-services.md#core-services)
-    * [ObjectMapService](./13-services.md#object-map-service)
-    * [ThemeService](./13-services.md#theme-service)
-    * [SnackerService](./13-services.md#snacker-service)
+    * [CoreService](./13-services.md#coreservice)
+    * [ObjectMapService](./13-services.md#objectmapservice)
+    * [ThemeService](./13-services.md#themeservice)
+    * [SnackerService](./13-services.md#snackerservice)
 * [API Services](./13-services.md#api-services)
-    * [ItemService](./13-services.md#item-service)
+    * [ItemService](./13-services.md#itemservice)
 
 ### [Components](./14-components.md)
 

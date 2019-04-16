@@ -105,6 +105,9 @@ A curated list of external links, organized by topic, provided throughout this r
 
 * [HTML](https://developer.mozilla.org/en-US/docs/Glossary/HTML)
 * [CSS](https://developer.mozilla.org/en-US/docs/Glossary/CSS)
+    * [Flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox)
+    * [CSS Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout)
+    * [Media Queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries)
 * [Sass](https://sass-lang.com/guide)
     * [SCSS](https://sass-lang.com/documentation/file.SCSS_FOR_SASS_USERS.html)
     * [map-get](https://sass-lang.com/documentation/Sass/Script/Functions.html#map_get-instance_method)
@@ -192,5 +195,8 @@ A curated list of external links, organized by topic, provided throughout this r
 ### [Angular Flex Layout](#links)
 * [GitHub - Flex Layout](https://github.com/angular/flex-layout)
 * [Wiki](https://github.com/angular/flex-layout/wiki)
+    * [Flex Layout API](https://github.com/angular/flex-layout/wiki/Declarative-API-Overview)
+    * [Flex Layout Responsive API](https://github.com/angular/flex-layout/wiki/Responsive-API)
+    * [Flex Layout Demo](https://tburleson-layouts-demos.firebaseapp.com/#/docs)
 
 [Back to Top](#links)

@@ -156,7 +156,6 @@
 * [Input and Output Properties](./14-components.md#input-and-output-properties)
 * [Template Expression Operators](./14-components.md#template-expression-operators)
   * [Safe Navigation](./14-components.md#safe-navigation)
-  * [Non-Null Assertion](./14-components.md#non-null-assertion)
   * [Pipes](./14-components.md#pipes)
     * [Numeric Pipes](./14-components.md#numeric-pipes)
     * [Casing Pipes](./14-components.md#casing-pipes)
@@ -166,7 +165,10 @@
     * [Slice Pipe](./14-components.md#slice-pipe)
     * [Async Pipe](./14-components.md#async-pipe)
 * [Lifecycle Hooks](./14-components.md#lifecycle-hooks)
+    * [Use Cases](./14-components.md#use-cases)
+    * [Best Practices](./14-components.md#best-practices)
 * [ViewChild](./14-components.md#viewchild)
+    * [RxJS fromEvent with ViewChild](./14-components.md#rxjs-fromevent-with-viewchild)
 * [Flex Layout](./14-components.md#flex-layout)
 
 ### [Root Component](./15-root-component.md)

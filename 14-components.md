@@ -15,7 +15,6 @@
 * [Input and Output Properties](#input-and-output-properties)
 * [Template Expression Operators](#template-expression-operators)
   * [Safe Navigation](#safe-navigation)
-  * [Non-Null Assertion](#non-null-assertion)
   * [Pipes](#pipes)
     * [Numeric Pipes](#numeric-pipes)
     * [Casing Pipes](#casing-pipes)
@@ -25,7 +24,10 @@
     * [Slice Pipe](#slice-pipe)
     * [Async Pipe](#async-pipe)
 * [Lifecycle Hooks](#lifecycle-hooks)
+  * [Using Hooks](#using-hooks)
+  * [Best Practices](#best-practices)
 * [ViewChild](#viewchild)
+  * [RxJS fromEvent with ViewChild](#rxjs-fromevent-with-viewchild)
 * [Flex Layout](#flex-layout)
 
 ## [Overview](#components)
@@ -120,7 +122,7 @@ The majority of the features described in the following sections is directly der
 
 ## [Interpolation](#components)
 
-[Interpolation](https://angular.io/guide/template-syntax#interpolation) documentation
+> [Interpolation](https://angular.io/guide/template-syntax#interpolation) documentation
 
 Interpolation allows you to embed expressions into the markup of a Component template.
 
@@ -168,7 +170,7 @@ export class ExampleComponent {
 
 ## [Binding Syntax](#components)
 
-[Binding Syntax](https://angular.io/guide/template-syntax#binding-syntax-an-overview) documentation
+> [Binding Syntax](https://angular.io/guide/template-syntax#binding-syntax-an-overview) documentation
 
 Data binding is a mechanism for coordinating what users see, with application data values. While you could push values to and pulle values from HTML, the application is easier to write, read, and maintain if you turn these chores over to a binding framework. You simply declare bindings between binding sources and target HTML elements and let the framework do the work.
 
@@ -353,7 +355,7 @@ export class HomeComponent {
 
 ## [Directives](#components)
 
-[Built-in Directives](https://angular.io/guide/template-syntax#built-in-directives) documentation
+> [Built-in Directives](https://angular.io/guide/template-syntax#built-in-directives) documentation
 
 Components are directives that define template-oriented features. The `@Component` decoratore extends the `@Directive` decorator. Directives exist to simplify complex tasks. Angular ships with built-in directives, and you can define your own with the `@Directive` decorator.
 
@@ -361,7 +363,7 @@ Components are directives that define template-oriented features. The `@Componen
 
 ### [Attribute Directives](#components)
 
-[Attribute Directives](https://angular.io/guide/attribute-directives) documentation
+> [Attribute Directives](https://angular.io/guide/attribute-directives) documentation
 
 Attirbute directives listen to and modify the behavior of other HTML elements, attributes, properties, and components. They are usually applied to elemenst as if they were HTML attributes, hence the name.
 
@@ -510,7 +512,7 @@ export class HomeComponent {
 
 ### [Structural Directives](#components)
 
-[Structural Directives](https://angular.io/guide/structural-directives) documentation
+> [Structural Directives](https://angular.io/guide/structural-directives) documentation
 
 Structural directives are responsible for HTML layout. They shape or reshape the DOM's *structure*, typically by adding, removing, and manipulating the host elements to which they are attached.
 
@@ -661,7 +663,7 @@ export class HomeComponent {
 
 ## [Template Reference Variables](#components)
 
-[Template Reference Variables](https://angular.io/guide/template-syntax#template-reference-variables--var-) documentation
+> [Template Reference Variables](https://angular.io/guide/template-syntax#template-reference-variables--var-) documentation
 
 Template reference variables allow you to reference a DOM element, Component, Directive, or Web Component.
 
@@ -683,7 +685,7 @@ A template reference variable can be refered to *anywhere* in the template:
 
 ## [Input and Output Properties](#components)
 
-[Input and Output Property](https://angular.io/guide/template-syntax#input-and-output-properties) documentation
+> [Input and Output Property](https://angular.io/guide/template-syntax#input-and-output-properties) documentation
 
 An *Input* property is a *settable* property annotated with an `@Input` decorator. Values flow *into* the property when it is data bound with a [property binding](https://angular.io/guide/template-syntax#property-binding).
 
@@ -808,7 +810,7 @@ export class HomeComponent {
 
 ## [Template Expression Operators](#components)
 
-[Template Expression Operators](https://angular.io/guide/template-syntax#template-expression-operators) documentation
+> [Template Expression Operators](https://angular.io/guide/template-syntax#template-expression-operators) documentation
 
 The template expression language (relevant to interpolation) employs a superset of JavaScript syntax supplemented with a few special operators for specific scenarios.
 
@@ -818,33 +820,52 @@ Safe Navigation Operator: `?.`
 
 > [Safe Navigation Operator](https://angular.io/guide/template-syntax#the-safe-navigation-operator----and-null-property-paths) documentation
 
-### [Non-Null Assertion](#components)
+If you attempt to bind to the property of an object that is `null`, an error will be thrown. The null safe operator allows you to safely access properties on objects that may be null:
 
-Non-Null Assertion Operator: `!`
+```html
+<!-- error thrown! -->
+<p>{{nullObject.name}}</p>
 
-> [Non-Null Assertion Operator](https://angular.io/guide/template-syntax#the-non-null-assertion-operator---) documentation
+<!-- safe! -->
+<p>{{nullObject?.name}}</p>
+```
+
+This is particularly useful when doing conditional checks with `*ngIf`.
+
+Instead of having to do this:
+
+```html
+<ng-container *ngIf="nullObject && nullObject.name">
+  <!-- template -->
+</ng-container>
+```
+
+you can do this:
+
+```html
+<ng-container *ngIf="nullObject?.name">
+  <!-- template -->
+</ng-container>
+```
+
+[StackBlitz - Safe Navigation Operator](https://stackblitz.com/edit/docs-safe-navigation-operator?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.html)
 
 ### [Pipes](#components)
 
 Pipe Operator: `|`
 
-> [Pipe Operator](https://angular.io/guide/template-syntax#the-pipe-operator---) documentation
-
-> Pipes are covered in depth in the [Pipes](./18-pipes.md) article. This section will discuss some of the built-in pipes.
+> [Pipe Operator](https://angular.io/guide/template-syntax#the-pipe-operator---) documentation  
+> [Built-in Pipes](https://angular.io/api?type=pipe) documentation
 
 The result of an expression might require some transformation before you're ready to use it in a binding. For example, you might display a number as a currency, force text to uppercase, or display an object in JSON format.
-
-> [Built-in Pipes](https://angular.io/api?type=pipe)
 
 > All of the following pipes are demonstrated in a [StackBlitz - Built-In Pipes](https://stackblitz.com/edit/docs-built-in-pipes?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.ts) example.
 
 #### [Numeric Pipes](#components)
 
-* [DecimalPipe](https://angular.io/api/common/DecimalPipe)
-* [CurrencyPipe](https://angular.io/api/common/CurrencyPipe)
-* [PercentPipe](https://angular.io/api/common/PercentPipe)
-
 **Decimal Pipe**
+
+> [DecimalPipe](https://angular.io/api/common/DecimalPipe) documentation  
 
 Usage:
 
@@ -869,6 +890,8 @@ Example:
 
 **Currency Pipe**
 
+> [CurrencyPipe](https://angular.io/api/common/CurrencyPipe) documentation  
+
 Shows a number in currency format.
 
 Usage:
@@ -891,6 +914,8 @@ Examples:
 ```
 
 **Percent Pipe**
+
+> [PercentPipe](https://angular.io/api/common/PercentPipe) documentation  
 
 Shows a number in percentage format.
 
@@ -915,10 +940,9 @@ Examples:
 
 #### [Casing Pipes](#components)
 
-* [LowerCasePipe](https://angular.io/api/common/LowerCasePipe)
-* [UpperCasePipe](https://angular.io/api/common/UpperCasePipe)
-* [TitleCasePipe](https://angular.io/api/common/TitleCasePipe)
-
+> [LowerCasePipe](https://angular.io/api/common/LowerCasePipe) documentation  
+> [UpperCasePipe](https://angular.io/api/common/UpperCasePipe) documentation  
+> [TitleCasePipe](https://angular.io/api/common/TitleCasePipe) documentation
 
 These pipes are used to transform the casing of a string.
 
@@ -945,7 +969,7 @@ Example:
 
 #### [Json Pipe](#components)
 
-* [JsonPipe](https://angular.io/api/common/JsonPipe)
+> [JsonPipe](https://angular.io/api/common/JsonPipe) documentation
 
 Renders a JavaScript object in JSON format.
 
@@ -987,7 +1011,7 @@ Output:
 
 #### [Date Pipe](#components)
 
-* [DatePipe](https://angular.io/api/common/DatePipe)
+> [DatePipe](https://angular.io/api/common/DatePipe) documentation
 
 Renders the date in a particular format
 
@@ -1014,6 +1038,8 @@ Examples:
 ```
 
 #### [KeyValue Pipe](#components)
+
+> [KeyValuePipe]() documentation
 
 Transforms an `Object` or a `Map` into an array of key value pairs.
 
@@ -1051,7 +1077,7 @@ Output:
 
 #### [Slice Pipe](#components)
 
-* [SlicePipe](https://angular.io/api/common/SlicePipe)
+> [SlicePipe](https://angular.io/api/common/SlicePipe) documentation  
 
 Creates a new `Array` or `String` containing a subset (slice) of the elements.
 
@@ -1094,7 +1120,7 @@ Examples:
 
 #### [Async Pipe](#components)
 
-* [AsyncPipe](https://angular.io/api/common/AsyncPipe)
+> [AsyncPipe](https://angular.io/api/common/AsyncPipe) documentation  
 
 Unwraps a value from an asynchronous primitive
 
@@ -1113,8 +1139,8 @@ The use case for the `async` pipe is a bit different than the other pipes becaus
 </ng-container>
 ```
 
-* [ng-template](https://angular.io/guide/structural-directives#the-ng-template)
-* [ng-container](https://angular.io/guide/structural-directives#ng-container-to-the-rescue)
+> [ng-template](https://angular.io/guide/structural-directives#the-ng-template) documentation  
+> [ng-container](https://angular.io/guide/structural-directives#ng-container-to-the-rescue) documentation  
 
 The `<ng-template>` is an Angular element that is never directly displayed. In this case, the `<mat-progress-bar>` will only be displayed whenever the `loading` case is encountered in the `*ngIf` statement. `loading` in `*ngIf` points to the **template reference variable** defined on the `<ng-template #loading>` element.
 
@@ -1172,8 +1198,384 @@ export class HomeComponent implements OnInit {
 
 ## [Lifecycle Hooks](#components)
 
+> [Lifecycle Hooks](https://angular.io/guide/lifecycle-hooks) documentation
+
+A component's lifecycle is managed by Angular. Angular will:
+
+* create
+* render
+* create and render children
+* check data-bound properties for changes
+* destroy
+
+**`ngOnChanges()`**
+
+Responds when Angular (re)sets data-bound input properties. The method receives a `SimpleChanges` object of current and previous property values.
+
+Called before `ngOnInit()` and whenever one or more data-bound input properties change.
+
+**`ngOnInit()`**
+
+Initialize the directive / component after Angular first displays the data-bound properties and sets the directive / component's input properties.
+
+Called *once*, after the *first* `ngOnChanges()`.
+
+**`ngDoCheck`**
+
+Detect and act upon changes that Angular can't or won't detect on its own.
+
+Called during every change detection run, immediately after `ngOnChanges()` and `ngOnInit()`.
+
+**`ngAfterContentInit()`**
+
+Respond after Angular projects external content into the component's view / the view that a directive is in.
+
+Called *once* after the first `ngDoCheck()`.
+
+**`ngAfterContentChecked()`**
+
+Responds after Angular checks the content projected into the directive / component.
+
+Called afert the `ngAfterContentInit()` and every subsequent `ngDoCheck()`.
+
+**`ngAfterViewInit()`**
+
+Repond after Angular initializes the component's views and child views / the view that a directive is in.
+
+Called *once* after the first `ngAfterContentChecked()`.
+
+**`ngAfterViewChecked()`**
+
+Respond after Angular checks the component's views and child views / the view that a directive is in.
+
+Called after the `ngAfterViewInit()` and every subsequent `ngAfterContentChecked()`.
+
+**`ngOnDestroy()`**
+
+Cleanup just before Angular destroys the directive / component. Unsubscribe Observables and detach event handlers to avoid memory leaks.
+
+Called *just before* Angular destroys the directive / component.
+
+### [Using Hooks](#components)
+
+To perform tasks inside of a lifecycle hook, you must do three things:
+
+* Import the necessary hook
+* Implement the hook's interface
+* Call the hook's function
+
+**`home.component.ts`**
+
+```ts
+import {
+  Component,
+  OnInit
+} from '@angular/core'
+
+import { AppService } from '../../services';
+
+@Component({
+  selector: 'home',
+  templateUrl: 'home.component.ts',
+  providers: [AppService]
+})
+export class HomeComponent implements OnInit {
+  constructor(
+    public app: AppService
+  ) { }
+
+  ngOnInit() {
+    this.app.getData();
+  }
+}
+```
+
+* The `OnInit` interface is imported from `@angular/core`.
+* `HomeComponent` specifies that it implements the `OnInit` interface.
+* The `ngOnInit()` function is executed when the component is initialized, calling the `AppService.getData()` function.
+
+### [Best Practices](#components)
+
+This section discusses the best practices associated with commonly-used Lifecycle Hooks.
+
+**`OnInit`**
+
+Used for two main reasons:
+
+1. To perform complex initializations shortly after construction
+2. To set up the component after Angular sets the input properties
+
+Used where you would normally perform initialization tasks inside of a `constructor`. As a rule of thumb:
+
+* The `constructor` should only be used for dependency injection
+* `OnInit` should be used to perform component startup tasks
+
+> Angular team lead Misko Hevery explains why you should avoid copmlex constructor logic in this [article](http://misko.hevery.com/code-reviewers-guide/flaw-constructor-does-real-work/).
+
+**`OnDestroy`**
+
+Cleanup logic that *must* run before Angular destroys the component. This is where you'll want to free any resources that won't be garbage collected automatically:
+
+* Unsubscribe from Observables
+* Unsubscribe from DOM events
+* Stop interval timers
+* Unregister callbacks registered with global or application services
+
+Neglecting to do so risks memory leaks.
+
+> A huge benefit of using the `async` pipe to subscribe to Observables is that the pipe automatically handles unsubscribing, preventing you from having to call `OnDestroy`.
+
 ## [ViewChild](#components)
 
+> [ViewChild](https://angular.io/api/core/ViewChild) documentation  
+
+The `@ViewChild` decorator configures a view query. The change detector looks for the first element or the directive matching the selector in the view DOM. If the view DOM changes, and a new child matches the selector, the property is updated.
+
+This allows you to access elements of a Component's view template inside of the class definition.
+
+Usage:
+
+```ts
+@ViewChild(selector)
+set child(c: Type) {
+  // perform interactions with the element
+}
+```
+
+* `selector` is the directive type or the name used for querying.
+* `c: Type` is the instance of the element to interact with and the type of element it is.
+
+Supported selectors include:
+* any class with the `@Component` or `@Directive` decorator
+* a template reference variable as a string
+  * query `<my-component #cmp></my-component>` with `@ViewChild('cmp')
+* any provider defined in the child component tree of the current component
+  * `@ViewChild(SomeService) someService: SomeService;`
+* any provider defined through a string token
+  * `@ViewChild('someToken') someTokenVal: any`
+* a `TemplateRef`
+  * Query `<ng-template></ng-template>` with `@ViewChild(TemplateRef) template;`
+
+### [RxJS fromEvent with ViewChild](#components)
+
+> If you recall from the [Services - CoreService](./13-services.md#coreservice) article, I said that `generateInputObservable()` would be discussed in this article. This is where it will be demonstrated.
+>
+> Again, RxJS will be covered in depth in the [RxJS](./a2-rxjs.md) article. But it would be negligent to cover `@ViewChild` without showing the power it enables with RxJS. If the following section doesn't make sense, spend some time getting comfortable with RxJS first, then revisit it.
+
+The RxJS function [fromEvent](https://rxjs.dev/api/index/function/fromEvent) allows you to pass in a DOM element and DOM event name in order to generate an **Observable**. In addition, you can pipe in additional RxJS operators to create some interesting features. The `CoreService.generateInputObservable()` function does just that. You provide an `<input>` DOM element, and it calls `fromEvent` to register the `keyup` event with several other RxJS operators to ensure that:
+
+* The **Observable** isn't generated until the user has stopped typing for a period of **300** milliseconds
+* Only the `event.target.value` string is wrapped inside of the Observable
+* The Observable isn't triggered if the resulting value is the same as the value it held previously
+
+The primary use case for this is to be able to to execute asynchronous operations that are based on user input.
+
+Example:
+
+**`post.ts`**
+
+```ts
+export interface Post {
+  id: number;
+  userId: number;
+  title: string;
+  body: string;  
+}
+```
+
+`Post` defines an interface for objects retrieved from the public [JsonPlaceholder - Posts](https://jsonplaceholder.typicode.com/posts) API.
+
+**`app.service.ts`**
+
+```ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+import { SnackerService } from './snacker.service';
+import { Post } from '../models';
+
+@Injectable()
+export class AppService {
+  private apiUrl = 'https://jsonplaceholder.typicode.com/posts';
+  private posts = new BehaviorSubject<Post[]>(null);
+
+  posts$ = this.posts.asObservable();
+
+  constructor(
+    private http: HttpClient,
+    private snacker: SnackerService
+  ) { }
+
+  getPosts = () => this.http.get<Post[]>(this.apiUrl)
+    .subscribe(
+      data => this.posts.next(data),
+      err => this.snacker.sendErrorMessage(err)
+    );
+
+  searchPosts = (val: string) => this.http.get<Post[]>(this.apiUrl)
+    .subscribe(
+      data => this.posts.next(data.filter(this.filterPost(val))),
+      err => this.snacker.sendErrorMessage(err)
+    );
+
+  private filterPost = (val: string) => (x: Post) =>
+    x.title.toLowerCase().includes(val.toLowerCase()) ||
+    x.body.toLowerCase().includes(val.toLowerCase());
+}
+```
+
+* The `private BehaviorSubject<T>` exposed as a `public Observable<T>` pattern is used in this service.
+* `getPosts()` retrieves all of the data from the public API endpoint
+* `searchPosts(val: string)` retrieves all of the data from the public API endpoint, then filters out all of the posts that don't contain the search value in the `title` or `body` properties of the `Post[]` returned by the API call.
+
+**`post-card.component.html`**
+
+```html
+<section class="background card elevated clickable"
+         fxLayout="column"
+         fxLayoutAlign="start stretch"
+         [matTooltip]="post.body">
+  <section [style.margin.px]="0"
+           [style.padding.px]="8"
+           class="background accent">
+    {{post.title}}
+  </section>
+  <p>{{post.body | truncate}}</p>
+</section>
+```
+
+A simple card interface for a `Post` object
+
+**`post-card.component.ts`**
+
+```ts
+import {
+  Component,
+  Input
+} from '@angular/core';
+
+import { Post } from '../../models';
+
+@Component({
+  selector: 'post-card',
+  templateUrl: 'post-card.component.html'
+})
+export class PostCardComponent {
+  @Input() post: Post;
+}
+```
+
+Receives a `Post` as an **Input** property
+
+**`home.component.html`**
+
+```html
+<mat-toolbar>RxJS fromEvent with ViewChild</mat-toolbar>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<section>
+  <mat-form-field [style.width.%]="80">
+    <mat-label>Search Posts</mat-label>
+    <input matInput #search>
+  </mat-form-field>  
+</section>
+<ng-container *ngIf="app.posts$ | async as posts else loading">
+  <section *ngIf="posts.length > 0"
+           fxLayout="row | wrap"
+           fxLayoutAlign="start start"
+           class="container">
+    <post-card *ngFor="let p of posts"
+               [post]="p" [style.width.px]="240"></post-card>
+  </section>
+  <h3 *ngIf="!(posts.length > 0)">No Posts Found</h3>
+</ng-container>
+```
+
+`<input matInput #search>` will be used inside of the component to trigger the `AppService.searchPosts()` API call
+
+**`home.component.ts`**
+
+```ts
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
+
+import {
+  AppService,
+  CoreService
+} from '../../services';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html',
+  providers: [AppService]
+})
+export class HomeComponent implements OnInit {
+  private postsInit = false;
+
+  @ViewChild('search')
+  set search(input: ElementRef) {
+    if (input && !this.postsInit) {
+      this.core.generateInputObservable(input)
+        .subscribe((val: string) => {
+          val && val.length > 1 ?
+            this.app.searchPosts(val) :
+            this.app.getPosts();
+        });
+
+      this.postsInit = true;
+    }
+  }
+
+  constructor(
+    public app: AppService,
+    private core: CoreService
+  ) { }
+
+  ngOnInit() {
+    this.app.getPosts();
+  }
+}
+```
+
+* A `private postsInit` value is captured to ensure that the `fromEvent` Observable is only generated once
+* `@ViewChild('search')` is used to query for the `<input matInput #search>` element, using the **template reference variable**, and a `search` setter function is defined for processing the `ViewChild` result, providing the `ElementRef` the query refers to
+  * If the `input` object has a value and the Observable hasn't been initialized, the `generateInputObservable` function (defined in [CoreService](./13-services.md#coreservice)) is called and `input` is passed in
+  * The resulting Observable is subscribed to, and whenever it is triggered by typing into the `<input>` element, the value is returned in the subscription
+    * If there is a value, the `searchPosts(val)` function is called
+    * If there isn't a value, the posts are reset with `getPosts()`
+  * `postsInit` is set to `true` the first (and only) time the Observable is generated
+* The initial posts are retrieved in `ngOnInit`
+
 ## [Flex Layout](#components)
+
+> [Flex Layout](https://github.com/angular/flex-layout/wiki) documentation
+
+Angular Flex Layout is a directive-based API for using Flexbox, CSS Grid, and mediaQuery.
+
+You may have noticed in some of the Component template examples the following directives used:
+
+```html
+<section fxLayout="row | wrap"
+         fxLayoutAlign="space-evenly start">
+  <!-- more markup -->
+<section>
+```
+
+These directives are part of the Flex Layout library and alter the way that the `<section>` arranges its child elements.
+
+This library is used extensively when laying out views in the app stack. It's highly recommended that you take the time to familiarize yourself with the features that it is built around, as well as the library's API itself:
+
+* [Flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox)
+* [CSS Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout)
+* [Media Queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries)
+* [Flex Layout API](https://github.com/angular/flex-layout/wiki/Declarative-API-Overview)
+* [Flex Layout Responsive API](https://github.com/angular/flex-layout/wiki/Responsive-API)
+* [Flex Layout Demo](https://tburleson-layouts-demos.firebaseapp.com/#/docs)
 
 [Back to Top](#components)

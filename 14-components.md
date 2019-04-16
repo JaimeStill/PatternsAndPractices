@@ -1552,6 +1552,8 @@ export class HomeComponent implements OnInit {
   * `postsInit` is set to `true` the first (and only) time the Observable is generated
 * The initial posts are retrieved in `ngOnInit`
 
+[StackBlitz - ViewChild](https://stackblitz.com/edit/docs-viewchild?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.ts)
+
 ## [Flex Layout](#components)
 
 > [Flex Layout](https://github.com/angular/flex-layout/wiki) documentation

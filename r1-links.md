@@ -104,6 +104,7 @@ A curated list of external links, organized by topic, provided throughout this r
 ## [Web Technologies](#links)
 
 * [HTML](https://developer.mozilla.org/en-US/docs/Glossary/HTML)
+    * [File API](https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications)
 * [CSS](https://developer.mozilla.org/en-US/docs/Glossary/CSS)
     * [Flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox)
     * [CSS Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout)
@@ -118,6 +119,7 @@ A curated list of external links, organized by topic, provided throughout this r
     * [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
 * [TypeScript](https://www.typescriptlang.org/docs/home.html)
     * [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
+    * [Tuple](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple)
     * [Interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html)
     * [Classes](https://www.typescriptlang.org/docs/handbook/classes.html)
     * [Functions](https://www.typescriptlang.org/docs/handbook/functions.html)

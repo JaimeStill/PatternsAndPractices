@@ -569,7 +569,7 @@ We want to display an image with a slider above it that, when dragged, will adju
     * `(change)` is an **Output property** and output properties emit events. Don't worry about understanding this concept yet. It will be covered in detail in the [Components](./14-components.md) article.
 * An image to display
 
-> This demonstration will also make use of the [Angular Flex Layout](https://github.com/angular/flex-layout/wiki) library, which will also be covered in detail in the [Components](./14-components.md) article.
+> This demonstration will also make use of the [Angular Flex Layout](https://github.com/angular/flex-layout/wiki) library, which will also be covered in the [Components](./14-components.md) article.
 
 **`home.component.ts`**
 
@@ -634,5 +634,7 @@ The `<mat-slider>` element specifies the following:
 * The slider is rendered with a width of `420px`.
 
 You can see this example at [StackBlitz - Docs Slider Example](https://stackblitz.com/edit/docs-slider-example?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.ts).
+
+> The example actually registers the `input` event as opposed to the `change` event. The implementation is still exactly the same, but causes very different behavior. Try changing the registered event between `input` and `change` in the StackBlitz example to see the difference.
 
 [Back to Top](#material)

@@ -1,8 +1,10 @@
 import { Theme } from './models';
+import { Subscription } from 'rxjs';
 
 import {
   Component,
-  OnInit
+  OnInit,
+  OnDestroy
 } from '@angular/core';
 
 import {
@@ -14,7 +16,9 @@ import {
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  private themeSub: Subscription;
+
   themeClass = 'default';
 
   constructor(
@@ -24,6 +28,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.banner.getConfig();
-    this.theme.theme$.subscribe((t: Theme) => this.themeClass = t.name);
+    this.themeSub = this.theme.theme$.subscribe((t: Theme) => this.themeClass = t.name);
+  }
+
+  ngOnDestroy() {
+    this.themeSub && this.themeSub.unsubscribe();
   }
 }

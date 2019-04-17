@@ -173,7 +173,8 @@
 
 ### [Root Component](./15-root-component.md)
 
-
+* [Overview](./15-root-component.md#overview)
+* [Walkthrough](./15-root-component.md#walkthrough)
 
 ### [Display Components](./16-display-components.md)
 

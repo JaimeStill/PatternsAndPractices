@@ -117,3 +117,7 @@ export class AppComponent implements OnInit, OnDestroy {
     * `theme` in this case is the instance of `ThemeService` injected into `AppComponent`.
 
 * The remainder of the Angular app is rendered at the `<router-outlet>` element, which renders components based on the current route the app is resolved to.
+
+> For detailed information on root components, see the [Entry Components](https://angular.io/guide/entry-components) documentation.
+
+[Back to Top](#root-component)

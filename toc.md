@@ -178,7 +178,12 @@
 
 ### [Display Components](./16-display-components.md)
 
-
+* [Overview](./16-display-components.md#overview)
+* [BannerComponent](./16-display-components.md#bannercomponent)
+* [FileUploadComponent](./16-display-components.md#fileuploadcomponent)
+* [API Components](./16-display-components.md#api-components)
+    * [ItemCardComponent](./16-display-components.md#itemcardcomponent)
+    * [ItemListComponent](./16-display-components.md#itemlistcomponent)
 
 ### [Routes](./17-routes.md)
 

@@ -3,8 +3,9 @@
 * [Overview](#overview)
 * [BannerComponent](#bannercomponent)
 * [FileUploadComponent](#fileuploadcomponent)
-* [ItemCardComponent](#itemcardcomponent)
-* [ItemListComponent](#itemlistcomponent)
+* [API Components](#api-components)
+    * [ItemCardComponent](#itemcardcomponent)
+    * [ItemListComponent](#itemlistcomponent)
 
 ## [Overview](#display-components)
 
@@ -222,6 +223,17 @@ export class FileUploadComponent {
 * After the loop is complete, `selected.emit` triggers the `EventEmitter` and passes the values of `fileList` and `formData` in a Tuple.
 * The value of the `<input type="file">` element is cleared after the `selected` event is emitted.
 
-## [ItemCardComponent](#display-components)
+## [API Components](#display-components)
 
-## [ItemListComponent](#display-components)
+The above components are generically written to be used in any Angular application. The following section picks back up where the [Services](./13-services.md) article left off with demonstrating how the application flows from back to front. Before covering **Route Components**, it's important to understand how **Display Components** work so that you can understand the intent of a route component.
+
+Two of the most common types of components that you will write are:
+
+* Displaying a list of objects
+* Rendering an object as a card
+
+This section will define, from scratch, display components that render these capabilities with data retrieved from the `ItemService`.
+
+### [ItemCardComponent](#display-components)
+
+### [ItemListComponent](#display-components)

@@ -236,4 +236,286 @@ This section will define, from scratch, display components that render these cap
 
 ### [ItemCardComponent](#display-components)
 
+Before defining what a card for an `Item` should look like, it helps to see what the shape of the data is:
+
+```json
+{
+  id: 1,
+  categoryId: 1,
+  originLocationId: 1,
+  currentLocationId: 2,
+  name: "Item A",
+  isDeleted: false,
+  category: {
+    id: 1,
+    name: "Category A",
+    isDeleted: false,
+    items: null
+  },
+  originLocation: {
+    id: 1,
+    name: "Location A",
+    isDeleted: false
+  },
+  currentLocation: {
+    id: 2,
+    name: "Location B",
+    isDeleted: false
+  },
+  itemTags: [
+    {
+      id: 1,
+      itemId: 1,
+      tagId: 1,
+      tag: {
+        id: 1,
+        label: "Tag A",
+        isDeleted: false
+      },
+      item: null
+    },
+    {
+      id: 2,
+      itemId: 1,
+      tagId: 2,
+      tag: {
+        id: 2,
+        label: "Tag B",
+        isDeleted: false
+      },
+      item: null
+    }
+  ]
+}
+```
+
+The following properties will be displayed in the `ItemCardComponent`:
+
+* `name`
+* `category.name`
+* `originLocation.name`
+* `currentLocation.name`
+* `itemTags.tag.label`
+
+The component will allow the following functionality:
+
+* Determine whether the item is editable
+  * The name of the item can be updated
+  * The item can be deleted
+
+Card implementation details:
+* The same card will be able to toggle between viewing and editing. 
+* If you begin editing and cancel, the changes that you made will not be lost. Going back to editing should allow you to resume editing where you left off.
+
+With these details in mind, here is the `ItemCardComponent`:
+
+**`item-card.component.ts`**
+
+```ts
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
+
+import { Item } from '../../models';
+
+@Component({
+  selector: 'item-card',
+  templateUrl: 'item-card.component.html',
+  styleUrls: ['item-card.component.css']
+})
+export class ItemCardComponent {
+  itemState: Item = null;
+  editing = false;
+
+  @Input() item: Item = null;
+  @Input() editable = true;
+  @Output() save = new EventEmitter<Item>();
+  @Output() remove = new EventEmitter<Item>();
+
+  editItem = () => {
+    if (this.editable) {
+      if (this.itemState == null)
+        this.itemState = Object.assign(new Item, this.item);
+
+      this.editing = true;
+    }
+  }
+
+  cancelEdit = () => this.editing = false;
+
+  saveItem = () => {
+    if (this.editable) {
+      this.item = this.itemState;
+      this.save.emit(this.item);
+    }
+  }
+
+  removeItem = () => this.editable && this.remove.emit(this.item);
+}
+```
+
+**Properties**
+
+* `itemState: Item` is used to manage the state of the item when it is being edited.
+* `editing` is used to track whether or not the card is currently in view or edit mode.
+* `item: Item` is an input property for the item the card represents
+* `editable` determines whether or not the current item can even be edited.
+* `save` is an output event that is triggered whenever you want to save changes to the item when in edit mode.
+* `remove` is an output event that is triggered whenever you want to delete the item in when in edit mode.
+
+**Functions**
+
+* `editItem()` is tied to the edit button, which can only be clicked (and will only be visible) when `editable` is `true`. It is only shown when `editing` is `false`.
+  * If `itemState` is null, it is assigned the value of a new `Item` instance with the values of the `item` property.
+  * `editing` is set to `true`.
+* `cancelEdit()` is tied to the cancel button and simply sets `editing` back to `false`.
+* `saveItem` is tied to the save button, which can only be clicked (and will only be visible) when `editable` is `true`. It is only shown when `editing` is `true`.
+  * The value of `item` is set to the value of `itemState`, then is emitted through the `save` output event.
+* `removeItem` is tied to the delete button, which can only be clicked (and will only be visible) when `editable` is `true`. It is only shown when `editing` is `true`.
+
+**`item-card.component.html`**
+
+```html
+<section class="background card static-elevation arrow"
+         fxLayout="column"
+         fxLayoutAlign="start stretch">
+  <section fxLayout="row"
+           fxLayoutAlign="start center">
+    <p *ngIf="!(editing)"
+       class="mat-subheading-2"
+       fxFlex>{{item.name}}</p>
+    <mat-form-field *ngIf="editing"
+                    fxFlex>
+      <input matInput
+             [(ngModel)]="itemState.name"
+             fxFlex>
+    </mat-form-field>
+    <button *ngIf="!(editing)"
+            mat-icon-button
+            (click)="editItem()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button *ngIf="editing"
+            mat-icon-button
+            (click)="cancelEdit()">
+      <mat-icon>cancel</mat-icon>
+    </button>
+    <button *ngIf="editing"
+            mat-icon-button
+            (click)="saveItem()">
+      <mat-icon>save</mat-icon>
+    </button>
+    <button *ngIf="editing"
+            mat-icon-button
+            color="warn"
+            (click)="removeItem()">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </section>
+  <mat-chip-list class="background stacked">
+    <mat-chip *ngFor="let t of item.itemTags"
+              color="accent"
+              selected>{{t.tag.label}}</mat-chip>
+  </mat-chip-list>
+  <section fxLayout="column"
+           fxLayoutAlign="start stretch"
+           class="container">
+    <p>Category: {{item.category.name}}</p>
+    <p>Current Location: {{item.currentLocation.name}}</p>
+    <p>Origin Location: {{item.originLocation.name}}</p>
+  </section>
+</section>
+```
+
+The component template for `ItemCardComponent` can be broken down into three sections:
+
+* Header:
+  * Renders `item.name` inside of a `<p>` element when `editing` is `false`.
+  * Binds `item.name` with `[(ngModel)]` to an `<input matInput>` element when `editing` is `true`.
+  * Displays an **Edit** button whenever `editing` is `false`.
+  * Displays **Cancel**, **Save**, and **Delete** buttons whenever `editing` is `true`.
+* Tag list:
+  * Displays each `Tag` in `item.itemTags` as a `<mat-chip>` inside of a `<mat-chip-list>`.
+* Body
+  * Displays `item.category.name`, `item.currentLocation.name`, and `item.originLocation.name`
+
+**`item-card.component.css`**
+
+```css
+mat-form-field.mat-form-field {
+  margin: 0 8px;
+}
+
+mat-chip-list.mat-chip-list {
+  padding: 8px;
+}
+```
+
+Minor layout styling for elements defined in the card template.
+
 ### [ItemListComponent](#display-components)
+
+Being able to repeat the process of rendering an `Item` into a card is helpful, but it can also be helpful to be able to repeat the process of rendering multiple `Item` cards as a list.
+
+A very important thing to keep in mind is that, because this is an intermediate component, you need to be able to relay any events raised by `ItemCardComponent` back to the **Route Component** responsible for handling those events. In this case, the following output events need to be provided:
+
+* `save: EventEmitter<Item>`
+* `remove: EventEmitter<Item>`
+
+**`item-list.component.ts`**
+
+```ts
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
+
+import { Item } from '../../models';
+
+@Component({
+  selector: 'item-list',
+  templateUrl: 'item-list.component.html'
+})
+export class ItemListComponent {  
+  @Input() layout: string = "row | wrap";
+  @Input() align: string = "space-evenly start";
+  @Input() cardWidth: number = 420;
+
+  @Input() items: Item[];
+  @Output() save = new EventEmitter<Item>();
+  @Output() remove = new EventEmitter<Item>();
+}
+```
+
+* `layout` is used to determine the Flexbox layout of the list container
+* `align` is used to determine how the items in the Flexbox container are aligned
+* `cardWidth` specifies how wide the cards will be rendered inside of the list container
+* `items` is the collection of items to render inside of the list container
+* `save: EventEmitter<Item>` forwards any `save` output events triggered by an `ItemCardComponent`
+* `remove: EventEmitter<Item>` forwards any `remove` output events triggered by an `ItemCardComponent`
+
+**`item-list.component.html`**
+
+```html
+<section class="container"
+         [fxLayout]="layout"
+         [fxLayoutAlign]="align">
+  <item-card *ngFor="let i of items"
+             [item]="i"
+             (save)="save.emit($event)"
+             (remove)="remove.emit($event)"
+             [style.width.px]="cardWidth"></item-card>
+</section>
+```
+
+* The `layout` input property is bound to `fxLayout` on the root `<section>` element
+* The `align` input property is bound to `fxLayoutAlign` on the root `<section>` element
+* The `items` input property is iterated, and each `Item` is passed into an `<item-card>` component. The `save` and `remove` output events are registered to simply emit the corresponding output event defined on the list component.
+* The `cardWidth` input property is specified as the `style.width.px` value for each `<item-card>` component rendered.
+
+[StackBlitz - Item Components](https://stackblitz.com/edit/docs-item-components?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.ts)

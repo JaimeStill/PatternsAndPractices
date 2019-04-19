@@ -4,6 +4,7 @@
 * [Components](#components)
     * [Display Components](#display-components)
     * [Route Components](#route-components)
+* [Pipes](#pipes)
 
 ## [Angular Material](#examples)
 
@@ -29,3 +30,6 @@
 
 ### [Route Components](#examples)  
 * [StackBlitz - Route Components](https://stackblitz.com/edit/docs-route-components?file=src%2Fapp%2Froutes%2Findex.ts)
+
+## [Pipes](#examples)
+* [StackBlitz - Pipes](https://stackblitz.com/edit/docs-pipes?file=src%2Fapp%2Fpipes%2Ftruncate.pipe.ts)

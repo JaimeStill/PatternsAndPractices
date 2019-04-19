@@ -194,7 +194,11 @@
 
 ### [Pipes](./18-pipes.md)
 
-
+* [Overview](./18-pipes.md#overview)
+* [Anatomy](./18-pipes.md#anatomy)
+* [Custom Pipes](./18-pipes.md#custom-pipes)
+    * [UrlEncodePipe](./18-pipes.md#urlencodepipe)
+    * [TruncatePipe](./18-pipes.md#truncatepipe)
 
 ## Appendix
 
@@ -250,5 +254,7 @@
 * [Angular Material](./r2-examples.md#angular-material)
 * [Components](./r2-examples.md#components)
     * [Display Components](./r2-examples.md#display-components)
+    * [Route Components](./r2-examples.md#route-components)
+* [Pipes](./r2-examples.md#pipes)
 
 [Back to Top](#table-of-contents)

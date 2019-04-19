@@ -310,6 +310,38 @@ Whenever the entity schema is modified and you want the database to reflect the 
 {Project}.Data>dotnet ef database update -s ..\{Project}.Web
 ```  
 
-The `-s` flag indicates the startup project since `AppDbContext` is configured outside of the EF project. For a complete CLI reference, see the [Entity Framework Core tools reference](https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/dotnet).
+The `-s` flag indicates the startup project since `AppDbContext` is configured outside of the EF project.  
+
+The following is a short listing of available commands when using the `dotnet ef` tools:  
+
+> `{command} -arg` indicates that the command is available for use with all of the specified commands.
+
+**`dotnet ef migrations`**  
+
+Command | Description
+--------|------------
+`{command} --json` | Show JSON output (available for all but `script`)
+`{command} -c` | The DbContext to use
+`{command} -p` | The project to use
+`{command} -s` | The startup project to use
+`{command} -v` | Show verbose output
+`add` | Adds a new migration
+`list` | Lists available migrations
+`remove` | Removes the last migration
+`remove -f` | Revert the migration if it has been applied to the database
+`script` | Generates a SQL script from migrations
+`script -o` | The file to write the result to
+`script -i` | Generate a script that can be used on a database at any migration
+
+**`dotnet ef database update`**
+
+Command | Description
+--------|------------
+`-c` | The DbContext to use
+`-p` | The project to use
+`-s` | The startup project to use
+`-v` | Show verbose output
+
+> For a complete CLI reference, see the [Entity Framework Core tools reference](https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/dotnet).
 
 [Back to Top](#data-access-layer)

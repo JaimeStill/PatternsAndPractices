@@ -5,11 +5,11 @@
 * [Format](#format)
 * [Prerequisites](#prerequisites)
 * [Overview](#overview)
+* [Visual Studio Code Extensions](#visual-studio-code-extensions)
+* [Visual Studio](#visual-studio)
 * [Installing the App Stack Template](#installing-the-app-stack-template)
 * [Creating an App Stack Project](#creating-an-app-stack-project)
 * [Building and Running](#building-and-running)
-* [Visual Studio Code Extensions](#visual-studio-code-extensions)
-* [Visual Studio](#visual-studio)
 
 
 ## [Format](#patterns-and-practices)  
@@ -54,35 +54,6 @@ The major modifications are as follows:
     * Pipes
     * Routes
 
-## [Installing the App Stack Template](#patterns-and-practices)  
-
-1. The template is attached ot this project and is located in the template directory of this repository
-2. Run the following command to add it to the available `dotnet new` templates:
-
-```
-dotnet new -i {path-to-template-folder}
-```
-
-## [Creating an App Stack Project](#patterns-and-practices)  
-
-From a command prompt resolved to the created directory, execute the following:
-
-```
-dotnet new stack -n {project-name} -o {project-name}
-```  
-
-## [Building and Running](#patterns-and-practices)  
-
-Once the project has been created, run the following sequence of commands:  
-
-```
-{Project}>dotnet build
-{Project}>cd {Project}.Web
-{Project}.Web>dotnet run
-```  
-
-When the `dotnet run` command is called, the server will spin up at http://localhost:5000, and the Angular app will compile.
-
 ## [Visual Studio Code Extensions](#patterns-and-practices)  
 
 Extension | Description | Mandatory?
@@ -112,5 +83,47 @@ Only the following [**workloads**](https://visualstudio.microsoft.com/vs/visual-
 * [Web development](https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community?view=vs-2019#aspnet-and-web-development)
 * [Windows Desktop Development with C++](https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community?view=vs-2019#desktop-development-with-c)
 * [Data storage and processing](https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community?view=vs-2019#data-storage-and-processing)
+
+> After Visual Studio is installed, navigate to **Tools** > **Options** (from the top menu in Visual Studio). Expand **NuGet Package Manager** and select **Package Sources**. Ensure the following package source is available:  
+> 
+> **Name**: `nuget.org`  
+> **Source**: `https://api.nuget.org/v3/index.json`  
+> 
+> If only the `Microsoft Visual Studio Offline Packages` source is available, the following sections will fail to restore the declared NuGet packages for the projects in the template.
+
+## [Installing the App Stack Template](#patterns-and-practices)  
+
+1. The template is attached ot this project and is located in the template directory of this repository
+2. Run the following command to add it to the available `dotnet new` templates:
+
+```
+dotnet new -i {path-to-template-folder}
+```  
+
+After the command executes, the list of available `dotnet` commands is displayed, along with an updated list of available `dotnet new` templates. The following should closely represent what you see, with the new **stack** template highlighted:
+
+[![readme.01-new-template](./images/readme.01-new-template.png)](./images/readme.01-new-template.png)
+
+## [Creating an App Stack Project](#patterns-and-practices)  
+
+From a command prompt resolved to the created directory, execute the following:
+
+```
+dotnet new stack -n {ProjectName} -o {ProjectName}
+```  
+
+> Make sure your project name is not written in **`kebab-casing`**! It is recommended that you use **`PascalCasing`** for the project name to avoid [solution project-resolution issues](https://github.com/JaimeStill/PatternsAndPractices/issues/35).  
+
+## [Building and Running](#patterns-and-practices)  
+
+Once the project has been created, run the following sequence of commands:  
+
+```
+{Project}>dotnet build
+{Project}>cd {Project}.Web
+{Project}.Web>dotnet run
+```  
+
+When the `dotnet run` command is called, the server will spin up at http://localhost:5000, and the Angular app will compile.
 
 [Back to Top](#patterns-and-practices)

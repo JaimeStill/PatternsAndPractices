@@ -3,6 +3,7 @@
 * [Angular Material](#angular-material)
 * [Components](#components)
     * [Display Components](#display-components)
+    * [Route Components](#route-components)
 
 ## [Angular Material](#examples)
 
@@ -25,3 +26,6 @@
 ### [Display Components](#examples)
 * [StackBlitz - Simple Display Component](https://stackblitz.com/edit/docs-simple-display-component?file=src%2Fapp%2Fcomponents%2Fsimple%2Fsimple.component.html)
 * [StackBlitz - Item Components](https://stackblitz.com/edit/docs-item-components?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.ts)
+
+### [Route Components](#examples)  
+* [StackBlitz - Route Components](https://stackblitz.com/edit/docs-route-components?file=src%2Fapp%2Froutes%2Findex.ts)

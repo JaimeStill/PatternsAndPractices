@@ -195,6 +195,8 @@ A curated list of external links, organized by topic, provided throughout this r
 * [Dependency Injection](https://angular.io/guide/dependency-injection)
 * [HttpClient](https://angular.io/guide/http)
 * [Routing and Navigation](https://angular.io/guide/router)
+    * [Route](https://angular.io/api/router/Route)
+    * [RouterOutlet](https://angular.io/api/router/RouterOutlet)
 * [Animations](https://angular.io/guide/animations)
 * [Style Guide](https://angular.io/guide/styleguide)
 

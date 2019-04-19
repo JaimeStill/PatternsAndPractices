@@ -187,7 +187,10 @@
 
 ### [Routes](./17-routes.md)
 
-
+* [Angular Routing](./17-routes.md#angular-routing)
+* [Route Components](./17-routes.md#route-components)
+    * [ItemsComponent](./17-routes.md#itemscomponent)
+    * [ItemComponent](./17-routes.md#itemcomponent)
 
 ### [Pipes](./18-pipes.md)
 

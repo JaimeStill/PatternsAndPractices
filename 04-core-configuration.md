@@ -220,6 +220,6 @@ Member | Description
 
 There is a bit more going on in the **{Project}.Core** project, but this provides the details necessary to understand how the rest works.  
 
-> With the exception of the **{Project}.Core\\Sockets** features, which will be discussed in the [SignalR](./a7-signalr.md) article.
+> With the exception of the **{Project}.Core\\Sockets** features, which will be discussed in the [SignalR](./a6-signalr.md) article.
 
 [Back to Top](#core-configuration)

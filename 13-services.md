@@ -80,7 +80,7 @@ With this in mind, it's important to understand that the state maintained by **S
 
 ## [Observables](#services)
 
-> The explanation of RxJS Observables and Subjects in this section is intended to provide just enough information to understand how they work in the context of service state. RxJS will be covered in more detail in the [RxJS](./a2-rxjs.md) article.
+> The explanation of RxJS Observables and Subjects in this section is intended to provide just enough information to understand how they work in the context of service state. RxJS will be covered in more detail in the [RxJS](./a1-rxjs.md) article.
 
 An [**Observable**](https://rxjs.dev/guide/observable) is an asynchronous collection of future values or events. You subscribe to it once, and any time the value wrapped inside of the Observable is updated, the new value is delivered through the subscription.
 
@@ -150,9 +150,9 @@ Not all services are really complex and deal with managing state with Observable
 * `urlEncode(value: string): string` - Return a URL-encoded version of the provided string.
 * `generateInputObservable(input: ElementRef): Observable<string>` - Setup an `Observable` that is bound to the `keyup` event of the provided `input: ElementRef`. The `Observable` is setup with a `debounceTime` of `300`, maps the value to the actual text value of the input element, and triggers only when it is distinct from its previous value.
 
-> Dealing with upload data will be covered in the [Attachments](./a3-attachments.md) article.
+> Dealing with upload data will be covered in the [Attachments](./a2-attachments.md) article.
 
-> RxJS will be covered in detail in the [RxJS](./a2-rxjs.md) article. The use case for the `generateInputObservable` function will be shown in the [Components](./14-components.md) article.
+> RxJS will be covered in detail in the [RxJS](./a1-rxjs.md) article. The use case for the `generateInputObservable` function will be shown in the [Components](./14-components.md) article.
 
 **`core.service.ts`**
 

@@ -1360,7 +1360,7 @@ Supported selectors include:
 
 > If you recall from the [Services - CoreService](./13-services.md#coreservice) article, I said that `generateInputObservable()` would be discussed in this article. This is where it will be demonstrated.
 >
-> Again, RxJS will be covered in depth in the [RxJS](./a2-rxjs.md) article. But it would be negligent to cover `@ViewChild` without showing the power it enables with RxJS. If the following section doesn't make sense, spend some time getting comfortable with RxJS first, then revisit it.
+> Again, RxJS will be covered in depth in the [RxJS](./a1-rxjs.md) article. But it would be negligent to cover `@ViewChild` without showing the power it enables with RxJS. If the following section doesn't make sense, spend some time getting comfortable with RxJS first, then revisit it.
 
 The RxJS function [fromEvent](https://rxjs.dev/api/index/function/fromEvent) allows you to pass in a DOM element and DOM event name in order to generate an **Observable**. In addition, you can pipe in additional RxJS operators to create some interesting features. The `CoreService.generateInputObservable()` function does just that. You provide an `<input>` DOM element, and it calls `fromEvent` to register the `keyup` event with several other RxJS operators to ensure that:
 

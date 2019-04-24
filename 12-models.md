@@ -105,7 +105,7 @@ getExamples = () => this.http.get<Example[]>('/api/example/getExamples')
     );
 ```
 
-> Observables will be covered in greater detail in the [Services](./13-services.md) and [RxJS](./a2-rxjs.md) articles.
+> Observables will be covered in greater detail in the [Services](./13-services.md) and [RxJS](./a1-rxjs.md) articles.
 
 If you try to access the `filter` property on any of the objects received by the `getExamples` function, an error will be thrown. This is because, even though we specify that the type of data we're receiving is `Example[]`, we're still only assigning an `Object[]` to the `this.examples` observable stream.
 

@@ -75,7 +75,7 @@ The path-match strategy `full` matches against the entire URL. It is important t
 
 The component to instantiate when the path matches. Can be empty if child routes specify components.
 
-> Child routes will be covered in the [Child Routes](./a4-child-routes.md) article.
+> Child routes will be covered in the [Child Routes](./a3-child-routes.md) article.
 
 **`redirectTo?: string`**
 

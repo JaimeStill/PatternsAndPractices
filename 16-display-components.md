@@ -121,7 +121,7 @@ The component template is just as simple:
 
 The `FileUploadComponent` is also defined in the base app stack template provided. It is considerably more complicated than the `BannerComponent` shown above.
 
-> The [Attachments](./a3-attachments.md) article will detail the process of handling file uploads. This section is just concerned with showing how to build a robust component based around the `<input type="file">` element.
+> The [Attachments](./a2-attachments.md) article will detail the process of handling file uploads. This section is just concerned with showing how to build a robust component based around the `<input type="file">` element.
 >
 > If you're unfamiliar with the HTML File API, see the [File API]() documentation for detailed information.
 

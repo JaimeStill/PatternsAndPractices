@@ -202,32 +202,27 @@
 
 ## Appendix
 
-
-### [Appendix Overview](./a1-appendix-overview.md)
-
-
-
-### [RxJS](./a2-rxjs.md)
+### [RxJS](./a1-rxjs.md)
 
 
 
-### [Attachments](./a3-attachments.md)
+### [Attachments](./a2-attachments.md)
 
 
 
-### [Child Routes](./a4-child-routes.md)
+### [Child Routes](./a3-child-routes.md)
 
 
 
-### [Dialogs](./a5-dialogs.md)
+### [Dialogs](./a4-dialogs.md)
 
 
 
-### [Authorization](./a6-authorization.md)
+### [Authorization](./a5-authorization.md)
 
 
 
-### [SignalR](./a7-signalr.md)
+### [SignalR](./a6-signalr.md)
 
 
 

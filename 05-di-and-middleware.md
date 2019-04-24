@@ -514,7 +514,7 @@ namespace Demo.Identity
 
 This class provides a convenience method for populating its properties from a `UserPrincipal` instance. The `GetDomainPrefix()` method is used to be able to send direct messages to users using SignalR.  
 
-> SignalR will be reviewed at length in the [SignalR](./a7-signalr.md) article.
+> SignalR will be reviewed at length in the [SignalR](./a6-signalr.md) article.
 
 The `IUserProvider` interface exists so that multiple providers can be written. In this case, the true `AdUserProvider` that works in an Active Directory domain, and the `MockProvider` that implements the details of this interface in a way that allows us to work with these concepts outside of an Active Directory environment.  
 

@@ -156,11 +156,15 @@ A curated list of external links, organized by topic, provided throughout this r
     * [Wiki](https://github.com/Microsoft/TypeScript/wiki)
     * [Type Erasure](https://github.com/Microsoft/TypeScript/wiki/FAQ#what-is-type-erasure)
 * [RxJS](https://rxjs.dev/guide/overview)
-    * [Observables]()
-    * [Subscription]()
-    * [Subjects]()
+    * [Observables](https://rxjs.dev/guide/observable)
+    * [Subscription](https://rxjs.dev/guide/subscription)
+    * [Subjects](https://rxjs.dev/guide/subject)
+    * [Observer](https://rxjs.dev/api/index/interface/Observer)
+    * [Operators](https://rxjs.dev/guide/operators)
+    * [Schedulers](https://rxjs.dev/guide/scheduler)
     * [RxMarbles](https://rxmarbles.com/)
     * [RxJS Operators In Depth](https://stackblitz.com/edit/rxjs-operators-in-depth)
+    * [RxJS Practical Examples](https://angularfirebase.com/lessons/rxjs-quickstart-with-20-examples)
 
 ## [Angular](#links)
 

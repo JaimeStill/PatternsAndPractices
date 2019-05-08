@@ -77,6 +77,8 @@ A curated list of external links, organized by topic, provided throughout this r
 * [Adobe Color](https://color.adobe.com/create) - Robust color wheel tool. Color themes can be saved with an Adobe Creative Cloud account.
 * [Adobe Fonts](https://fonts.adobe.com/fonts) - Fonts from the Adobe ecosystem (licensed for Personal & Commercial use with an Adobe Creative Cloud account).
 * [Google Fonts](https://fonts.google.com) - Open source fonts from the Google ecosystem.
+* [Picsum Photos](https://picsum.photos/) - A public API for retrieving placeholder photos from [Unsplash](https://unsplash.com/).
+* [TV Maze](http://www.tvmaze.com/api) - A public API for retrieving TV show data
 
 ## [C#](#links)
 
@@ -162,9 +164,12 @@ A curated list of external links, organized by topic, provided throughout this r
     * [Observer](https://rxjs.dev/api/index/interface/Observer)
     * [Operators](https://rxjs.dev/guide/operators)
     * [Schedulers](https://rxjs.dev/guide/scheduler)
+    * [ReactiveX](http://reactivex.io)
+    * [LearnRxJS](https://www.learnrxjs.io/)
+    * [RxJS Quick Start](https://angularfirebase.com/lessons/rxjs-quickstart-with-20-examples)
     * [RxMarbles](https://rxmarbles.com/)
-    * [RxJS Operators In Depth](https://stackblitz.com/edit/rxjs-operators-in-depth)
-    * [RxJS Practical Examples](https://angularfirebase.com/lessons/rxjs-quickstart-with-20-examples)
+    * [reactive.how](https://reactive.how/)
+    * [RxJS Visualizer](https://rxviz.com/)
 
 ## [Angular](#links)
 

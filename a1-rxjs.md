@@ -8,16 +8,10 @@
   * [AsyncSubject](#asyncsubject)
   * [ReplaySubject](#replaysubject)
 * [Operators](#operators)
-  * [Creation Operators](#creation-operators)
-  * [Join Creation Operators](#join-creation-operators)
-  * [Transformation Operators](#transformation-operators)
-  * [Filtering Operators](#filtering-operators)
-  * [Join Operators](#join-operators)
-  * [Multicasting Operators](#multicasting-operators)
-  * [Error Handling Operators](#error-handling-operators)
-  * [Utility Operators](#utility-operators)
-  * [Boolean Operators](#boolean-operators)
-  * [Mathematical Operators](#mathematical-operators)
+  * [Randomizer](#randomizer)
+  * [Slideshow](#slideshow)
+  * [Photographers](#photographers)
+  * [Show Search](#show-search)
 * [Piping Operators](#piping-operators)  
 
 > The examples in this article can be found on [StackBlitz - Docs RxJS](https://stackblitz.com/edit/docs-rxjs)
@@ -594,26 +588,12 @@ The examples in the above **Subjects** section can be found at: [Stackblitz - Su
 
 ## [Operators](#rxjs)
 
-### [Creation Operators](#rxjs)
+### [Randomizer](#rxjs)
 
-### [Join Creation Operators](#rxjs)
+### [Slideshow](#rxjs)
 
-### [Transformation Operators](#rxjs)
+### [Photographers](#rxjs)
 
-### [Filtering Operators](#rxjs)
-
-### [Join Operators](#rxjs)
-
-### [Multicasting Operators](#rxjs)
-
-### [Error Handling Operators](#rxjs)
-
-### [Utility Operators](#rxjs)
-
-### [Boolean Operators](#rxjs)
-
-### [Mathematical Operators](#rxjs)
-
-## [Piping Operators](#rxjs)
+### [Show Search](#rxjs)
 
 [Back to Top](#rxjs)

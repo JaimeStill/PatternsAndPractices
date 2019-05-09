@@ -40,13 +40,25 @@ namespace Qxyz.Core.Extensions
             {
                 message.AppendLine();
                 message.AppendLine("Body");
+
+                using (var reader = new StreamReader(context.Request.Body))
+                {
+                    var body = await reader.ReadToEndAsync();
+                    message.AppendLine(body);
+                }
+            }
+
+            if (context.Request.Form.Count > 0)
+            {
+                message.AppendLine();
+                message.AppendLine("Form");
+
+                var form = await context.Request.ReadFormAsync();
                 
-                var body = await context.Request.ReadFormAsync();
-                
-                foreach (var k in body.Keys)
+                foreach (var k in form.Keys)
                 {
                     StringValues values;
-                    body.TryGetValue(k.ToString(), out values);
+                    form.TryGetValue(k.ToString(), out values);
                     
                     if (values.Count > 0)
                     {

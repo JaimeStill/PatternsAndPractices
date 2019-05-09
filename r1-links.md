@@ -189,6 +189,7 @@ A curated list of external links, organized by topic, provided throughout this r
     * [Input and Output Properties](https://angular.io/guide/template-syntax#input-and-output-properties)
     * [Template Expression Operators](https://angular.io/guide/template-syntax#template-expression-operators)
 * [Lifecycle Hooks](https://angular.io/guide/lifecycle-hooks)
+    * [Content Projection](https://angular.io/guide/lifecycle-hooks#content-projection)
 * [Component Interaction](https://angular.io/guide/component-interaction)
 * [Component Styles](https://angular.io/guide/component-styles)
 * [Attribute Directives](https://angular.io/guide/attribute-directives)

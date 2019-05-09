@@ -170,6 +170,7 @@
 * [ViewChild](./14-components.md#viewchild)
     * [RxJS fromEvent with ViewChild](./14-components.md#rxjs-fromevent-with-viewchild)
 * [Flex Layout](./14-components.md#flex-layout)
+* [Content Projection](./14-components.md#content-projection)
 
 ### [Root Component](./15-root-component.md)
 
@@ -271,5 +272,6 @@
     * [Display Components](./r2-examples.md#display-components)
     * [Route Components](./r2-examples.md#route-components)
 * [Pipes](./r2-examples.md#pipes)
+* [RxJS](./r2-examples.md#rxjs)
 
 [Back to Top](#table-of-contents)

@@ -29,6 +29,7 @@
 * [ViewChild](#viewchild)
   * [RxJS fromEvent with ViewChild](#rxjs-fromevent-with-viewchild)
 * [Flex Layout](#flex-layout)
+* [Content Projection](#content-projection)
 
 ## [Overview](#components)
 
@@ -1579,5 +1580,123 @@ This library is used extensively when laying out views in the app stack. It's hi
 * [Flex Layout API](https://github.com/angular/flex-layout/wiki/Declarative-API-Overview)
 * [Flex Layout Responsive API](https://github.com/angular/flex-layout/wiki/Responsive-API)
 * [Flex Layout Demo](https://tburleson-layouts-demos.firebaseapp.com/#/docs)
+
+## [Content Projection](#components)
+
+If you want to create a component that acts as a wrapper for dynamic content, you can do so via [Content Projection](https://angular.io/guide/lifecycle-hooks#content-projection).
+
+To do so, you need to place a `<ng-content></ng-content>` element inside of the component template. Doing so will allow any elements placed inside of the component to be rendered in this region.
+
+It would be best to see how this works through an example.
+
+**`widget.component.ts`**
+
+```ts
+import {
+  Component,
+  Input
+} from '@angular/core';
+
+@Component({
+  selector: 'widget',
+  templateUrl: 'widget.component.html'
+})
+export class WidgetComponent {
+  @Input() title = 'Title';
+  @Input() width: number | string = 420;
+  @Input() layout = 'column';
+  @Input() align = 'start stretch';
+  @Input() color = 'app-bar';
+  minimized = false;
+}
+```
+
+`title` will determine the text to render in the title bar of the widget.
+
+`width` will determine the horizontal size of the widget when rendered, with a default of **420** px.
+
+`layout` will determine the flex direction of the content rendered inside of the widget, with a default of **column**.
+
+`align` will determine the flex alignment of the content rendered inside of the widget, with a default of **start stretch**.
+
+`color` will determine the background color of the title bar of the widget, with a default of **app-bar**. Possible values are **app-bar**, **primary**, **accent**, and **warn**.
+
+`minimized` is used to track whether the widget content is currently minimized.
+
+**`widget.component.html`**
+
+```html
+<div [style.width.px]="width"
+     class="background card static-elevation">
+	<section fxLayout="row"
+           fxLayoutAlign="start center"
+           class="background"
+           [ngClass]="color">
+		<p class="mat-title"
+       fxFlex>{{title}}</p>
+    <button mat-icon-button
+            (click)="minimized = !minimized">
+      <mat-icon *ngIf="minimized">keyboard_arrow_right</mat-icon>
+      <mat-icon *ngIf="!(minimized)">keyboard_arrow_down</mat-icon>
+    </button>
+	</section>
+  <section *ngIf="!(minimized)"
+           [fxLayout]="layout"
+           [fxLayoutAlign]="align">
+    <ng-content></ng-content>
+  </section>
+</div>
+```
+
+The `width` property is used to determine the width of the root `<div>`.
+
+The first `<section>` defines the title bar for the widget, and renders the `title`, and a button that can be clicked to toggle the `minimized` property.
+
+The second `<section>` defines the outlet for the content the widget will host. If `minimized` is true, this section will not render. All content rendered inside of a `<widget>` element will be rendered at the `<ng-content></ng-content>` region.
+
+**`home.component.ts`**
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'home',
+  templateUrl: './home.component.html',
+})
+export class HomeComponent {
+  planets = [
+    { name: 'venus', url: 'https://steemitimages.com/p/Zskj9C56UondJxcjVaienfhVaNb7LJVWG6e787ga2qahpDYYoFcjyZaQ8jJjxMAQu5MauuFeEjMw3D83ypfRdWVyqfPHPY14n8UeXQ5catHH2u44KcAJ?format=match&mode=fit&width=640' },
+    { name: 'earth', url: 'https://cbschicago.files.wordpress.com/2015/07/blue-marble-apollo-17.jpg?w=420&h=420' },
+    { name: 'mars', url: 'https://www.mps.mpg.de/5244163/original-1518434133.jpg?t=eyJ3aWR0aCI6NTQwLCJvYmpfaWQiOjUyNDQxNjN9--016b8714202d8875a6c5a107124bde9ac83dd9ae' },
+    { name: 'jupiter', url: 'https://d2c13moo8u717n.cloudfront.net/wp-content/uploads/sites/11/2016/07/28124809/2016-07-27T173755Z_1_LYNXNPEC6Q1AZ_RTROPTP_3_SPACE-JUPITER-420x420.jpg' }
+  ]
+}
+```
+
+`HomeComponent` defines a `planets` array with objects that contain a `name` and `url` property.
+
+**`home.component.html`**
+
+```html
+<mat-toolbar>Home</mat-toolbar>
+<section fxLayout="row | wrap"
+         fxLayoutAlign="start start"
+         class="container">
+  <widget *ngFor="let p of planets"
+          [title]="p.name | titlecase">
+    <img [src]="p.url" 
+         [alt]="p.name">
+    <a mat-button
+       target="_blank"
+       [style.margin.px]="8"
+       [href]="p.url">Open</a>
+  </widget>
+</section>
+```
+
+For each of the objects in the `planets` array, a `<widget>` is rendered. Inside of the widget, an `<img>` is rendered, pointed at the `url` property, and an `<a>` element is provided that allows the image to be opened in a new tab.
+
+* [StackBlitz - Content Projection Demo](https://docs-content-projection.stackblitz.io/home)
+* [StackBlitz - Content Projection Source](https://stackblitz.com/edit/docs-content-projection?file=src%2Fapp%2Froutes%2Fhome%2Fhome.component.html)
 
 [Back to Top](#components)

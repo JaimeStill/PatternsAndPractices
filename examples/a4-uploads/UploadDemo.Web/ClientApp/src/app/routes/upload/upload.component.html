@@ -1,0 +1,20 @@
+<ng-template #loading>
+  <p class="mat-title">Loading Upload</p>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<ng-container *ngIf="service.upload$ | async as upload else loading">
+  <mat-toolbar>
+    <button mat-button
+            color="primary"
+            (click)="addFolders(upload)">
+      Add to Folder
+    </button>
+  </mat-toolbar>
+  <section class="container">
+    <upload-card [upload]="upload"
+                 [expanded]="true"
+                 [clickable]="false"
+                 (delete)="deleteUpload($event)"></upload-card>
+  </section>
+</ng-container>

@@ -1,0 +1,80 @@
+<section class="background card elevated"
+         fxLayout="column"
+         fxLayoutAlign="start stretch"
+         [style.width.px]="size">
+  <section class="container"
+           fxLayout="row"
+           fxLayoutAlign="start center">
+    <p class="mat-title"
+       [class.clickable]="clickable"
+       fxFlex
+       (click)="clickable && select.emit(upload)">{{upload.file}}</p>
+    <button mat-icon-button
+            color="warn"
+            matTooltip="Delete"
+            (click)="delete.emit(upload)">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <a mat-icon-button
+       target="_blank"
+       matTooltip="Download"
+       [href]="upload.url">
+      <mat-icon>save_alt</mat-icon>
+    </a>
+    <button *ngIf="expandable"
+            mat-icon-button
+            [matTooltip]="expanded ? 'Collapse' : 'Expand'"
+            (click)="toggleExpanded()">
+      <mat-icon *ngIf="expanded">keyboard_arrow_down</mat-icon>
+      <mat-icon *ngIf="!(expanded)">keyboard_arrow_right</mat-icon>
+    </button>
+  </section>
+  <section *ngIf="expanded">
+    <ng-container [ngSwitch]="upload.fileType.split('/')[0]">
+      <img *ngSwitchCase="'image'"
+           [src]="upload.url"
+           [alt]="upload.file"
+           [width]="size">
+      <section *ngSwitchCase="'audio'"
+               class="container"
+               fxLayout="column"
+               fxLayoutAlign="center center">
+        <audio controls
+               [src]="upload.url"
+               [style.width.px]="size - 20"></audio>
+      </section>
+      <video *ngSwitchCase="'video'"
+             controls
+             [width]="size">
+        <source [src]="upload.url"
+                [type]="upload.fileType">
+        Sorry, this format isn't supported in your browser
+      </video>
+    </ng-container>
+  </section>
+  <mat-divider *ngIf="!(expanded)"></mat-divider>
+  <section fxLayout="column"
+           fxLayoutAlign="start center"
+           class="container"
+           [style.margin.px]="8">
+    <mat-chip-list selectable="false">
+      <mat-chip [matTooltip]="upload.fileType">{{upload.fileType | truncate:'15'}}</mat-chip>
+      <mat-chip>{{upload.size | bytes}}</mat-chip>
+      <mat-chip>{{upload.uploadDate | date:'dd MMM yyyy HH:mm'}}</mat-chip>
+    </mat-chip-list>
+  </section>
+  <mat-divider></mat-divider>
+  <section fxLayout="column"
+           fxLayoutAlign="start center"
+           class="container"
+           [style.margin.px]="8">
+    <mat-chip-list *ngIf="upload.uploadFolders?.length > 0">
+      <mat-chip *ngFor="let a of upload.uploadFolders"
+                class="clickable"
+                routerLink="/folder/{{a.folder.name}}">{{a.folder.name}}</mat-chip>
+    </mat-chip-list>
+    <mat-chip-list *ngIf="!(upload.uploadFolders?.length > 0)">
+      <mat-chip>No Folders</mat-chip>
+    </mat-chip-list>
+  </section>
+</section>

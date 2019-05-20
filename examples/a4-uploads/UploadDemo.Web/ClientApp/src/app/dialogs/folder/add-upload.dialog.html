@@ -1,0 +1,37 @@
+<div class="mat-typography">
+  <h2 mat-dialog-title>Add Uploads to {{data.name}}</h2>
+  <mat-dialog-content>
+    <ng-template #loading>
+      <mat-progress-bar mode="indeterminate"
+                        color="accent"></mat-progress-bar>
+    </ng-template>
+    <mat-toolbar>
+      <span>Add New Uploads</span>
+      <section [style.margin-left.px]="12">
+        <file-upload (selected)="fileChange($event)"
+                     accept="*/*"></file-upload>
+        <button mat-button
+                color="primary"
+                (click)="addNewUploads()"
+                *ngIf="formData"
+                [disabled]="uploading">Upload New</button>
+        <button mat-button
+                (click)="clearFiles()"
+                *ngIf="formData"
+                [disabled]="uploading">Clear</button>
+      </section>
+    </mat-toolbar>
+    <ng-container *ngIf="files">
+      <file-list [files]="files"></file-list>
+    </ng-container>
+    <ng-container *ngIf="upload.uploads$ | async as uploads else loading">
+      <upload-selector [uploads]="uploads"
+                       [selectable]="uploading"
+                       (select)="addFolderUploads($event)"></upload-selector>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</div>

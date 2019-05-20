@@ -1,0 +1,12 @@
+<p class="mat-title">Pending Uploads</p>
+<section class="container"
+         [fxLayout]="layout"
+         [fxLayoutAlign]="align">
+  <section *ngFor="let f of files"
+           class="background card container"
+           [class.static-elevation]="elevated">
+    <p class="mat-subheading-2">{{f.name}}</p>
+    <p>{{f.lastModified | date:'dd MMM yyyy HH:mm'}}</p>
+    <p>{{f.type}}</p>
+  </section>
+</section>

@@ -1,0 +1,35 @@
+<ng-template #loading>
+  <mat-toolbar mode="indeterminate"
+               color="accent"></mat-toolbar>
+</ng-template>
+<ng-container *ngIf="service.folder$ | async as folder else loading">
+  <mat-toolbar>
+    <span>{{folder.name}}</span>
+    <section [style.margin-left.px]="12">
+      <button mat-button
+              color="primary"
+              (click)="addUploads(folder)">
+        Add Uploads
+      </button>
+    </section>
+  </mat-toolbar>
+  <section class="container">
+    <p>{{folder.description}}</p>
+  </section>
+  <mat-toolbar>
+    <span>Uploads</span>
+  </mat-toolbar>
+  <ng-template #loadingUploads>
+    <mat-progress-bar mode="indeterminate"
+                      color="accent"></mat-progress-bar>
+  </ng-template>
+  <ng-container *ngIf="service.uploads$ | async as uploads else loadingUploads">
+    <section *ngIf="uploads.length > 0" fxLayout="row | wrap" fxLayoutAlign="start start" class="container">
+      <upload-card *ngFor="let u of uploads"
+                   [upload]="u"
+                   (select)="selectUpload($event)"
+                   (delete)="deleteUpload($event)"></upload-card>
+    </section>
+    <p class="mat-title" *ngIf="!(uploads.length > 0)">No Uploads Available</p>
+  </ng-container>
+</ng-container>

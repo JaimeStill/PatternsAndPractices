@@ -1,0 +1,28 @@
+<div class="mat-typography">
+  <h2 mat-dialog-title>{{dialogTitle}}</h2>
+  <mat-dialog-content>
+    <section fxLayout="column"
+             fxLayoutAlign="start stretch">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput
+               [(ngModel)]="folder.name">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea matInput
+                  mat-autosize
+                  [(ngModel)]="folder.description"
+                  [matAutosizeMinRows]="4"
+                  [matAutosizeMaxRows]="8"></textarea>
+      </mat-form-field>
+    </section>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            color="accent"
+            (click)="saveFolder()">Save</button>
+    <button mat-button
+            mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</div>

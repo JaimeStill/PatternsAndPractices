@@ -1,0 +1,43 @@
+<div class="mat-typography">
+  <h2 mat-dialog-title>Folder Bin</h2>
+  <mat-dialog-content>
+    <ng-template #loading>
+      <p class="mat-title">Loading Folder Bin</p>
+      <mat-progress-bar mode="indeterminate"
+                        color="accent"></mat-progress-bar>
+    </ng-template>
+    <ng-container *ngIf="service.folders$ | async as folders else loading">
+      <section *ngIf="folders.length > 0"
+               fxLayout="column"
+               fxLayoutAlign="start stretch"
+               class="container">
+        <section *ngFor="let a of folders"
+                 class="background card elevated"
+                 fxLayout="column"
+                 fxLayoutAlign="start stretch">
+          <section fxLayout="row"
+                   fxLayoutAlign="start center"
+                   class="container">
+            <p class="mat-title"
+               fxFlex>{{a.name}}</p>
+            <button mat-button
+                    color="warn"
+                    (click)="removeFolder(a)">Delete</button>
+            <button mat-button
+                    (click)="restoreFolder(a)">Restore</button>
+          </section>
+          <section class="container"
+                   [matTooltip]="a.description">
+            <p>{{a.description | truncate}}</p>
+          </section>
+        </section>
+      </section>
+      <p *ngIf="!(folders.length > 0)"
+         class="mat-title">Recycle Bin is Empty</p>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</div>

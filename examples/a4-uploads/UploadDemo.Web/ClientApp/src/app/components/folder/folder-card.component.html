@@ -1,0 +1,28 @@
+<section class="background card elevated"
+         fxLayout="column"
+         fxLayoutAlign="start stretch"
+         [style.width.px]="size">
+  <section class="container"
+           fxLayout="row"
+           fxLayoutAlign="start center">
+    <p class="mat-title clickable"
+       fxFlex
+       (click)="select.emit(folder)">{{folder.name}}</p>
+    <button mat-icon-button
+            color="warn"
+            matTooltip="Delete"
+            (click)="delete.emit(folder)">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-icon-button
+            matTooltip="Edit"
+            (click)="edit.emit(folder)">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </section>
+  <section class="container"
+           [matTooltip]="folder.description">
+    <p>{{folder.description | truncate}}</p>
+    <p>Folder Uploads: {{folder?.folderUploads?.length}}</p>
+  </section>
+</section>

@@ -21,6 +21,8 @@
 
 The [File API](https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications) defines a mechanism for allowing users to upload binary file data. This article will discuss setting up .NET Core to manage these uploads, building a workflow in Angular, and tying uploads to related data via Entity Framework.
 
+> A full example of the content shown in this article can be found in [/examples/a4-uploads](./examples/a4-uploads)
+
 ## [.NET Core](#uploads)
 
 ### [Configuration](#uploads)

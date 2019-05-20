@@ -1,0 +1,47 @@
+<mat-toolbar>
+  <span>Select Folders</span>
+  <button mat-button
+          *ngIf="selectedFolders.length > 0"
+          [disabled]="selectable"
+          [style.margin-left.px]="12"
+          (click)="select.emit(selectedFolders)">Select</button>
+</mat-toolbar>
+<section fxLayout="row | wrap"
+         fxLayoutAlign="start start">
+  <section fxLayout="column"
+           fxLayoutAlign="start stretch"
+           fxFlex
+           [style.margin-right.px]="4">
+    <p class="mat-title">Available</p>
+    <section cdkDropList
+             #list="cdkDropList"
+             [cdkDropListData]="folders"
+             [cdkDropListConnectedTo]="[selected]"
+             class="container drop-container"
+             (cdkDropListDropped)="drop($event)">
+      <section *ngFor="let a of folders"
+               class="background card container elevated clickable"
+               cdkDrag>
+        <p>{{a.name}}</p>
+      </section>
+    </section>
+  </section>
+  <section fxLayout="column"
+           fxLayoutAlign="start stretch"
+           fxFlex
+           [style.margin-left.px]="4">
+    <p class="mat-title">Selected</p>
+    <section cdkDropList
+             #selected="cdkDropList"
+             [cdkDropListData]="selectedFolders"
+             [cdkDropListConnectedTo]="[list]"
+             class="container drop-container"
+             (cdkDropListDropped)="drop($event)">
+      <section *ngFor="let s of selectedFolders"
+               class="background card container elevated clickable"
+               cdkDrag>
+        <p>{{s.name}}</p>
+      </section>
+    </section>
+  </section>
+</section>

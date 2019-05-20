@@ -1,0 +1,48 @@
+<mat-toolbar>
+  <span>Uploads</span>
+  <section [style.margin-left.px]="12">
+    <file-upload (selected)="fileChange($event)"
+                 accept="*/*"></file-upload>
+    <button mat-button
+            color="primary"
+            (click)="uploadFiles()"
+            *ngIf="formData"
+            [disabled]="uploading">Upload</button>
+    <button mat-button
+            (click)="clearFiles()"
+            *ngIf="formData"
+            [disabled]="uploading">Cancel</button>
+    <button mat-button
+            color="warn"
+            (click)="openUploadBin()">Recycle Bin</button>
+  </section>
+</mat-toolbar>
+<ng-container *ngIf="files?.length > 0">
+  <file-list [files]="files"></file-list>
+</ng-container>
+<section class="container"
+         fxLayout="column"
+         fxLayoutAlign="start stretch">
+  <searchbar label="Search Uploads"
+             [minimum]="1"
+             (search)="service.searchUploads($event)"
+             (clear)="service.getUploads()">
+  </searchbar>
+</section>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<section fxLayout="row | wrap"
+         fxLayoutAlign="start start"
+         class="container"
+         *ngIf="service.uploads$ | async as uploads else loading">
+  <ng-container *ngIf="uploads.length > 0">
+    <upload-card *ngFor="let u of uploads"
+                 [upload]="u"
+                 [size]="420"
+                 (select)="selectUpload($event)"
+                 (delete)="deleteUpload($event)"></upload-card>
+  </ng-container>
+  <h3 *ngIf="!(uploads.length > 0)">No Uploads Found</h3>
+</section>

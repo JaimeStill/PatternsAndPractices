@@ -1,0 +1,50 @@
+<div class="mat-typography">
+  <h2 mat-dialog-title>Upload Bin</h2>
+  <mat-dialog-content>
+    <ng-template #loading>
+      <p class="mat-title">Loading Upload Bin</p>
+      <mat-progress-bar mode="indeterminate"
+                        color="accent"></mat-progress-bar>
+    </ng-template>
+    <ng-container *ngIf="service.uploads$ | async as uploads else loading">
+      <section *ngIf="uploads.length > 0"
+               fxLayout="column"
+               fxLayoutAlign="start stretch"
+               class="container">
+        <section *ngFor="let u of uploads"
+                 class="background card elevated"
+                 fxLayout="column"
+                 fxLayoutAlign="start stretch">
+          <section fxLayout="row"
+                   fxLayoutAlign="start center"
+                   class="container">
+            <p class="mat-title"
+               fxFlex>{{u.file}}</p>
+            <button mat-button
+                    color="warn"
+                    (click)="removeUpload(u)">Delete</button>
+            <button mat-button
+                    (click)="restoreUpload(u)">Restore</button>
+          </section>
+          <mat-divider></mat-divider>
+          <section fxLayout="column"
+                   fxLayoutAlign="start center"
+                   class="container"
+                   [style.margin.px]="8">
+            <mat-chip-list selectable="false">
+              <mat-chip [matTooltip]="u.fileType">{{u.fileType | truncate:'20'}}</mat-chip>
+              <mat-chip>{{u.size | bytes}}</mat-chip>
+              <mat-chip>{{u.uploadDate | date:'mediumDate'}}</mat-chip>
+            </mat-chip-list>
+          </section>
+        </section>
+      </section>
+      <p *ngIf="!(uploads.length > 0)"
+         class="mat-title">Recycle Bin is Empty</p>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</div>

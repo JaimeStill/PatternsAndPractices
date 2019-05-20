@@ -1,0 +1,36 @@
+<mat-toolbar>
+  <span>Folders</span>
+  <section [style.margin-left.px]="12">
+    <button mat-button
+            color="accent"
+            (click)="addFolder()">Add Folder</button>
+    <button mat-button
+            color="warn"
+            (click)="openFolderBin()">Recycle Bin</button>
+  </section>
+</mat-toolbar>
+<section class="container"
+         fxLayout="column"
+         fxLayoutAlign="start stretch">
+  <searchbar label="Search Folders"
+             [minimum]="1"
+             (search)="service.searchFolders($event)"
+             (clear)="service.getFolders()"></searchbar>
+</section>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<section fxLayout="row | wrap"
+         fxLayoutAlign="start start"
+         class="container"
+         *ngIf="service.folders$ | async as folders else loading">
+  <ng-container *ngIf="folders.length > 0">
+    <folder-card *ngFor="let a of folders"
+                [folder]="a"
+                (delete)="deleteFolder($event)"
+                (edit)="editFolder($event)"
+                (select)="selectFolder($event)"></folder-card>
+  </ng-container>
+  <h3 *ngIf="!(folders.length > 0)">No Folders Found</h3>
+</section>

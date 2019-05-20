@@ -150,7 +150,7 @@ Not all services are really complex and deal with managing state with Observable
 * `urlEncode(value: string): string` - Return a URL-encoded version of the provided string.
 * `generateInputObservable(input: ElementRef): Observable<string>` - Setup an `Observable` that is bound to the `keyup` event of the provided `input: ElementRef`. The `Observable` is setup with a `debounceTime` of `300`, maps the value to the actual text value of the input element, and triggers only when it is distinct from its previous value.
 
-> Dealing with upload data will be covered in the [Attachments](./a2-attachments.md) article.
+> Dealing with upload data will be covered in the [Uploads](./a4-uploads.md) article.
 
 > RxJS will be covered in detail in the [RxJS](./a1-rxjs.md) article. The use case for the `generateInputObservable` function will be shown in the [Components](./14-components.md) article.
 

@@ -217,27 +217,30 @@
     * [Show Search](./a1-rxjs.md#show-search)
 * [Piping Operators](./a1-rxjs.md#piping-operators)
 
-### [Attachments](./a2-attachments.md#)
-
-* [Overview](./a2-attachments.md#overview)
-* [.NET Core](./a2-attachments.md#net-core)
-    * [Configuration](./a2-attachments.md#configuration)
-    * [Data Layer](./a2-attachments.md#data-layer)
-    * [Business Logic](./a2-attachments.md#business-logic)
-    * [Controller](./a2-attachments.md#controller)
-* [Angular](./a2-attachments.md#angular)
-    * [Model](./a2-attachments.md#model)
-    * [Service](./a2-attachments.md#service)
-    * [Components](./a2-attachments.md#components)
-    * [Route](./a2-attachments.md#route)
-
-### [Child Routes](./a3-child-routes.md)
+### [Advanced Routing](./a2-advanced-routing.md)
 
 
 
-### [Dialogs](./a4-dialogs.md)
+### [Dialogs](./a3-dialogs.md)
 
 
+
+### [Uploads](./a4-uploads.md#)
+
+* [Overview](./a4-uploads.md#overview)
+* [.NET Core](./a4-uploads.md#net-core)
+    * [Configuration](./a4-uploads.md#configuration)
+    * [Data Layer](./a4-uploads.md#data-layer)
+    * [Business Logic](./a4-uploads.md#business-logic)
+    * [Controller](./a4-uploads.md#controller)
+* [Angular](./a4-uploads.md#angular)
+    * [Model](./a4-uploads.md#model)
+    * [Service](./a4-uploads.md#service)
+    * [Pipe](./a4-uploads.md#pipe)
+    * [Components](./a4-uploads.md#components)
+    * [Dialogs](./a4-uploads.md#dialogs)
+    * [Route](./a4-uploads.md#route)
+* [Related Data](./a4-uploads.md#related-data)
 
 ### [Authorization](./a5-authorization.md)
 

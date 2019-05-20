@@ -118,6 +118,7 @@ A curated list of external links, organized by topic, provided throughout this r
 * [Use JavaScriptServices to Create Single Page Applications in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa-services?view=aspnetcore-2.2)
 * [GitHub - aspnet/AspNetCore](https://github.com/aspnet/AspNetCore)
 * [GitHub - aspnet/JavaScriptServices](https://github.com/aspnet/JavaScriptServices)
+* [GitHub Issue - Default 30MB Request Body Limit](https://github.com/aspnet/Announcements/issues/267)
 
 ### [Entity Framework Core](#links)
 
@@ -132,7 +133,6 @@ A curated list of external links, organized by topic, provided throughout this r
 ## [Web Technologies](#links)
 
 * [HTML](https://developer.mozilla.org/en-US/docs/Glossary/HTML)
-    * [File API](https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications)
 * [CSS](https://developer.mozilla.org/en-US/docs/Glossary/CSS)
     * [Flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox)
     * [CSS Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout)
@@ -145,6 +145,12 @@ A curated list of external links, organized by topic, provided throughout this r
     * [Arrow Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)    
     * [Immediately Invoked Function Expression](https://developer.mozilla.org/en-US/docs/Glossary/IIFE)
     * [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+    * [Math](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math)
+        * [Math.floor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor)
+        * [Math.log](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/log)
+        * [Math.pow](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/pow)
+* [File API](https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications)
+    * [MIME Types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types)
 * [TypeScript](https://www.typescriptlang.org/docs/home.html)
     * [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
     * [Tuple](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple)

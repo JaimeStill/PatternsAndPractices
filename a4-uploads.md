@@ -14,7 +14,7 @@
     * [Pipe](#pipe)
     * [Components](#components)
     * [Dialogs](#dialogs)
-    * [Route](#route)
+    * [Routes](#routes)
 * [Related Data](#related-data)
 
 ## [Overview](#uploads)
@@ -445,6 +445,16 @@ export class Upload {
 }
 ```
 
+Make sure to register the `Upload` class with the `models` TypeScript module:
+
+**`index.ts`**
+
+```ts
+export * from './banner-config';
+export * from './theme';
+export * from './upload';
+```
+
 ### [Service](#uploads)
 
 Before defining the `UploadService`, it's important to note that the `CoreService` defined by the template contains a `getUploadOptions()` function:
@@ -598,6 +608,34 @@ export class UploadService {
 
 The `uploadFiles` function receives a `formData: FormData` argument and returns a `Promise<Upload[]>`. An `HttpClient.post` function is called, providing `formData` in the body of the request, and setting the request headers by calling `CoreService.getUploadOptions()`. When the result returns, the user is alerted, and the results are resolved in the `Promise<Upload[]>` returned by the function. If an error occurs, the error is alerted to the user and `null` is resolved by the returned Promise.
 
+Make sure to register the `UploadService` with the `services` TypeScript module:
+
+**`index.ts`**
+
+```ts
+import { BannerService } from './banner.service';
+import { CoreService } from './core.service';
+import { ObjectMapService } from './object-map.service';
+import { SnackerService } from './snacker.service';
+import { ThemeService } from './theme.service';
+
+export const Services = [
+  BannerService,
+  CoreService,
+  ObjectMapService,
+  SnackerService,
+  ThemeService
+];
+
+export * from './banner.service';
+export * from './core.service';
+export * from './object-map.service';
+export * from './snacker.service';
+export * from './theme.service';
+export * from './upload.service';
+
+```
+
 ### [Pipe](#uploads)
 
 The `size` property of the `Upload` class is provided in bytes. In order to provide better labeling for file sizes, a `BytesPipe` is created:
@@ -644,6 +682,20 @@ console.log('base', i); // "base" 2
 
 const result = parseFloat((value / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 console.log('result', result); // "result" "22.84 MB"
+```
+
+Make sure to register the `BytesPipe` with the `pipes` TypeScript module:
+
+**`index.ts`**  
+
+```ts
+import { BytesPipe } from './bytes.pipe';
+import { TruncatePipe } from './truncate.pipe';
+
+export const Pipes = [
+  BytesPipe,
+  TruncatePipe
+];
 ```
 
 ### [Components](#uploads)
@@ -754,6 +806,74 @@ In addition to the `File[]` input property, the `layout`, `align`, and `elevated
   </section>
 </section>
 ```
+
+To prevent from having to continually define search functionality in route components, a `SearchbarComponent` is created to setup the RxJS-based search pattern demonstrated in [Components - RxJS fromEvent with ViewChild](./14-components.md#rxjs-fromevent-with-viewchild).
+
+**`searchbar.component.html`**
+
+```html
+<section fxLayout="column"
+         fxLayoutAlign="start stretch">
+  <mat-form-field>
+    <mat-label>{{label}}</mat-label>
+    <input #searchbar
+           matInput>
+  </mat-form-field>
+</section>
+```
+
+**`searchbar.component.ts`**
+
+```ts
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+  ViewEncapsulation
+} from '@angular/core';
+
+import { Subscription } from 'rxjs';
+import { CoreService } from '../../services';
+
+@Component({
+  selector: 'searchbar',
+  templateUrl: 'searchbar.component.html'
+})
+export class SearchbarComponent implements OnDestroy {
+  sub: Subscription;
+
+  @Input() label = "Search";
+  @Input() minimum: number = 2;
+  @Output() search = new EventEmitter<string>();
+  @Output() clear = new EventEmitter();
+
+  constructor(
+    private core: CoreService
+  ) { }
+
+  @ViewChild('searchbar')
+  set searchbar (input: ElementRef) {
+    if (input) {
+      this.sub = this.core.generateInputObservable(input)
+        .subscribe((val: string) => {
+          val && val.length >= this.minimum ?
+            this.search.emit(val) :
+            this.clear.emit();
+        });
+    }
+  }
+
+  ngOnDestroy() {
+    this.core.unsubscribe(this.sub);
+  }
+}
+```
+
+Rather than executing a service function as a result of input being typed into the `searchbar` input, it either emits a `search` or `clear` event, based the length of the value received through the subscrition compared to the value specified by the `minimum` input property (which defaults to **2**).
 
 Because we have access to the `Upload.fileType`, the card that is used to render an `Upload` can be dynamically configured to render the content of the `Upload` for certain file types. This way, we can render all `Upload` items using a single card component, but have them render according to their content type.
 
@@ -922,13 +1042,151 @@ If the `expanded` property is false, a `MatDivider` is rendered in place of the 
 
 This section of the template is represented by the third `<section>` element inside of the root `<section>`. It uses a `MatChipList` to render the additional properties of the `Upload` the card represents. Not that the `upload.size` chip uses the `bytes` pipe to appropriately display the file size.
 
+Make sure to register each component with the `components` TypeScript module:
+
+**`index.ts`**
+
+```ts
+import { BannerComponent } from './banner/banner.component';
+import { FileListComponent } from './file-upload/file-list.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
+import { SearchbarComponent } from './searchbar/searchbar.component';
+import { UploadCardComponent } from './upload/upload-card.component';
+
+export const Components = [
+  BannerComponent,
+  FileListComponent,
+  FileUploadComponent,
+  SearchbarComponent,
+  UploadCardComponent
+];
+
+```
+
 ### [Dialogs](#uploads)
 
 Because uploads can be soft-deleted, it's important to have a way to easily access deleted uploads to either restore them, or permanently remove them. This is accomplished with an `UploadBinDialog` component.
 
 > If the term dialog is unfamiliar to you, refer to the [Dialogs](./a3-dialogs.md) article.
 
-### [Route](#uploads)
+**`upload-bin.dialog.ts`**
+
+```ts
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+
+import { UploadService } from '../../services';
+import { Upload } from '../../models';
+
+@Component({
+  selector: 'upload-bin-dialog',
+  templateUrl: 'upload-bin.dialog.html',
+  providers: [UploadService]
+})
+export class UploadBinDialog implements OnInit {
+  constructor(
+    public service: UploadService
+  ) { }
+
+  ngOnInit() {
+    this.service.getDeletedUploads();
+  }
+
+  restoreUpload = async (upload: Upload) => {
+    const res = await this.service.toggleUploadDeleted(upload);
+    res && this.service.getDeletedUploads();
+  }
+
+  removeUpload = async (upload: Upload) => {
+    const res = await this.service.removeUpload(upload);
+    res && this.service.getDeletedUploads();
+  }
+}
+```  
+
+The `UploadBinDialog` component registers the `UploadService` with its providers array. In the **OnInit** lifecycle hook, it retrieves all of the deleted uploads. 
+
+The `restoreUpload()` function receives an `Upload` from the template, and passes it to the `UploadService.toggleUploadDeleted()` function, effectively restoring it. If this completes successfully, the deleted uploads are refreshed.
+
+The `removeUpload()` function receives an `Upload` from the template, and passes it to the `UploadService.removeUpload()` function, permanently removing both the file and database record. If this completes successfully, the deleted uploads are refreshed.
+
+**`upload-bin.dialog.html`**
+
+```html
+<div class="mat-typography">
+  <h2 mat-dialog-title>Upload Bin</h2>
+  <mat-dialog-content>
+    <ng-template #loading>
+      <p class="mat-title">Loading Upload Bin</p>
+      <mat-progress-bar mode="indeterminate"
+                        color="accent"></mat-progress-bar>
+    </ng-template>
+    <ng-container *ngIf="service.uploads$ | async as uploads else loading">
+      <section *ngIf="uploads.length > 0"
+               fxLayout="column"
+               fxLayoutAlign="start stretch"
+               class="container">
+        <section *ngFor="let u of uploads"
+                 class="background card elevated"
+                 fxLayout="column"
+                 fxLayoutAlign="start stretch">
+          <section fxLayout="row"
+                   fxLayoutAlign="start center"
+                   class="container">
+            <p class="mat-title"
+               fxFlex>{{u.file}}</p>
+            <button mat-button
+                    color="warn"
+                    (click)="removeUpload(u)">Delete</button>
+            <button mat-button
+                    (click)="restoreUpload(u)">Restore</button>
+          </section>
+          <mat-divider></mat-divider>
+          <section fxLayout="column"
+                   fxLayoutAlign="start center"
+                   class="container"
+                   [style.margin.px]="8">
+            <mat-chip-list selectable="false">
+              <mat-chip [matTooltip]="u.fileType">{{u.fileType | truncate:'20'}}</mat-chip>
+              <mat-chip>{{u.size | bytes}}</mat-chip>
+              <mat-chip>{{u.uploadDate | date:'mediumDate'}}</mat-chip>
+            </mat-chip-list>
+          </section>
+        </section>
+      </section>
+      <p *ngIf="!(uploads.length > 0)"
+         class="mat-title">Recycle Bin is Empty</p>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</div>
+```
+
+Make sure to register the `UploadBinDialog` component with the `dialogs` TypeScript module:
+
+**`index.ts`**  
+
+```ts
+import { ConfirmDialog } from './confirm.dialog';
+import { UploadBinDialog } from './upload/upload-bin.dialog';
+
+export const Dialogs = [
+  ConfirmDialog,
+  UploadBinDialog
+];
+
+export * from './confirm.dialog';
+export * from './upload/upload-bin.dialog';
+```
+
+### [Routes](#uploads)
+
+
 
 ## [Related Data](#uploads)
 

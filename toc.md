@@ -239,7 +239,7 @@
     * [Pipe](./a4-uploads.md#pipe)
     * [Components](./a4-uploads.md#components)
     * [Dialogs](./a4-uploads.md#dialogs)
-    * [Route](./a4-uploads.md#route)
+    * [Routes](./a4-uploads.md#routes)
 * [Related Data](./a4-uploads.md#related-data)
 
 ### [Authorization](./a5-authorization.md)

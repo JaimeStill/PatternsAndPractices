@@ -1186,7 +1186,294 @@ export * from './upload/upload-bin.dialog';
 
 ### [Routes](#uploads)
 
+The main route for the application will be the `/uploads` route, which will correspond to an `UploadsComponent`. It will provide the following functionality:
 
+* Select files to upload
+* Clear selected files
+* Upload selected files
+* Open the upload bin
+* Render the list of files pending upload
+* Render a list of uploads from the database
+* Search the list of uploads
+
+**`uploads.component.html`**
+
+```html
+<mat-toolbar>
+  <span>Uploads</span>
+  <section [style.margin-left.px]="12">
+    <file-upload (selected)="fileChange($event)"
+                 accept="*/*"></file-upload>
+    <button mat-button
+            color="primary"
+            (click)="uploadFiles()"
+            *ngIf="formData"
+            [disabled]="uploading">Upload</button>
+    <button mat-button
+            (click)="clearFiles()"
+            *ngIf="formData"
+            [disabled]="uploading">Cancel</button>
+    <button mat-button
+            color="warn"
+            (click)="openUploadBin()">Recycle Bin</button>
+  </section>
+</mat-toolbar>
+<ng-container *ngIf="files?.length > 0">
+  <file-list [files]="files"></file-list>
+</ng-container>
+<section class="container"
+         fxLayout="column"
+         fxLayoutAlign="start stretch">
+  <searchbar label="Search Uploads"
+             [minimum]="1"
+             (search)="service.searchUploads($event)"
+             (clear)="service.getUploads()">
+  </searchbar>
+</section>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<section fxLayout="row | wrap"
+         fxLayoutAlign="start start"
+         class="container"
+         *ngIf="service.uploads$ | async as uploads else loading">
+  <ng-container *ngIf="uploads.length > 0">
+    <upload-card *ngFor="let u of uploads"
+                 [upload]="u"
+                 [size]="420"
+                 (select)="selectUpload($event)"
+                 (delete)="deleteUpload($event)"></upload-card>
+  </ng-container>
+  <h3 *ngIf="!(uploads.length > 0)">No Uploads Found</h3>
+</section>
+```
+
+The `<mat-toolbar>` section at the top of the component template define actions that allow the first four features to be accomplished.
+
+The `<file-upload>` component registers a `selected` event that allows the `File[]` and `FormData` objects returned from the event to be received when files have been selected.
+
+The **upload** `<button>` element is only shown if the `formData` property has a value (indicating that files have been selected for upload), and is only enabled if the `uploading` property is false. When clicked, the `uploadFiles()` function is called.
+
+The **cancel** `<button>` element is only shown if the `formData` property has a value (indicating that files have been selected for upload), and is only enabled if the `uploading` property is false. When clicked, the `clearFiles()` function is called.
+
+The **recycle bin** `<button>` element is used to render the `UploadBinDialog` dialog, and when clicked, calls the `openUploadBin()` function.
+
+If there are any files pending upload, they will be rendered using a `<file-list>` component.
+
+The `<searchbar>` component is defined to allow the retrieved uploads to be searched. The `minimum` property is set to **1** so that as long as the typed value is greater than **0**, the `search` event will be emitted. The `search` event calls the `UploadService.searchUploads()` function. The `clear` event calls the `UploadService.getUploads()` function.
+
+The `UploadService.uploads$` stream is subscribed to via the `async` pipe, and when it has a value, renders the contents inside of the `<section>` element where the stream is subscribed.
+
+If the length of the array returned by the stream is greater than zero, each item in the array is rendered via an `<upload-card>` component. The `size` of the card is set to **420px**. The `select` event calls the `selectUpload()` function, and the `delete` event calls the `deleteUpload()` function.
+
+**`uploads.component.ts`**
+
+```ts
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+
+import {
+  ConfirmDialog,
+  UploadBinDialog
+} from '../../dialogs';
+
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { UploadService } from '../../services';
+import { Upload } from '../../models';
+
+@Component({
+  selector: 'uploads-route',
+  templateUrl: 'uploads.component.html',
+  providers: [ UploadService ]
+})
+export class UploadsComponent implements OnInit {
+  files: File[];
+  formData: FormData;
+  uploading = false;
+
+  constructor(
+    public service: UploadService,
+    private router: Router,
+    private dialog: MatDialog
+  ) { }
+
+  ngOnInit() {
+    this.service.getUploads();
+  }
+
+  fileChange = (fileDetails: [File[], FormData]) => {
+    this.files = fileDetails[0];
+    this.formData = fileDetails[1];
+  }
+
+  clearFiles = () => {
+    this.files = null;
+    this.formData = null;
+  }
+
+  async uploadFiles() {
+    this.uploading = true;
+    const res = await this.service.uploadFiles(this.formData);
+    this.uploading = false;
+    this.clearFiles();
+    res && this.service.getUploads();
+  }
+
+  selectUpload = (upload: Upload) => upload && this.router.navigate(['upload', upload.file]);
+
+  deleteUpload = (upload: Upload) => this.dialog.open(ConfirmDialog)
+    .afterClosed()
+    .subscribe(async result => {
+      const res = result && await this.service.toggleUploadDeleted(upload);
+      res && this.service.getUploads();
+    });
+
+  openUploadBin = () => this.dialog.open(UploadBinDialog, {
+    width: '800px'
+  })
+  .afterClosed()
+  .subscribe(() => this.service.getUploads());
+}
+```  
+
+The `UploadService` is registers with the `providers` array of `UploadsComponent`. In the **OnInit** lifecycle hook, the `UploadService.getUploads()` function is called, effectively initializing the `UploadService.uploads$` Observable.
+
+The properties for the component are described as follows:
+
+Property | Type | Description
+---------|------|------------
+`files` | `File[]` | Represents the `File[]` received from the `select` output event of the `FileUploadComponent`
+`formData` | `FormData` | Represents the `FormData` received from the `select` output event of the `FileUploadComponent`
+`uploading` | `boolean` | Used to track when files are being uploaded  
+
+The `fileChange()` function is used with the `<file-upload>` component to receive the details of files that have been selected for upload.
+
+The `clearFiles()` function nullifies the values of the `files` and `formData` properties, clearing any pending uploads.
+
+The `uploadFiles()` asynchronous function sets the `uploading` flag to true, and passes the pending `formData` property to the `UploadService.uploadFiles()` function. When complete, the `uploading` flag is set to false and `clearFiles()` is called. If the operation completed successfully, the list of uploads is refreshed.
+
+The `selectUpload()` function receives an `Upload` object. If the received object has a value, the router navigates the the `/upload/:file` route, using the `upload.file` property for the `file` URL parameter.
+
+The `deleteUpload()` function receives an `Upload` object. The `ConfirmDialog` is opened, asking the user to confirm that they want to complete the specified action. After the dialog closes, if the result is true, the `upload` is passed to the `UploadService.toggleUploadDeleted()` function, effectively soft-deleting the upload. If the operation completes successfully, the list of uploads is refreshed.
+
+The `openUploadBin()` function opens the `UploadBinDialog`. After it is closed, the list of uploads is refreshed.
+
+In addition to the `UploadsComponent`, an `UploadComponent` is defined that allows a single `Upload` to be shown at a route, given the `Upload.file`.
+
+**`upload.component.html`**
+
+```html
+<ng-template #loading>
+  <p class="mat-title">Loading Upload</p>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<ng-container *ngIf="service.upload$ | async as upload else loading">
+  <section class="container">
+    <upload-card [upload]="upload"
+                 [expanded]="true"
+                 [clickable]="false"
+                 (delete)="deleteUpload($event)"></upload-card>
+  </section>
+</ng-container>
+```
+
+The route simply renders an `<upload-card>` component for the `Upload` object resolved by the route. The `expanded` input property is set to `true`, and `clickable` is set to `false`. The `delete` output event will call the `deleteUpload()` function when emitted.
+
+**`upload.component.ts`**
+
+```ts
+import {
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+
+import {
+  ActivatedRoute,
+  Router,
+  ParamMap
+} from '@angular/router';
+
+import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { UploadService } from '../../services';
+import { ConfirmDialog } from '../../dialogs';
+import { Upload } from '../../models';
+
+@Component({
+  selector: 'upload-route',
+  templateUrl: 'upload.component.html',
+  providers: [UploadService]
+})
+export class UploadComponent implements OnInit, OnDestroy {
+  private subs = new Array<Subscription>();
+
+  private navigate = () => this.router.navigate(['uploads']);
+
+  constructor(
+    public service: UploadService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private dialog: MatDialog
+  ) { }
+
+  ngOnInit() {
+    this.subs.push(this.route.paramMap.subscribe(async (params: ParamMap) => {
+      if (params.has('file')) {
+        const file = params.get('file');
+        const res = await this.service.getUploadByName(file);
+        !res && this.navigate();
+      } else {
+        this.navigate();
+      }
+    }));
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(x => x.unsubscribe);
+  }
+
+  deleteUpload = (upload: Upload) => this.subs.push(this.dialog.open(ConfirmDialog)
+    .afterClosed()
+    .subscribe(async result => {
+      const res = result && await this.service.toggleUploadDeleted(upload);
+      res && this.navigate();
+    }));
+}
+```  
+
+The `UploadService` is registered with the `providers` array for the `UploadComponent`.
+
+In the **OnInit** lifecycle hook, the `ActivatedRoute.paramMap` Observable is subscribed to, and if the received value has a `file` parameter, the `UploadService.getUploadByName()` function is called with the value of the `file` route parameter. If an upload is not found, or if there is not `file` route parameter, the router navigates back to the `/uploads` route. Otherwise, the `UploadService.upload$` Observable will be populated with the appropriate `Upload` object in the component template.
+
+The `deleteUpload()` function works the same as in the `UploadsComponent`.
+
+Make sure to register these route components with the `routes` TypeScript module:
+
+**`index.ts`**
+
+```ts
+import { Route } from '@angular/router';
+import { UploadsComponent } from './upload/uploads.component';
+import { UploadComponent } from './upload/upload.component';
+
+export const RouteComponents = [
+  UploadsComponent,
+  UploadComponent
+];
+
+export const Routes: Route[] = [
+  { path: 'uploads', component: UploadsComponent },
+  { path: 'upload/:file', component: UploadComponent },
+  { path: '', redirectTo: 'uploads', pathMatch: 'full' },
+  { path: '**', redirectTo: 'uploads', pathMatch: 'full' }
+];
+```
 
 ## [Related Data](#uploads)
 

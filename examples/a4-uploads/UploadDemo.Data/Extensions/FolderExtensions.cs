@@ -116,15 +116,6 @@ namespace UploadDemo.Data.Extensions
             }
         }
 
-        public static async Task UpdateFolderUpload(this AppDbContext db, FolderUpload folderUpload)
-        {
-            if (await folderUpload.Validate(db))
-            {
-                db.FolderUploads.Update(folderUpload);
-                await db.SaveChangesAsync();
-            }
-        }
-
         public static async Task RemoveFolderUpload(this AppDbContext db, string name, Upload upload)
         {
             var folderUpload = await db.FolderUploads.FirstOrDefaultAsync(

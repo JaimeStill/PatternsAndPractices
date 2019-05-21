@@ -4,18 +4,20 @@
 
 * [Overview](#overview)
 * [.NET Core](#net-core)
-    * [Configuration](#configuration)
-    * [Data Layer](#data-layer)
-    * [Business Logic](#business-logic)
-    * [Controller](#controller)
+  * [Configuration](#configuration)
+  * [Data Layer](#data-layer)
+  * [Business Logic](#business-logic)
+  * [Controller](#controller)
 * [Angular](#angular)
-    * [Model](#model)
-    * [Service](#service)
-    * [Pipe](#pipe)
-    * [Components](#components)
-    * [Dialogs](#dialogs)
-    * [Routes](#routes)
+  * [Model](#model)
+  * [Service](#service)
+  * [Pipe](#pipe)
+  * [Components](#components)
+  * [Dialogs](#dialogs)
+  * [Routes](#routes)
 * [Related Data](#related-data)
+  * [Folders Back End](#folders-back-end)
+  * [Folders Front End](#folders-front-end)
 
 ## [Overview](#uploads)
 
@@ -1476,5 +1478,513 @@ export const Routes: Route[] = [
 ```
 
 ## [Related Data](#uploads)
+
+Now that a workflow for managing uploads has been established, it's time to take it a step further and discuss how to associate uploads with other entities. In this section, we'll look at how to create folders and manage how uploads are related to folders using join tables.
+
+### [Folders Back End](#uploads)
+
+Before an upload can be associated with anything, it needs an entity to be associated with.
+
+**`Folder.cs`**
+
+``` cs
+namespace UploadDemo.Data.Entities
+{
+    public class Folder
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public bool IsDeleted { get; set; }
+    }
+}
+```
+
+To join the `Upload` class to the `Folder` class, a `FolderUpload` class is created that provides a link between the two.
+
+**`FolderUpload.cs`**
+
+```cs
+namespace UploadDemo.Data.Entities
+{
+    public class FolderUpload
+    {
+        public int Id { get; set; }
+        public int FolderId { get; set; }
+        public int UploadId { get; set; }
+
+        public Folder Folder { get; set; }
+        public Upload Upload { get; set; }
+    }
+}
+```
+
+With this in place, the following navigation property can be added to the bottom of the `Folder` class:
+
+``` cs
+public class Folder
+{
+  // Properties removed for brevity
+
+  public List<FolderUpload> FolderUploads { get; set; }
+}
+```
+
+And the following navigation property can be added to the `Upload` class:
+
+```cs
+public class Upload
+{
+  // Properties removed for brevity
+
+  public List<FolderUpload> UploadFolders { get; set; }
+}
+```
+
+Now the newly created classes can be added to `AppDbContext`, and the `UploadFolders` navigation property can be appropriately mapped in `OnModelCreating()`:
+
+**`AppDbContext.cs`**
+
+```cs
+namespace UploadDemo.Data
+{
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        public DbSet<Folder> Folders { get; set; }
+        public DbSet<FolderUpload> FolderUploads { get; set; }
+        public DbSet<Upload> Uploads { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Model
+                .GetEntityTypes()
+                .ToList()
+                .ForEach(x =>
+                {
+                    modelBuilder
+                        .Entity(x.Name)
+                        .ToTable(x.Name.Split('.').Last());
+                });
+            
+            modelBuilder
+                .Entity<Upload>()
+                .HasMany(x => x.UploadFolders)
+                .WithOne(x => x.Upload)
+                .HasForeignKey(x => x.UploadId)
+                .IsRequired();
+        }
+    }
+}
+```
+
+> If you're unfamiliar with managing entity relationships or configuring entities in `OnModelCreating`, refer to the [Data Access Layer](./02-data-access-layer.md) article.
+
+The `FolderUpload` logic will be contained in both the `UploadExtensions` and `FolderExtensions` classes, with `FolderExtensions` containing the bulk of the logic.
+
+With this in mind, the following modifications are made to the `UploadExtensions` class:
+
+**`UploadExtensions.cs`**
+
+```cs
+namespace UploadDemo.Data.Extensions
+{
+    public static class UploadExtensions
+    {
+        private static IQueryable<Upload> SetUploadIncludes(this DbSet<Upload> uploads) =>
+            uploads.Include(x => x.UploadFolders)
+                .ThenInclude(x => x.Folder);
+
+        public static async Task<List<Upload>> GetUploads(this AppDbContext db, bool isDeleted = false)
+        {
+            var uploads = await db.Uploads
+                .SetUploadIncludes()
+                .Where(x => x.IsDeleted == isDeleted)
+                .OrderByDescending(x => x.UploadDate)
+                .ToListAsync();
+
+            return uploads;
+        }
+
+        public static async Task<List<Upload>> SearchUploads(this AppDbContext db, string search, bool isDeleted = false)
+        {
+            search = search.ToLower();
+            var uploads = await db.Uploads
+                .SetUploadIncludes()
+                .Where(x => x.IsDeleted == isDeleted)
+                .Where(x => 
+                    x.File.ToLower().Contains(search) ||
+                    x.UploadFolders.Any(y =>
+                        y.Folder.Name.ToLower().Contains(search) ||
+                        y.Folder.Description.ToLower().Contains(search)
+                    )
+                )
+                .OrderByDescending(x => x.UploadDate)
+                .ToListAsync();
+
+            return uploads;
+        }
+
+        public static async Task<Upload> GetUpload(this AppDbContext db, int uploadId) => 
+            await db.Uploads
+                .SetUploadIncludes()
+                .FirstOrDefaultAsync(x => x.Id == uploadId);
+
+        public static async Task<Upload> GetUploadByName(this AppDbContext db, string file) => 
+            await db.Uploads
+                .SetUploadIncludes()
+                .FirstOrDefaultAsync(x => x.File.ToLower() == file.ToLower());
+
+        public static async Task<List<Folder>> GetUploadFolders(this AppDbContext db, int uploadId, bool isDeleted = false)
+        {
+            var folders = await db.FolderUploads
+                .Where(x =>
+                    x.UploadId == uploadId &&
+                    x.Folder.IsDeleted == isDeleted
+                )
+                .Select(x => x.Folder)
+                .OrderBy(x => x.Name)
+                .ToListAsync();
+
+            return folders;
+        }
+
+        public static async Task<List<Upload>> GetExcludedUploads(this AppDbContext db, string name, bool isDeleted = false)
+        {
+            var uploads = await db.Uploads
+                .Where(x => x.IsDeleted == isDeleted)
+                .Where(x => !x.UploadFolders.Any(y => y.Folder.Name.ToLower() == name.ToLower()))
+                .OrderByDescending(x => x.UploadDate)
+                .ToListAsync();
+
+            return uploads;
+        }
+    }
+}
+```
+
+The `SetUploadIncludes()` method is a convenience method for ensuring that `UploadFolders`, and the `Folder` property for each item it contains, are added included in the query for each `Upload` that is returned when this method is called.
+
+`GetUploads()` adds the `SetUploadIncludes()` extension method to its method chain.
+
+`SearchUpload()` adds the `SetUploadIncludes()` extension method to its method chain and allows you to search for files by the `Folder.Name` and `Folder.Description` for any folders it is related to.
+
+Both `GetUpload()` and `GetUploadByName()` add the `SetUploadIncludes()` extension method to its method chain.
+
+`GetUploadFolders()` retrieves the folders that contain the provided upload ID, and accepts an optional `isDeleted` argument (which defaults to `false`) to determine whether to retrieve uploads based on the `Upload.IsDeleted` property.
+
+`GetExcludedUploads()` retrieves all of the uploads that ***are not*** related to a specified folder name. It accepts an optional `isDeleted` argument (which defaults to `false`) to determine whether to retrieve uploads based on the` Upload.IsDeleted` property.
+
+Now, the `FolderExtensions` class can be defined, which contains all of the boilerplate CRUD operations for `Folder`, similar to the operations defined for `Upload` in `UploadExtensions`, but it also contains the boilerplate CRUD operations for `FolderUpload` interactions.
+
+**`FolderExtensions.cs`**
+
+```cs
+namespace UploadDemo.Data.Extensions
+{
+    public static class FolderExtensions
+    {
+        public static async Task<List<Folder>> GetFolders(this AppDbContext db, bool IsDeleted = false)
+        {
+            var folders = await db.Folders
+                .Include(x => x.FolderUploads)
+                .Where(x => x.IsDeleted == IsDeleted)
+                .OrderBy(x => x.Name)
+                .ToListAsync();
+
+            return folders;
+        }
+
+        public static async Task<List<Folder>> SearchFolders(this AppDbContext db, string search, bool IsDeleted = false)
+        {
+            search = search.ToLower();
+            var folders = await db.Folders
+                .Include(x => x.FolderUploads)
+                .Where(x => x.IsDeleted == IsDeleted)
+                .Where(x =>
+                    x.Name.ToLower().Contains(search) ||
+                    x.Description.ToLower().Contains(search) ||
+                    x.FolderUploads.Any(y => y.Upload.Name.ToLower().Contains(search))
+                )
+                .OrderBy(x => x.Name)
+                .ToListAsync();
+
+            return folders;
+        }
+
+        public static async Task<Folder> GetFolder(this AppDbContext db, int id) => await db.Folders.FindAsync(id);
+
+        public static async Task<Folder> GetFolderByName(this AppDbContext db, string name) =>
+            await db.Folders.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
+
+        public static async Task<List<Upload>> GetFolderUploads(this AppDbContext db, string name, bool isDeleted = false)
+        {
+            var uploads = await db.FolderUploads
+                .Include(x => x.Upload)
+                    .ThenInclude(x => x.UploadFolders)
+                        .ThenInclude(x => x.Folder)
+                .Where(x =>
+                    x.Folder.Name.ToLower() == name.ToLower() &&
+                    x.Upload.IsDeleted == isDeleted
+                )
+                .Select(x => x.Upload)
+                    .Include(x => x.UploadFolders)
+                        .ThenInclude(x => x.Folder)
+                .OrderByDescending(x => x.UploadDate)
+                .ToListAsync();
+
+            Console.WriteLine(uploads);
+            return uploads;
+        }
+
+        public static async Task<List<Folder>> GetExcludedFolders(this AppDbContext db, string file, bool isDeleted = false)
+        {
+            var folders = await db.Folders
+                .Where(x => x.IsDeleted == isDeleted)
+                .Where(x => !x.FolderUploads.Any(y => y.Upload.File.ToLower() == file.ToLower()))
+                .OrderBy(x => x.Name)
+                .ToListAsync();
+
+            return folders;
+        }
+
+        public static async Task AddFolder(this AppDbContext db, Folder folder)
+        {
+            if (await folder.Validate(db))
+            {
+                await db.Folders.AddAsync(folder);
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public static async Task UpdateFolder(this AppDbContext db, Folder folder)
+        {
+            if (await folder.Validate(db))
+            {
+                db.Folders.Update(folder);
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public static async Task ToggleFolderDeleted(this AppDbContext db, Folder folder)
+        {
+            if (await folder.Validate(db))
+            {
+                db.Folders.Attach(folder);
+                folder.IsDeleted = !folder.IsDeleted;
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public static async Task RemoveFolder(this AppDbContext db, Folder folder)
+        {
+            db.Folders.Remove(folder);
+            await db.SaveChangesAsync();
+        }
+
+        public static async Task AddFolderUploads(this AppDbContext db, List<FolderUpload> folderUploads)
+        {
+            if (await folderUploads.Validate(db))
+            {
+                await db.FolderUploads.AddRangeAsync(folderUploads);
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public static async Task RemoveFolderUpload(this AppDbContext db, string name, Upload upload)
+        {
+            var folderUpload = await db.FolderUploads.FirstOrDefaultAsync(
+                x => x.Folder.Name.ToLower() == name.ToLower() &&
+                x.UploadId == upload.Id
+            );
+
+            if (folderUpload == null)
+            {
+                throw new Exception($"{name} does not contain ${upload.File}");
+            }
+
+            db.FolderUploads.Remove(folderUpload);
+            await db.SaveChangesAsync();
+        }
+
+        public static async Task<bool> Validate(this Folder folder, AppDbContext db)
+        {
+            if (string.IsNullOrEmpty(folder.Name))
+            {
+                throw new Exception("An folder must have a name");
+            }
+
+            var check = await db.Folders
+                .FirstOrDefaultAsync(x =>
+                    x.Id != folder.Id &&
+                    x.Name.ToLower() == folder.Name.ToLower()
+                );
+
+            if (check != null)
+            {
+                throw new Exception("An folder with this name already exists");
+            }
+
+            return true;
+        }
+
+        public static async Task<bool> Validate(this FolderUpload folderUpload, AppDbContext db)
+        {
+            if (folderUpload.FolderId < 1)
+            {
+                throw new Exception("An upload must be associated with an folder");
+            }
+
+            if (folderUpload.UploadId < 1)
+            {
+                throw new Exception("An folder must be associated with an upload");
+            }
+
+            var check = await db.FolderUploads
+                .FirstOrDefaultAsync(x =>
+                    x.Id != folderUpload.Id &&
+                    x.FolderId == folderUpload.FolderId &&
+                    x.UploadId == folderUpload.UploadId
+                );
+
+            if (check != null)
+            {
+                throw new Exception("This folder already contains the specified upload");
+            }
+
+            return true;
+        }
+
+        public static async Task<bool> Validate(this List<FolderUpload> folderUploads, AppDbContext db)
+        {
+            foreach (var a in folderUploads)
+            {
+                await a.Validate(db);
+            }
+
+            return true;
+        }
+    }
+}
+```
+
+As mentioned, this class contains all of the same CRUD operations that are available to `Upload`, just relevant to the `Folder` entity, to include `GetFolderUploads()` for retrieving uploads that are related to a folder, and `GetExcludedFolders()` for retrieving folders that ***are not*** related to an upload.
+
+The following extension methods define the logic for interacting with the `FolderUpload` entity.
+
+`Validate(this List<FolderUpload> folderUploads)` executes the validation function for each `FolderUpload` contained in the collection.
+
+`Validate(this FolderUpload folderUpload)` ensures that the provided `FolderUpload` specifies a `Folder` and an `Upload`, and that the upload specified is not already related to the specified folder.
+
+`AddFolderUploads` accepts a `List<FolderUpload>`, calls the collection validation function mentioned above, adds the collection to the database, and saves the changes.
+
+`RemoveFolderUpload` retrieves a `FolderUpload` object based on the provided folder name and `Upload` object. If no result is found, an exception is thrown indicating that the folder does not contain the upload. Otherwise, the `FolderUpload` retrieved is removed from the database, and the changes are saved.
+
+Before defining the `FolderController` class, the following API endpoints need to be added to the `UploadController` to match the updated logic:
+
+**`UploadController.cs`**
+
+```cs
+[Route("api/[controller]")]
+public class UploadController : Controller
+{
+  private AppDbContext db;
+  private UploadConfig config;
+
+  public UploadController(AppDbContext db, UploadConfig config)
+  {
+    this.db = db;
+    this.config = config;
+  }
+
+  // API endpoints up to GetUploadByName
+
+  [HttpGet("[action]/{id}")]
+  public async Task<List<Folder>> GetUploadFolders([FromRoute]int id) => await db.GetUploadFolders(id);
+
+  [HttpGet("[action]/{name}")]
+  public async Task<List<Upload>> GetExcludedUploads([FromRoute]string name) => await db.GetExcludedUploads(name);
+
+  // Remaining API endpoints
+}
+```
+
+`FolderController` is a pretty standard API controller. It simply maps an endpoint to each of the defined extension methods. No weird upload logic needed here.
+
+**`FolderController.cs`**
+
+```cs
+namespace UploadData.Web.Controllers
+{
+    [Route("api/[controller]")]
+    public class FolderController : Controller
+    {
+        private AppDbContext db;
+
+        public FolderController(AppDbContext db)
+        {
+            this.db = db;
+        }
+
+        [HttpGet("[action]")]
+        public async Task<List<Folder>> GetFolders() => await db.GetFolders();
+
+        [HttpGet("[action]")]
+        public async Task<List<Folder>> GetDeletedFolders() => await db.GetFolders(true);
+
+        [HttpGet("[action]/{search}")]
+        public async Task<List<Folder>> SearchFolders([FromRoute]string search) => await db.SearchFolders(search);
+
+        [HttpGet("[action]/{search}")]
+        public async Task<List<Folder>> SearchDeletedFolders([FromRoute]string search) => await db.SearchFolders(search, true);
+
+        [HttpGet("[action]/{id}")]
+        public async Task<Folder> GetFolder([FromRoute]int id) => await db.GetFolder(id);
+
+        [HttpGet("[action]/{name}")]
+        public async Task<Folder> GetFolderByName([FromRoute]string name) => await db.GetFolderByName(name);
+
+        [HttpGet("[action]/{name}")]
+        public async Task<List<Upload>> GetFolderUploads([FromRoute]string name) => await db.GetFolderUploads(name);
+
+        [HttpGet("[action]/{file}")]
+        public async Task<List<Folder>> GetExcludedFolders([FromRoute]string file) => await db.GetExcludedFolders(file);
+
+        [HttpPost("[action]")]
+        public async Task AddFolder([FromBody]Folder folder) => await db.AddFolder(folder);
+
+        [HttpPost("[action]")]
+        public async Task UpdateFolder([FromBody]Folder folder) => await db.UpdateFolder(folder);
+
+        [HttpPost("[action]")]
+        public async Task ToggleFolderDeleted([FromBody]Folder folder) => await db.ToggleFolderDeleted(folder);
+
+        [HttpPost("[action]")]
+        public async Task RemoveFolder([FromBody]Folder folder) => await db.RemoveFolder(folder);
+
+        [HttpPost("[action]")]
+        public async Task AddFolderUploads([FromBody]List<FolderUpload> folderUploads) => await db.AddFolderUploads(folderUploads);
+
+        [HttpPost("[action]/{name}")]
+        public async Task RemoveFolderUpload([FromRoute]string name, [FromBody]Upload upload) => await db.RemoveFolderUpload(name, upload);
+    }
+}
+```
+
+### [Folders Front End](#uploads)
+
+**Models**
+
+**Service**
+
+**Updates**
+
+**Components**
+
+**Dialogs**
+
+**Routes**
 
 [Back to Top](#uploads)

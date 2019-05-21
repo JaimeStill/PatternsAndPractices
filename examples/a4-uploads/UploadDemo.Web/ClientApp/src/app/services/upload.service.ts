@@ -156,21 +156,6 @@ export class UploadService {
         )
     });
 
-  updateFolderUpload = (folderUpload: FolderUpload): Promise<boolean> =>
-    new Promise((resolve) => {
-      this.http.post('/api/folder/updateFolderUpload', folderUpload)
-        .subscribe(
-          () => {
-            this.snacker.sendSuccessMessage('Folder upload successfully updated');
-            resolve(true);
-          },
-          err => {
-            this.snacker.sendErrorMessage(err.error);
-            resolve(false);
-          }
-        )
-    });
-
   removeFolderUpload = (folderUpload: FolderUpload): Promise<boolean> =>
     new Promise((resolve) => {
       this.http.post('/api/folder/removeFolderUpload', folderUpload)

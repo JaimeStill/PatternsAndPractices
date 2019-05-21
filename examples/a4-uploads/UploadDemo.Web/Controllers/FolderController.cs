@@ -56,9 +56,6 @@ namespace UploadData.Web.Controllers
         [HttpPost("[action]")]
         public async Task AddFolderUploads([FromBody]List<FolderUpload> folderUploads) => await db.AddFolderUploads(folderUploads);
 
-        [HttpPost("[action]")]
-        public async Task UpdateFolderUpload([FromBody]FolderUpload folderUpload) => await db.UpdateFolderUpload(folderUpload);
-
         [HttpPost("[action]/{name}")]
         public async Task RemoveFolderUpload([FromRoute]string name, [FromBody]Upload upload) => await db.RemoveFolderUpload(name, upload);
     }

@@ -241,6 +241,8 @@
     * [Dialogs](./a4-uploads.md#dialogs)
     * [Routes](./a4-uploads.md#routes)
 * [Related Data](./a4-uploads.md#related-data)
+    * [Folders Back End](./a4-uploads.md#folders-back-end)
+    * [Folders Front End](./a4-uploads.md#folders-front-end)
 
 ### [Authorization](./a5-authorization.md)
 

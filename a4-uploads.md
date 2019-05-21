@@ -405,10 +405,12 @@ namespace UploadDemo.Web.Controllers
         public async Task<List<Upload>> GetDeletedUploads() => await db.GetUploads(true);
 
         [HttpGet("[action]/{search}")]
-        public async Task<List<Upload>> SearchUploads([FromRoute]string search) => await db.SearchUploads(search);
+        public async Task<List<Upload>> SearchUploads([FromRoute]string search) => 
+          await db.SearchUploads(search);
 
         [HttpGet("[action]/{search}")]
-        public async Task<List<Upload>> SearchDeletedUploads([FromRoute]string search) => await db.SearchUploads(search, true);
+        public async Task<List<Upload>> SearchDeletedUploads([FromRoute]string search) =>
+          await db.SearchUploads(search, true);
 
         [HttpGet("[action]/{id}")]
         public async Task<Upload> GetUpload([FromRoute]int id) => await db.GetUpload(id);

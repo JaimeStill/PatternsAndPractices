@@ -11,10 +11,6 @@ import {
 } from '@angular/router';
 
 import {
-  FolderService
-} from '../../services';
-
-import {
   AddUploadDialog,
   FolderDialog,
   ConfirmDialog
@@ -27,6 +23,7 @@ import {
 
 import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
+import { FolderService } from '../../services';
 
 @Component({
   selector: 'folder-route',
@@ -85,7 +82,7 @@ export class FolderComponent {
       res && this.navigate();
     }));
 
-  selectUpload = (upload: Upload) => this.router.navigate(['upload', upload.name]);
+  selectUpload = (upload: Upload) => this.router.navigate(['upload', upload.file]);
 
   deleteUpload = (upload: Upload) => this.subs.push(this.dialog.open(ConfirmDialog)
     .afterClosed()

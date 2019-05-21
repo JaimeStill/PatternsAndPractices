@@ -24,12 +24,13 @@
     * [Dialogs](#dialogs)
     * [Routes](#routes)
     * [Updated App Component](#updated-app-component)
+* [Example App](#example-app)
 
 ## [Overview](#uploads)
 
 The [File API](https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications) defines a mechanism for allowing users to upload binary file data. This article will discuss setting up .NET Core to manage these uploads, building a workflow in Angular, and tying uploads to related data via Entity Framework.
 
-> A full example of the content shown in this article can be found in [/examples/a4-uploads](./examples/a4-uploads)
+> A full example has been created for the content shown in this article. See [Example App](#example-app) for details.
 
 ## [.NET Core](#uploads)
 
@@ -3122,6 +3123,519 @@ export * from './upload/upload-bin.dialog';
 
 #### [Routes](#uploads)
 
+Before defining the `Folder` routes, some adjustments need to be made to the `/upload/:file` route that enables the upload to be added to a folder.
+
+**`upload.component.ts`**
+
+```ts
+import {
+  AddFolderDialog,
+  ConfirmDialog
+} from '../../dialogs';
+
+// additional imports removed for brevity
+
+@Component({
+  selector: 'upload-route',
+  templateUrl: 'upload.component.html',
+  providers: [UploadService]
+})
+export class UploadComponent implements OnInit, OnDestroy {
+  // Additional class definiton removed for brevity
+
+  addFolders = (upload: Upload) => this.subs.push(this.dialog.open(AddFolderDialog, {
+    data: Object.assign(new Upload(), upload),
+    width: '800px',
+    disableClose: true
+  })
+  .afterClosed()
+  .subscribe(res => res && this.service.getUploadByName(upload.file)));
+}
+```
+
+When `addFolders()` is called, it receives an `Upload` argument. The upload is then assigned to the `data` property of the `AddFolderDialog` options object. When the dialog closes, if it returns a `true` result, `UploadService.getUploadByName()` is called to refresh the current `UploadService.upload$` Observable.
+
+**`upload.component.html`**
+
+```html
+<!-- additional template removed for brevity -->
+<ng-container *ngIf="service.upload$ | async as upload else loading">
+  <mat-toolbar>
+    <button mat-button
+            color="primary"
+            (click)="addFolders(upload)">
+      Add to Folder
+    </button>
+  </mat-toolbar>
+  <section class="container">
+    <upload-card [upload]="upload"
+                 [expanded]="true"
+                 [clickable]="false"
+                 (delete)="deleteUpload($event)"></upload-card>
+  </section>
+</ng-container>
+```
+
+Once the `UploadService.upload$` Observable resolves with a value, a button is now rendered above the upload card that, when clicked, passes the `upload` to the `addFolders()` function.
+
+The `/folders` route will function in much of the same way as the `/uploads` route. Here are the features available:
+
+* Add a new `Folder`
+* Open the `FolderBinDialog`
+* Search the list of folders using the `SearchbarComponent`
+* Display a list of `FolderCardComponent` items based on the resolved `FolderService.folders$` Observable
+
+**`folders.component.ts`**
+
+```ts
+import {
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+
+import {
+  FolderDialog,
+  FolderBinDialog,
+  ConfirmDialog
+} from '../../dialogs';
+
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { FolderService } from '../../services';
+import { Folder } from '../../models';
+
+@Component({
+  selector: 'folders-route',
+  templateUrl: 'folders.component.html',
+  providers: [ FolderService ]
+})
+export class FoldersComponent implements OnInit, OnDestroy {
+  private subs = new Array<Subscription>();
+  constructor(
+    public service: FolderService,
+    private router: Router,
+    private dialog: MatDialog
+  ) { }
+
+  ngOnInit() {
+    this.service.getFolders();
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(x => x.unsubscribe());
+  }
+
+  selectFolder = (folder: Folder) => folder && this.router.navigate(['folder', folder.name]);
+
+  addFolder = () => this.subs.push(this.dialog.open(FolderDialog, {
+    data: new Folder(),
+    width: '800px',
+    disableClose: true
+  })
+  .afterClosed()
+  .subscribe(res => res && this.service.getFolders()));
+
+  editFolder = (folder: Folder) => this.subs.push(this.dialog.open(FolderDialog, {
+    data: Object.assign(new Folder(), folder),
+    width: '800px',
+    disableClose: true
+  })
+  .afterClosed()
+  .subscribe(res => res && this.service.getFolders()));
+
+  deleteFolder = (folder: Folder) => this.subs.push(this.dialog.open(ConfirmDialog)
+    .afterClosed()
+    .subscribe(async result => {
+      const res = result && await this.service.toggleFolderDeleted(folder);
+      res && this.service.getFolders();
+    }));
+
+  openFolderBin = () => this.subs.push(this.dialog.open(FolderBinDialog, {
+    width: '800px'
+  })
+  .afterClosed()
+  .subscribe(() => this.service.getFolders()));
+}
+```
+
+The `FolderService` is registered with the `providers` array for `FoldersComponent`.
+
+In the **OnInit** lifecycle hook, the `FolderService.folders$` Observable is initialized by calling the `FolderService.getFolders()` function.
+
+The `selectFolder()` function receives a `folder: Folder` object, and if `folder` has a value, the router navigates to the `/folder/:name` route, with `folder.name` as the url parameter.
+
+The `addFolder()` function opens the `FolderDialog`. If the dialog closes with a `true` result, `FolderService.getFolders()` is called, refreshing the `FolderService.folders$` Observable.
+
+The `editFolder()` function receives a `folder: Folder` argument, which it assigns to the `data` property of the `FolderDialog` options. If the dialog closes with a `true` result, `FolderService.getFolders()` is called, refreshing the `FolderService.folders$` Observable.
+
+The `deleteFolder()` function receives a `folder: Folder` argument. A `ConfirmDialog` is opened, prompting the user to confirm whether or not they actually want to complete the action initiated. If the dialog closes with a `true` result, the `folder` is passed to the `FolderService.toggleFolderDeleted()` function. If the function completes successfully, `FolderService.getFolders()` is called, refreshing the `FolderService.folders$` Observable.
+
+The `openFolderBin()` function opens a `FolderBinDialog`. After the dialog is closed, `FolderService.getFolders()` is called, refreshing the `FolderService.folders$` Observable.
+
+**`folders.component.html`**
+
+```html
+<mat-toolbar>
+  <span>Folders</span>
+  <section [style.margin-left.px]="12">
+    <button mat-button
+            color="accent"
+            (click)="addFolder()">Add Folder</button>
+    <button mat-button
+            color="warn"
+            (click)="openFolderBin()">Recycle Bin</button>
+  </section>
+</mat-toolbar>
+<section class="container"
+         fxLayout="column"
+         fxLayoutAlign="start stretch">
+  <searchbar label="Search Folders"
+             [minimum]="1"
+             (search)="service.searchFolders($event)"
+             (clear)="service.getFolders()"></searchbar>
+</section>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<section fxLayout="row | wrap"
+         fxLayoutAlign="start start"
+         class="container"
+         *ngIf="service.folders$ | async as folders else loading">
+  <ng-container *ngIf="folders.length > 0">
+    <folder-card *ngFor="let a of folders"
+                [folder]="a"
+                (delete)="deleteFolder($event)"
+                (edit)="editFolder($event)"
+                (select)="selectFolder($event)"></folder-card>
+  </ng-container>
+  <h3 *ngIf="!(folders.length > 0)">No Folders Found</h3>
+</section>
+```
+
+The `/folders` route can be broken down into three sections:
+
+* Toolbar
+* Search
+* Folder Card List
+
+The toolbar contains:
+
+* A `<button>` that calls `addFolder()`
+* A `<button>` that calls `openFolderBin()`
+
+The Search section contains a `<searchbar>` component:
+
+* `minimum` is set to **1**
+* When the `search` event is emitted, `FolderService.SearchFolders()` is called
+* When the `clear` event is emitted, `FolderService.getFolders()` is called
+
+In the Folder Card List:
+
+* When `FolderService.folders$` resolves, the `folders` value is checked:
+  * If it has data, each folder is rendered as a `<folder-card>`
+  * If it does not have data, a label indicates that no folders were found
+* When the `delete` event is emitted, `deleteFolder()` is called
+* When the `edit` event is emitted, `editFolder()` is called
+* When the `select` event is emitted, `selectFolder()` is called
+
+The `/folder/:name` route provides the following functionality:
+* Retrieve the `Folder` represented by the `name` url parameter
+  * If the parameter does not exist, or a folder is not found, return to `/folders`
+* Add uploads to the folder
+* Edit the folder
+* Render all of the uploads related to the folder
+  * Clicking the upload title routes to `/upload/:file`
+  * Ability to delete uploads from the folder
+
+**`folder.component.ts`**
+
+```ts
+import {
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+
+import {
+  ActivatedRoute,
+  ParamMap,
+  Router
+} from '@angular/router';
+
+import {
+  AddUploadDialog,
+  FolderDialog,
+  ConfirmDialog
+} from '../../dialogs';
+
+import {
+  Folder,
+  Upload
+} from '../../models';
+
+import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { FolderService } from '../../services';
+
+@Component({
+  selector: 'folder-route',
+  templateUrl: 'folder.component.html',
+  providers: [FolderService]
+})
+export class FolderComponent {
+  private subs = new Array<Subscription>();
+  private navigate = () => this.router.navigate(['folders']);
+  private name: string;
+
+  constructor(
+    public service: FolderService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private dialog: MatDialog
+  ) { }
+
+  ngOnInit() {
+    this.subs.push(this.route.paramMap.subscribe(async (params: ParamMap) => {
+      if (params.has('name')) {
+        this.name = params.get('name');
+        const res = await this.service.getFolderByName(this.name);
+        res && this.service.getFolderUploads(this.name);
+        !res && this.navigate();
+      } else {
+        this.navigate();
+      }
+    }));
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(x => x.unsubscribe());
+  }
+
+  addUploads = (folder: Folder) => this.subs.push(this.dialog.open(AddUploadDialog, {
+    data: Object.assign(new Folder(), folder),
+    width: '800px',
+    disableClose: true
+  })
+  .afterClosed()
+  .subscribe(res => res && this.service.getFolderUploads(folder.name)));
+
+  editFolder = (folder: Folder) => this.subs.push(this.dialog.open(FolderDialog, {
+    data: Object.assign(new Folder(), folder),
+    width: '800px',
+    disableClose: true
+  })
+  .afterClosed()
+  .subscribe(res => res && this.service.getFolderByName(folder.name)));
+
+  deleteFolder = (folder: Folder) => this.subs.push(this.dialog.open(ConfirmDialog)
+    .afterClosed()
+    .subscribe(async result => {
+      const res = result && await this.service.toggleFolderDeleted(folder);
+      res && this.navigate();
+    }));
+
+  selectUpload = (upload: Upload) => this.router.navigate(['upload', upload.file]);
+
+  deleteUpload = (upload: Upload) => this.subs.push(this.dialog.open(ConfirmDialog)
+    .afterClosed()
+    .subscribe(async result => {
+      const res = result && await this.service.removeFolderUpload(this.name, upload);
+      res && this.service.getFolderUploads(this.name);
+    }));
+}
+```
+
+The `FolderService` is registered with the `providers` array for the `FolderComponent`.
+
+In the **OnInit** lifecycle hook, the `ActivatedRoute.paramMap` is subscribed to, and when resolved, checked for a `name` parameter. If one does not exist, the router navigates back to the `/folders` route. If a `name` parameter does exist, it's value is passed to the `FolderService.getFolderByName()` function. If the operation returns true, the uploads for the folder are retrieved with the `FolderService.getFolderUploads()` function. If the operation does not return true, indicating that a matching `Folder` was not found, the router navigates back to the `/folders` route.
+
+The `addUploads()` function receives a `folder: Folder` argument, and assigns it to the `data` property of the `AddUploadDialog`. If the dialog closes with a `true` result, the list of uploads is refreshed with the `FolderService.getFolderUploads()` function.
+
+The `editFolder()` function receives a `folder: Folder` argument, and assigns it to the `data` property of the `FolderDialog`. If the dialog closes with a true result, the folder is refreshed with the `FolderService.getFolderByName()` function.
+
+The `deleteFolder()` function receives a `folder: Folder` argument. A `ConfirmDialog` is opened asking the user to confirm the action they initiated. If the dialog closes with a `true` result, the `folder` is passed to the `FolderService.toggleFolderDeleted()` function. If the operation completes successfully, the router navigates to the `/folders` route.
+
+The `selectUpload()` function receives an `upload: Upload` argument. The router then navigates to the `/upload/:file` route, providing `upload.file` as the url parameter.
+
+The `deleteUpload()` function receives an `upload: Upload` argument. A `ConfirmDialog` is opened asking the user to confirm the action they initiated. If the dialog closes with a `true` result, the folder name and `upload` are passed to the `FolderService.removeFolderUpload()` function. If the operation completes successfully, the list of uploads is refreshed with the `FolderService.getFolderUploads()` function.
+
+**`folder.component.html`**
+
+```html
+<ng-template #loading>
+  <mat-toolbar mode="indeterminate"
+               color="accent"></mat-toolbar>
+</ng-template>
+<ng-container *ngIf="service.folder$ | async as folder else loading">
+  <mat-toolbar>
+    <span>{{folder.name}}</span>
+    <section [style.margin-left.px]="12">
+      <button mat-button
+              color="primary"
+              (click)="addUploads(folder)">
+        Add Uploads
+      </button>
+      <button mat-button
+              color="accent"
+              (click)="editFolder(folder)">
+        Edit Folder
+      </button>
+      <button mat-button
+              color="warn"
+              (click)="deleteFolder(folder)">
+        Delete Folder
+      </button>
+    </section>
+  </mat-toolbar>
+  <section class="container">
+    <p>{{folder.description}}</p>
+  </section>
+  <mat-toolbar>
+    <span>Uploads</span>
+  </mat-toolbar>
+  <ng-template #loadingUploads>
+    <mat-progress-bar mode="indeterminate"
+                      color="accent"></mat-progress-bar>
+  </ng-template>
+  <ng-container *ngIf="service.uploads$ | async as uploads else loadingUploads">
+    <section *ngIf="uploads.length > 0" fxLayout="row | wrap" fxLayoutAlign="start start" class="container">
+      <upload-card *ngFor="let u of uploads"
+                   [upload]="u"
+                   (select)="selectUpload($event)"
+                   (delete)="deleteUpload($event)"></upload-card>
+    </section>
+    <p class="mat-title" *ngIf="!(uploads.length > 0)">No Uploads Available</p>
+  </ng-container>
+</ng-container>
+```
+
+The `FolderService.folder$` Observable is subscribed to, and when resolved, renders the component. This is initialized by calling the `FolderService.getFolderByName()` function in the **OnInit** lifecycle hook.
+
+The `FolderComponent` template can be split into three sections:
+
+* Toolbar
+* Description
+* Uploads
+
+**Toolbar**  
+
+* Renders the name of the folder, using `folder.name`
+* **Add Uploads** button calls the `addUploads(folder)` function
+* **Edit Folder** button calls the `editFolder(folder)` function
+* **Delete Folder** button calls the `deleteFolder(folder)` function
+
+**Description**
+
+Renders the folder description, using `folder.description`
+
+**Uploads**
+
+Subscribes to the `FolderService.uploads$` Observable, and when resolved, renders uploads section.
+
+If the uploads array contains data, the list of uploads is rendered. Otherwise, a label is shown stating that no uploads are available.
+
+When the `select` output event is emitted, the `selectUpload()` function is called.
+
+When the `delete` output event is emitted, the `deleteUpload()` function is called.
+
+Make sure to update the `components` TypeScript module with the newly defined components:
+
+**`index.ts`**
+
+```ts
+import { Route } from '@angular/router';
+import { FoldersComponent } from './folder/folders.component';
+import { FolderComponent } from './folder/folder.component';
+import { UploadsComponent } from './upload/uploads.component';
+import { UploadComponent } from './upload/upload.component';
+
+export const RouteComponents = [
+  FoldersComponent,
+  FolderComponent,
+  UploadsComponent,
+  UploadComponent
+];
+
+export const Routes: Route[] = [
+  { path: 'folders', component: FoldersComponent },
+  { path: 'folder/:name', component: FolderComponent },
+  { path: 'uploads', component: UploadsComponent },
+  { path: 'upload/:file', component: UploadComponent },
+  { path: '', redirectTo: 'uploads', pathMatch: 'full' },
+  { path: '**', redirectTo: 'uploads', pathMatch: 'full' }
+];
+```
+
 #### [Updated App Component](#uploads)
+
+Now that everything has been defined, we need an easy way to navigate between the `/uploads` and `/folders` routes from anywhere in the application.
+
+The `AppComponent` template can be modified to make use of a `MatMenu` component, which contains links to both of the routes:
+
+**`app.component.html`**
+
+```html
+<div class="mat-typography mat-app-background app-panel"
+     fxLayout="column"
+     [ngClass]="themeClass">
+  <ng-container *ngIf="banner.config$ | async as config else loading">
+    <banner [label]="config.label"
+            [background]="config.background"
+            [color]="config.color"></banner>
+    <mat-toolbar color="primary">
+      <button mat-icon-button
+              [style.margin-right.px]="8"
+              [matMenuTriggerFor]="routeMenu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu #routeMenu="matMenu">
+        <a mat-menu-item
+           routerLink="uploads"
+           routerLinkActive="active">Uploads</a>
+        <a mat-menu-item
+           routerLink="folders"
+           routerLinkActive="active">Folders</a>
+      </mat-menu>
+      <span fxFlex>Patterns and Practices - Uploads</span>
+      <button mat-icon-button
+              [matMenuTriggerFor]="menu">
+        <mat-icon>format_color_fill</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item
+                *ngFor="let t of theme.themes$ | async"
+                (click)="theme.setTheme(t)">{{t.display}}</button>
+      </mat-menu>
+    </mat-toolbar>
+    <section class="app-body">
+      <router-outlet></router-outlet>
+    </section>
+  </ng-container>
+</div>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+```
+
+Now, just to the left of the toolbar title, a menu is avaiable for navigating between the `/uploads` and `/folders` routes.
+
+## Example App
+
+An example app has been created for the final app that this article creates. Here are the steps for getting the app running:
+
+1. Either clone this repository, or download the app located at [/examples/a4-uploads](./examples/a4-uploads).
+2. Open a command prompt at the root of the app (`/examples/a4-uploads`).
+3. Run `dotnet build`
+4. Change directory to `UploadDemo.Data`
+5. Run `dotnet ef database update -s ..\UploadDemo.Web`
+6. Change directory to `dbseeder`
+7. Run `dotnet run -- -c "Server=(localdb)\ProjectsV13;Database=UploadDemo-dev;Trusted_Connection=True;"`
+8. Change directory to `UploadDemo.Web`
+9. Run `dotnet run`
+10. Navigate to [localhost:5000](http://localhost:5000)
 
 [Back to Top](#uploads)

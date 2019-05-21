@@ -217,7 +217,11 @@ namespace UploadDemo.Data.Extensions
             return uploads;
         }
 
-        public static async Task<List<Upload>> SearchUploads(this AppDbContext db, string search, bool isDeleted = false)
+        public static async Task<List<Upload>> SearchUploads(
+          this AppDbContext db,
+          string search,
+          bool isDeleted = false
+        )
         {
             search = search.ToLower();
             var uploads = await db.Uploads

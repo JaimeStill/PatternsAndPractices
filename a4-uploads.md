@@ -239,7 +239,12 @@ namespace UploadDemo.Data.Extensions
                 .SetUploadIncludes()
                 .FirstOrDefaultAsync(x => x.File.ToLower() == file.ToLower());
 
-        public static async Task<List<Upload>> UploadFiles(this AppDbContext db, IFormFileCollection files, string path, string url)
+        public static async Task<List<Upload>> UploadFiles(
+          this AppDbContext db,
+          IFormFileCollection files,
+          string path,
+          string url
+        )
         {
             if (files.Count < 1)
             {

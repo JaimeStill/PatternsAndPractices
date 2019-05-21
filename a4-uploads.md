@@ -1627,7 +1627,11 @@ namespace UploadDemo.Data.Extensions
             return uploads;
         }
 
-        public static async Task<List<Upload>> SearchUploads(this AppDbContext db, string search, bool isDeleted = false)
+        public static async Task<List<Upload>> SearchUploads(
+          this AppDbContext db,
+          string search,
+          bool isDeleted = false
+        )
         {
             search = search.ToLower();
             var uploads = await db.Uploads
@@ -1656,7 +1660,11 @@ namespace UploadDemo.Data.Extensions
                 .SetUploadIncludes()
                 .FirstOrDefaultAsync(x => x.File.ToLower() == file.ToLower());
 
-        public static async Task<List<Folder>> GetUploadFolders(this AppDbContext db, int uploadId, bool isDeleted = false)
+        public static async Task<List<Folder>> GetUploadFolders(
+          this AppDbContext db,
+          int uploadId,
+          bool isDeleted = false
+        )
         {
             var folders = await db.FolderUploads
                 .Where(x =>
@@ -1670,7 +1678,11 @@ namespace UploadDemo.Data.Extensions
             return folders;
         }
 
-        public static async Task<List<Upload>> GetExcludedUploads(this AppDbContext db, string name, bool isDeleted = false)
+        public static async Task<List<Upload>> GetExcludedUploads(
+          this AppDbContext db,
+          string name,
+          bool isDeleted = false
+        )
         {
             var uploads = await db.Uploads
                 .Where(x => x.IsDeleted == isDeleted)
@@ -1716,7 +1728,11 @@ namespace UploadDemo.Data.Extensions
             return folders;
         }
 
-        public static async Task<List<Folder>> SearchFolders(this AppDbContext db, string search, bool IsDeleted = false)
+        public static async Task<List<Folder>> SearchFolders(
+          this AppDbContext db,
+          string search,
+          bool IsDeleted = false
+        )
         {
             search = search.ToLower();
             var folders = await db.Folders
@@ -1733,12 +1749,17 @@ namespace UploadDemo.Data.Extensions
             return folders;
         }
 
-        public static async Task<Folder> GetFolder(this AppDbContext db, int id) => await db.Folders.FindAsync(id);
+        public static async Task<Folder> GetFolder(this AppDbContext db, int id) =>
+          await db.Folders.FindAsync(id);
 
         public static async Task<Folder> GetFolderByName(this AppDbContext db, string name) =>
             await db.Folders.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
 
-        public static async Task<List<Upload>> GetFolderUploads(this AppDbContext db, string name, bool isDeleted = false)
+        public static async Task<List<Upload>> GetFolderUploads(
+          this AppDbContext db,
+          string name,
+          bool isDeleted = false
+        )
         {
             var uploads = await db.FolderUploads
                 .Include(x => x.Upload)
@@ -1758,7 +1779,11 @@ namespace UploadDemo.Data.Extensions
             return uploads;
         }
 
-        public static async Task<List<Folder>> GetExcludedFolders(this AppDbContext db, string file, bool isDeleted = false)
+        public static async Task<List<Folder>> GetExcludedFolders(
+          this AppDbContext db,
+          string file,
+          bool isDeleted = false
+        )
         {
             var folders = await db.Folders
                 .Where(x => x.IsDeleted == isDeleted)
@@ -1924,7 +1949,8 @@ public class UploadController : Controller
   public async Task<List<Folder>> GetUploadFolders([FromRoute]int id) => await db.GetUploadFolders(id);
 
   [HttpGet("[action]/{name}")]
-  public async Task<List<Upload>> GetExcludedUploads([FromRoute]string name) => await db.GetExcludedUploads(name);
+  public async Task<List<Upload>> GetExcludedUploads([FromRoute]string name) => 
+    await db.GetExcludedUploads(name);
 
   // Remaining API endpoints
 }
@@ -1954,10 +1980,12 @@ namespace UploadData.Web.Controllers
         public async Task<List<Folder>> GetDeletedFolders() => await db.GetFolders(true);
 
         [HttpGet("[action]/{search}")]
-        public async Task<List<Folder>> SearchFolders([FromRoute]string search) => await db.SearchFolders(search);
+        public async Task<List<Folder>> SearchFolders([FromRoute]string search) =>
+          await db.SearchFolders(search);
 
         [HttpGet("[action]/{search}")]
-        public async Task<List<Folder>> SearchDeletedFolders([FromRoute]string search) => await db.SearchFolders(search, true);
+        public async Task<List<Folder>> SearchDeletedFolders([FromRoute]string search) =>
+          await db.SearchFolders(search, true);
 
         [HttpGet("[action]/{id}")]
         public async Task<Folder> GetFolder([FromRoute]int id) => await db.GetFolder(id);
@@ -1966,10 +1994,12 @@ namespace UploadData.Web.Controllers
         public async Task<Folder> GetFolderByName([FromRoute]string name) => await db.GetFolderByName(name);
 
         [HttpGet("[action]/{name}")]
-        public async Task<List<Upload>> GetFolderUploads([FromRoute]string name) => await db.GetFolderUploads(name);
+        public async Task<List<Upload>> GetFolderUploads([FromRoute]string name) =>
+          await db.GetFolderUploads(name);
 
         [HttpGet("[action]/{file}")]
-        public async Task<List<Folder>> GetExcludedFolders([FromRoute]string file) => await db.GetExcludedFolders(file);
+        public async Task<List<Folder>> GetExcludedFolders([FromRoute]string file) =>
+          await db.GetExcludedFolders(file);
 
         [HttpPost("[action]")]
         public async Task AddFolder([FromBody]Folder folder) => await db.AddFolder(folder);
@@ -1984,10 +2014,12 @@ namespace UploadData.Web.Controllers
         public async Task RemoveFolder([FromBody]Folder folder) => await db.RemoveFolder(folder);
 
         [HttpPost("[action]")]
-        public async Task AddFolderUploads([FromBody]List<FolderUpload> folderUploads) => await db.AddFolderUploads(folderUploads);
+        public async Task AddFolderUploads([FromBody]List<FolderUpload> folderUploads) =>
+          await db.AddFolderUploads(folderUploads);
 
         [HttpPost("[action]/{name}")]
-        public async Task RemoveFolderUpload([FromRoute]string name, [FromBody]Upload upload) => await db.RemoveFolderUpload(name, upload);
+        public async Task RemoveFolderUpload([FromRoute]string name, [FromBody]Upload upload) =>
+          await db.RemoveFolderUpload(name, upload);
     }
 }
 ```
@@ -2169,11 +2201,12 @@ export class FolderService {
       err => this.snacker.sendErrorMessage(err.error)
     );
 
-  searchDeletedFolders = (search: string) => this.http.get<Folder[]>(`/api/folder/searchDeletedFolders/${search}`)
-    .subscribe(
-      data => this.folders.next(data),
-      err => this.snacker.sendErrorMessage(err.error)
-    );
+  searchDeletedFolders = (search: string) =>
+    this.http.get<Folder[]>(`/api/folder/searchDeletedFolders/${search}`)
+      .subscribe(
+        data => this.folders.next(data),
+        err => this.snacker.sendErrorMessage(err.error)
+      );
 
   getFolder = (id: number): Promise<boolean> =>
     new Promise((resolve) => {

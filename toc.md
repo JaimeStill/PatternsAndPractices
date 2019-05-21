@@ -243,6 +243,13 @@
 * [Related Data](./a4-uploads.md#related-data)
     * [Folders Back End](./a4-uploads.md#folders-back-end)
     * [Folders Front End](./a4-uploads.md#folders-front-end)
+        * [Models](./a4-uploads.md#models)
+        * [Services](./a4-uploads.md#services)
+        * [Components](./a4-uploads.md#components)
+        * [Dialogs](./a4-uploads.md#dialogs)
+        * [Routes](./a4-uploads.md#routes)
+        * [Updated App Component](./a4-uploads.md#updated-app-component)
+* [Example App](./a4-uploads.md#example-app)
 
 ### [Authorization](./a5-authorization.md)
 
@@ -283,5 +290,6 @@
     * [Route Components](./r2-examples.md#route-components)
 * [Pipes](./r2-examples.md#pipes)
 * [RxJS](./r2-examples.md#rxjs)
+* [Uploads](./r2-examples.md#uploads)
 
 [Back to Top](#table-of-contents)

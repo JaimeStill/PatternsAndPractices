@@ -1,10 +1,13 @@
 # Examples
 
+[Table of Contents](./toc.md)
+
 * [Angular Material](#angular-material)
 * [Components](#components)
     * [Display Components](#display-components)
     * [Route Components](#route-components)
 * [Pipes](#pipes)
+* [Uploads](#uploads)
 
 ## [Angular Material](#examples)
 
@@ -37,3 +40,8 @@
 
 ## [RxJS](#examples)
 * [StackBlitz - RxJS](https://stackblitz.com/edit/docs-rxjs)
+
+## [Uploads](#examples)
+* [Upload Demo](./examples/a4-uploads)
+
+[Back to Top](#examples)

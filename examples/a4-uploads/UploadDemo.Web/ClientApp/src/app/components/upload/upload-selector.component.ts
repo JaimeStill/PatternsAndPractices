@@ -19,7 +19,7 @@ import { Upload } from '../../models';
 })
 export class UploadSelectorComponent {
   @Input() uploads: Upload[];
-  @Input() selectable = true;
+  @Input() pending = false;
   @Output() select = new EventEmitter<Upload[]>();
 
   selectedUploads = new Array<Upload>();

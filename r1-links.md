@@ -16,6 +16,7 @@ A curated list of external links, organized by topic, provided throughout this r
 * [Angular](#angular)
     * [Angular CLI](#angular-cli)
     * [Angular Material](#angular-material)
+    * [Angular CDK](#angular-cdk)
     * [Angular Flex Layout](#angular-flex-layout)
 
 ## [Software](#links)
@@ -237,6 +238,11 @@ A curated list of external links, organized by topic, provided throughout this r
     * [Typography](https://github.com/angular/material2/blob/master/src/lib/core/typography/_typography.scss)
     * [Elevation](https://github.com/angular/material2/blob/master/src/lib/core/style/_elevation.scss)
     * [Variables](https://github.com/angular/material2/blob/master/src/lib/core/style/_variables.scss)
+
+### [Angular CDK](#links)
+
+* [Home](https://material.angular.io/cdk)
+* [Drag and Drop](https://material.angular.io/cdk/drag-drop/overview)
 
 ### [Angular Flex Layout](#links)
 * [GitHub - Flex Layout](https://github.com/angular/flex-layout)

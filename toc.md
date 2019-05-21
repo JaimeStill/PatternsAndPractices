@@ -272,6 +272,7 @@
 * [Angular](./r1-links.md#angular)
     * [Angular CLI](./r1-links.md#angular-cli)
     * [Angular Material](./r1-links.md#angular-material)
+    * [Angular CDK](./r1-links.md#angular-cdk)
     * [Angular Flex Layout](./r1-links.md#angular-flex-layout)
 
 ### [Examples](./r2-examples.md)

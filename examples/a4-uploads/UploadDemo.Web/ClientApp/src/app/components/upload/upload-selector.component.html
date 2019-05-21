@@ -2,7 +2,7 @@
   <span>Select Uploads</span>
   <button mat-button
           *ngIf="selectedUploads.length > 0"
-          [disabled]="selectable"
+          [disabled]="pending"
           [style.margin-left.px]="12"
           (click)="select.emit(selectedUploads)">Select</button>
 </mat-toolbar>

@@ -2,7 +2,7 @@
   <span>Select Folders</span>
   <button mat-button
           *ngIf="selectedFolders.length > 0"
-          [disabled]="selectable"
+          [disabled]="pending"
           [style.margin-left.px]="12"
           (click)="select.emit(selectedFolders)">Select</button>
 </mat-toolbar>

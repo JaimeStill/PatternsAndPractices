@@ -19,7 +19,7 @@ import { Folder } from '../../models';
 })
 export class FolderSelectorComponent {
   @Input() folders: Folder[];
-  @Input() selectable = true;
+  @Input() pending = false;
   @Output() select = new EventEmitter<Folder[]>();
 
   selectedFolders = new Array<Folder>();

@@ -18,6 +18,12 @@
 * [Related Data](#related-data)
   * [Folders Back End](#folders-back-end)
   * [Folders Front End](#folders-front-end)
+    * [Models](#models)
+    * [Services](#services)
+    * [Components](#components)
+    * [Dialogs](#dialogs)
+    * [Routes](#routes)
+    * [Updated App Component](#updated-app-component)
 
 ## [Overview](#uploads)
 
@@ -1975,16 +1981,722 @@ namespace UploadData.Web.Controllers
 
 ### [Folders Front End](#uploads)
 
-**Models**
+Now that the back end provides the necessary functionality for working with `Folder` and `Upload` entities, and ways of relating the two, it's time to create a workflow that makes use of these features.
 
-**Service**
+#### [Models](#uploads)
 
-**Updates**
+As with any feature set, TypeScript classes need to be created which define the shape of the entity models.
 
-**Components**
+**`folder.ts`**
 
-**Dialogs**
+```ts
+import { FolderUpload } from './folder-upload';
 
-**Routes**
+export class Folder {
+  id: number;
+  name: string;
+  description: string;
+  isDeleted: boolean;
+
+  folderUploads: FolderUpload[];
+}
+```
+
+**`folder-upload.ts`**
+
+```ts
+import { Folder } from './folder';
+import { Upload } from './upload';
+
+export class FolderUpload {
+  id: number;
+  folderId: number;
+  uploadId: number;
+
+  folder: Folder;
+  upload: Upload;
+}
+```
+
+The `Upload` class also needs to be updated to reflect the `FolderUpload[]` navigation property:
+
+**`upload.ts`**
+
+```ts
+import { FolderUpload } from './folder-upload';
+
+export class Upload {
+  // properties removed for brevity
+
+  uploadFolders: FolderUpload[];
+}
+```
+
+Make sure to update the `models` TypeScript module:
+
+**`index.ts`**
+
+```ts
+export * from './folder';
+export * from './folder-upload';
+export * from './banner-config';
+export * from './theme';
+export * from './upload';
+```
+
+#### [Services](#uploads)
+
+Before defining the `FolderService`, lets take a moment to update the `UploadService` with the additional functionality created on the back end. Below is the class with only the updates made:
+
+**`upload.service.ts`**
+
+```ts
+// Imports excluded
+
+@Injectable()
+export class UploadService {
+  // Properties and Constructor excluded
+
+  // Previously defined functions excluded
+
+  getExcludedUploads = (name: string) => this.http.get<Upload[]>(`/api/upload/getExcludedUploads/${name}`)
+    .subscribe(
+      data => this.uploads.next(data),
+      err => this.snacker.sendErrorMessage(err)
+    );
+
+  getUploadFolders = (id: number) => this.http.get<Folder[]>(`/api/upload/getUploadFolders/${id}`)
+    .subscribe(
+      data => this.folders.next(data),
+      err => this.snacker.sendErrorMessage(err.error)
+    );
+
+  addFolderUpload = (folderUpload: FolderUpload): Promise<boolean> =>
+    new Promise((resolve) => {
+      this.http.post('/api/folder/addFolderUpload', folderUpload)
+        .subscribe(
+          () => {
+            this.snacker.sendSuccessMessage('Upload successfully added to folder');
+            resolve(true);
+          },
+          err => {
+            this.snacker.sendErrorMessage(err.error);
+            resolve(false);
+          }
+        )
+    });
+
+  removeFolderUpload = (folderUpload: FolderUpload): Promise<boolean> =>
+    new Promise((resolve) => {
+      this.http.post('/api/folder/removeFolderUpload', folderUpload)
+        .subscribe(
+          () => {
+            this.snacker.sendSuccessMessage('Upload successfully removed from folder');
+            resolve(true);
+          },
+          err => {
+            this.snacker.sendErrorMessage(err.error);
+            resolve(false);
+          }
+        )
+    });
+}
+```
+
+`getExcludedUploads()` and `getUploadFolders()` map directly to the newly created API endpoints defined on the `UploadController`.
+
+`addFolderUpload()` and `removeFolderUpload()` point to the `FolderUpload` API endpoints defined on the `FolderController`. They are defined here so that an `Upload` and `Folder` relationship can be configured from either of the relevant services.
+
+The `FolderService` is just a standard API mapping service that connects the endpoints defined in the `FolderController` to the Angular application.
+
+**`folder.service.ts`**
+
+```ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs';
+import { SnackerService } from './snacker.service';
+
+import {
+  Folder,
+  FolderUpload,
+  Upload
+} from '../models';
+
+@Injectable()
+export class FolderService {
+  private folders = new Subject<Folder[]>();
+  private folder = new Subject<Folder>();
+  private uploads = new Subject<Upload[]>();
+
+  folders$ = this.folders.asObservable();
+  folder$ = this.folder.asObservable();
+  uploads$ = this.uploads.asObservable();
+
+  constructor(
+    private http: HttpClient,
+    private snacker: SnackerService
+  ) { }
+
+  getFolders = () => this.http.get<Folder[]>('/api/folder/getFolders')
+    .subscribe(
+      data => this.folders.next(data),
+      err => this.snacker.sendErrorMessage(err.error)
+    );
+
+  getDeletedFolders = () => this.http.get<Folder[]>('/api/folder/getDeletedFolders')
+    .subscribe(
+      data => this.folders.next(data),
+      err => this.snacker.sendErrorMessage(err.error)
+    );
+
+  searchFolders = (search: string) => this.http.get<Folder[]>(`/api/folder/searchFolders/${search}`)
+    .subscribe(
+      data => this.folders.next(data),
+      err => this.snacker.sendErrorMessage(err.error)
+    );
+
+  searchDeletedFolders = (search: string) => this.http.get<Folder[]>(`/api/folder/searchDeletedFolders/${search}`)
+    .subscribe(
+      data => this.folders.next(data),
+      err => this.snacker.sendErrorMessage(err.error)
+    );
+
+  getFolder = (id: number): Promise<boolean> =>
+    new Promise((resolve) => {
+      this.http.get<Folder>(`/api/folder/getFolder/${id}`)
+        .subscribe(
+          data => {
+            this.folder.next(data);
+            resolve(true);
+          },
+          err => {
+            this.snacker.sendErrorMessage(err.error);
+            resolve(false);
+          }
+        )
+    });
+
+  getFolderByName = (name: string): Promise<boolean> =>
+    new Promise((resolve) => {
+      this.http.get<Folder>(`/api/folder/getFolderByName/${name}`)
+        .subscribe(
+          data => {
+            this.folder.next(data);
+            resolve(true);
+          },
+          err => {
+            this.snacker.sendErrorMessage(err.error);
+            resolve(false);
+          }
+        )
+    });
+
+  getFolderUploads = (name: string) => this.http.get<Upload[]>(`/api/folder/getFolderUploads/${name}`)
+    .subscribe(
+      data => this.uploads.next(data),
+      err => this.snacker.sendErrorMessage(err.error)
+    );
+
+  getExcludedFolders = (file: string) => this.http.get<Folder[]>(`/api/folder/getExcludedFolders/${file}`)
+    .subscribe(
+      data => this.folders.next(data),
+      err => this.snacker.sendErrorMessage(err.error)
+    );
+
+  addFolder = (folder: Folder): Promise<boolean> =>
+    new Promise((resolve) => {
+      this.http.post('/api/folder/addFolder', folder)
+        .subscribe(
+          () => {
+            this.snacker.sendSuccessMessage(`${folder.name} successfully added`);
+            resolve(true);
+          },
+          err => {
+            this.snacker.sendErrorMessage(err.error);
+            resolve(false);
+          }
+        )
+    });
+
+  updateFolder = (folder: Folder): Promise<boolean> =>
+    new Promise((resolve) => {
+      this.http.post('/api/folder/updateFolder', folder)
+        .subscribe(
+          () => {
+            this.snacker.sendSuccessMessage(`${folder.name} successfully updated`);
+            resolve(true);
+          },
+          err => {
+            this.snacker.sendErrorMessage(err.error);
+            resolve(false);
+          }
+        )
+    });
+
+  toggleFolderDeleted = (folder: Folder): Promise<boolean> =>
+    new Promise((resolve) => {
+      this.http.post('/api/folder/toggleFolderDeleted', folder)
+        .subscribe(
+          () => {
+            const message = folder.isDeleted ?
+              `${folder.name} successfully restored` :
+              `${folder.name} successfully deleted`;
+
+            this.snacker.sendSuccessMessage(message);
+            resolve(true);
+          },
+          err => {
+            this.snacker.sendErrorMessage(err.error);
+            resolve(false);
+          }
+        )
+    });
+
+  removeFolder = (folder: Folder): Promise<boolean> =>
+    new Promise((resolve) => {
+      this.http.post('/api/folder/removeFolder', folder)
+        .subscribe(
+          () => {
+            this.snacker.sendSuccessMessage(`${folder.name} permanently deleted`);
+            resolve(true);
+          },
+          err => {
+            this.snacker.sendErrorMessage(err.error);
+            resolve(false);
+          }
+        )
+    });
+
+    addFolderUploads = (folderUploads: FolderUpload[]): Promise<boolean> =>
+      new Promise((resolve) => {
+        this.http.post('/api/folder/addFolderUploads', folderUploads)
+          .subscribe(
+            () => {
+              this.snacker.sendSuccessMessage('Uploads successfully added to folder');
+              resolve(true);
+            },
+            err => {
+              this.snacker.sendErrorMessage(err.error);
+              resolve(false);
+            }
+          )
+      });
+
+    removeFolderUpload = (name: string, upload: Upload): Promise<boolean> =>
+      new Promise((resolve) => {
+        this.http.post(`/api/folder/removeFolderUpload/${name}`, upload)
+          .subscribe(
+            () => {
+              this.snacker.sendSuccessMessage('Upload successfully removed from folder');
+              resolve(true);
+            },
+            err => {
+              this.snacker.sendErrorMessage(err.error);
+              resolve(false);
+            }
+          )
+      });
+}
+```
+
+Make sure to update the `services` TypeScript module with the `FolderService`:
+
+**`index.ts`**
+
+```ts
+import { BannerService } from './banner.service';
+import { CoreService } from './core.service';
+import { ObjectMapService } from './object-map.service';
+import { SnackerService } from './snacker.service';
+import { ThemeService } from './theme.service';
+
+export const Services = [
+  BannerService,
+  CoreService,
+  ObjectMapService,
+  SnackerService,
+  ThemeService
+];
+
+export * from './folder.service';
+export * from './banner.service';
+export * from './core.service';
+export * from './object-map.service';
+export * from './snacker.service';
+export * from './theme.service';
+export * from './upload.service';
+```
+
+#### [Components](#uploads)
+
+Now that the uploads also contain their nested folder data when retrieved, the `UploadCardComponent` template can be updated to render links to the folders that the upload is related to, defaulting to **No Folders** if no relationships exist.
+
+**`upload-card.component.html`**
+
+```html
+<!-- Just below the section containing the metadata chip list -->
+<mat-divider></mat-divider>
+<section fxLayout="column"
+         fxLayoutAlign="start center"
+         class="container"
+         [style.margin.px]="8">
+  <mat-chip-list *ngIf="upload.uploadFolders?.length > 0">
+    <mat-chip *ngFor="let a of upload.uploadFolders"
+              class="clickable"
+              routerLink="/folder/{{a.folder.name}}">{{a.folder.name}}</mat-chip>
+  </mat-chip-list>
+  <mat-chip-list *ngIf="!(upload.uploadFolders?.length > 0)">
+    <mat-chip>No Folders</mat-chip>
+  </mat-chip-list>
+</section>
+```
+
+A `FolderCardComponent` is defined to enable consistently rendering a `Folder` instance:
+
+**`folder-card.component.ts`**
+
+```ts
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
+
+import { Folder } from '../../models';
+
+@Component({
+  selector: 'folder-card',
+  templateUrl: 'folder-card.component.html'
+})
+export class FolderCardComponent {
+  @Input() folder: Folder;
+  @Input() size = 420;
+  @Output() edit = new EventEmitter<Folder>();
+  @Output() delete = new EventEmitter<Folder>();
+  @Output() select = new EventEmitter<Folder>();
+}
+```
+
+Property | Type | Scope | Description
+---------|------|-------|------------
+`folder` | `Folder` | Input | The `Folder` that the card represents
+`size` | `number` | Input | The width the card is rendered at, **420px** by default
+`edit` | `EventEmitter<Folder>` | Output | Emits the `Folder` indicating it should be edited
+`delete` | `EventEmitter<Folder>` | Output | Emits the `Folder` indicating it should be deleted
+`select` | `EventEmitter<Folder>` | Output | Emits the `Folder` indicating it should be selected
+
+**`folder-card.component.html`**
+
+```html
+<section class="background card elevated"
+         fxLayout="column"
+         fxLayoutAlign="start stretch"
+         [style.width.px]="size">
+  <section class="container"
+           fxLayout="row"
+           fxLayoutAlign="start center">
+    <p class="mat-title clickable"
+       fxFlex
+       (click)="select.emit(folder)">{{folder.name}}</p>
+    <button mat-icon-button
+            color="warn"
+            matTooltip="Delete"
+            (click)="delete.emit(folder)">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-icon-button
+            matTooltip="Edit"
+            (click)="edit.emit(folder)">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </section>
+  <section class="container"
+           [matTooltip]="folder.description">
+    <p>{{folder.description | truncate}}</p>
+    <p>Folder Uploads: {{folder?.folderUploads?.length}}</p>
+  </section>
+</section>
+```
+
+The `FolderCardComponent` is split into two sections:
+
+* Card Header
+* Card Body
+
+The header contains:
+* a clickable title, rendered as `folder.name`, which emits the `select` event when clicked.
+* A button that emits the `delete` event.
+* A button that emits the `edit` event.
+
+The body renders:
+* The `folder.description`, truncated. The tooltip for the body renders the full description.
+* The amount of uploads related to the folder, as `folder?.folderUploads?.length`.
+
+In addition to the card components, selector components can be created. They receive a list of items rendered in an **Available** column on the left, and can be dragged into a **Selected** column on the right. When a **Save** event is triggered, it emits the list of selected items.
+
+**`upload-selector.component.ts`**
+
+```ts
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
+
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem
+} from '@angular/cdk/drag-drop';
+
+import { Upload } from '../../models';
+
+@Component({
+  selector: 'upload-selector',
+  templateUrl: 'upload-selector.component.html'
+})
+export class UploadSelectorComponent {
+  @Input() uploads: Upload[];
+  @Input() selectable = true;
+  @Output() select = new EventEmitter<Upload[]>();
+
+  selectedUploads = new Array<Upload>();
+
+  drop(event: CdkDragDrop<Upload[]>) {
+    event.previousContainer !== event.container ?
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      ) :
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+  }
+}
+```
+
+This component makes use of the Angular CDK's [Drag and Drop](https://material.angular.io/cdk/drag-drop/overview) behavior to make it incredibly simple to manage the changes made to the arrays when moving items between columns.
+
+Property | Type | Scope | Description
+---------|------|-------|------------
+`uploads` | `Upload[]` | Input | The initial list of available `Upload` objects for selection.
+`pending` | `boolean` | Input | Used to determine whether the selected items are currently being saved. Prevents duplicate `select` events from being emitted.
+`select` | `EventEmitter<Upload[]>` | Output | Emits the `Upload[]`, indicating they have been selected.
+`selectedUploads` | `Upload[]` | Local | The list of `Upload` objects that have been selected.
+
+The `drop()` function is called whenever a `CdkDragDrop` operation emits. If the item is being moved to a different array, between **Available** and **Selected**, the `transferArrayItem()` function is called to perform the array transfer. If the item is being moved within the same array, the `moveItemInArray()` function is called to update the affected array.
+
+> `transferArrayItem` and `moveItemInArray` are defined in the `@angular/cdk/drag-drop` module.  
+
+**`upload-selector.component.html`**
+
+```html
+<mat-toolbar>
+  <span>Select Uploads</span>
+  <button mat-button
+          *ngIf="selectedUploads.length > 0"
+          [disabled]="pending"
+          [style.margin-left.px]="12"
+          (click)="select.emit(selectedUploads)">Select</button>
+</mat-toolbar>
+<section fxLayout="row | wrap"
+         fxLayoutAlign="start start">
+  <section fxLayout="column"
+           fxLayoutAlign="start stretch"
+           fxFlex
+           [style.margin-right.px]="4">
+    <p class="mat-title">Available</p>
+    <section cdkDropList
+             #list="cdkDropList"
+             [cdkDropListData]="uploads"
+             [cdkDropListConnectedTo]="[selected]"
+             class="container drop-container"
+             (cdkDropListDropped)="drop($event)">
+      <section *ngFor="let u of uploads"
+               class="background card container elevated clickable"
+               cdkDrag>
+        <p>{{u.file}}</p>
+      </section>
+    </section>
+  </section>
+  <section fxLayout="column"
+           fxLayoutAlign="start stretch"
+           fxFlex
+           [style.margin-left.px]="4">
+    <p class="mat-title">Selected</p>
+    <section cdkDropList
+             #selected="cdkDropList"
+             [cdkDropListData]="selectedUploads"
+             [cdkDropListConnectedTo]="[list]"
+             class="container drop-container"
+             (cdkDropListDropped)="drop($event)">
+      <section *ngFor="let s of selectedUploads"
+               class="background card container elevated clickable"
+               cdkDrag>
+        <p>{{s.file}}</p>
+      </section>
+    </section>
+  </section>
+</section>
+```
+
+The component can be split into three different sections:
+
+* Header
+* Available Column
+* Selected Colunm
+
+The header defines a `<button>` that, when clicked, calls `select.emit(selectedUploads)`. It is disabled when `pending` is `true`. The button will only be shown when the `selectedUploads` array contains values.
+
+The **Available** and **Selected** sections are the same, just sourced from different arrays (`uploads` and `selectedUploads` respectively). They both incorporate the directives and events necessary to enable `CdkDragDrop` functionality:
+
+* The `cdkDropList` directive and template reference variable declaration, `#list="cdkDropList`, mark the element as a drop target
+* The `cdkDropListData` directive defines the data source for the drop list
+* The `cdkDropListConnectedTo` directive connects one drop list to another, allowing items to be moved between two lists
+* When an item is dropped inside of a drop list, the `cdkDropListDropped` event is emitted, and calls the `drop()` function for the component.
+* Each item inside of the drop list contains the `cdkDrag` directive, defining it as a drop list item which enables it to be dragged within the drop list, as well as between connected drop lists.
+
+The `FolderSelectorComponent` is implemented in the same was as `UploadSelectorComponent`, just relevant to the `Folder` entity.
+
+> It would be possible to make the selector component generic by creating an interface that wraps the type of the items managed by the selector. Feel free to work out this implementation on your own if interested.
+
+**`folder-selector.component.ts`**
+
+```ts
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
+
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem
+} from '@angular/cdk/drag-drop';
+
+import { Folder } from '../../models';
+
+@Component({
+  selector: 'folder-selector',
+  templateUrl: 'folder-selector.component.html'
+})
+export class FolderSelectorComponent {
+  @Input() folders: Folder[];
+  @Input() pending = false;
+  @Output() select = new EventEmitter<Folder[]>();
+
+  selectedFolders = new Array<Folder>();
+
+  drop(event: CdkDragDrop<Folder[]>) {
+    event.previousContainer !== event.container ?
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      ) :
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+  }
+}
+```
+
+**`folder-selector.component.html`**
+
+```html
+<mat-toolbar>
+  <span>Select Folders</span>
+  <button mat-button
+          *ngIf="selectedFolders.length > 0"
+          [disabled]="pending"
+          [style.margin-left.px]="12"
+          (click)="select.emit(selectedFolders)">Select</button>
+</mat-toolbar>
+<section fxLayout="row | wrap"
+         fxLayoutAlign="start start">
+  <section fxLayout="column"
+           fxLayoutAlign="start stretch"
+           fxFlex
+           [style.margin-right.px]="4">
+    <p class="mat-title">Available</p>
+    <section cdkDropList
+             #list="cdkDropList"
+             [cdkDropListData]="folders"
+             [cdkDropListConnectedTo]="[selected]"
+             class="container drop-container"
+             (cdkDropListDropped)="drop($event)">
+      <section *ngFor="let a of folders"
+               class="background card container elevated clickable"
+               cdkDrag>
+        <p>{{a.name}}</p>
+      </section>
+    </section>
+  </section>
+  <section fxLayout="column"
+           fxLayoutAlign="start stretch"
+           fxFlex
+           [style.margin-left.px]="4">
+    <p class="mat-title">Selected</p>
+    <section cdkDropList
+             #selected="cdkDropList"
+             [cdkDropListData]="selectedFolders"
+             [cdkDropListConnectedTo]="[list]"
+             class="container drop-container"
+             (cdkDropListDropped)="drop($event)">
+      <section *ngFor="let s of selectedFolders"
+               class="background card container elevated clickable"
+               cdkDrag>
+        <p>{{s.name}}</p>
+      </section>
+    </section>
+  </section>
+</section>
+```
+
+Make sure that the `components` TypeScript module is updated with the newly created components:
+
+**`index.ts`**
+
+```ts
+import { BannerComponent } from './banner/banner.component';
+import { FileListComponent } from './file-upload/file-list.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
+import { FolderCardComponent } from './folder/folder-card.component';
+import { FolderSelectorComponent } from './folder/folder-selector.component';
+import { SearchbarComponent } from './searchbar/searchbar.component';
+import { UploadCardComponent } from './upload/upload-card.component';
+import { UploadSelectorComponent } from './upload/upload-selector.component';
+
+export const Components = [
+  BannerComponent,
+  FileListComponent,
+  FileUploadComponent,
+  FolderCardComponent,
+  FolderSelectorComponent,
+  SearchbarComponent,
+  UploadCardComponent,
+  UploadSelectorComponent
+];
+```
+
+#### [Dialogs](#uploads)
+
+
+
+#### [Routes](#uploads)
+
+#### [Updated App Component](#uploads)
 
 [Back to Top](#uploads)

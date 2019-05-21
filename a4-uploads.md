@@ -2693,7 +2693,432 @@ export const Components = [
 
 #### [Dialogs](#uploads)
 
+In addition to creating a `FolderBinDialog`, the following dialogs will also be created:
 
+* `AddFolderDialog` - retrieves a list of folders an upload is not related to, and allows you to add the relationship between the upload and the selected folders
+* `AddUploadDialog` - retrieves a list of uploads a folder is not related to, and allows you to add the relationship between the folder and the selected uploads
+* `FolderDialog` - used to create or edit a `Folder` item
+
+**`add-folder.dialog.ts`**
+
+```ts
+import {
+  Component,
+  Inject,
+  OnInit
+} from '@angular/core';
+
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from '@angular/material';
+
+import {
+  FolderService
+} from '../../services';
+
+import {
+  Folder,
+  FolderUpload,
+  Upload
+} from '../../models';
+
+@Component({
+  selector: 'add-folder-dialog',
+  templateUrl: 'add-folder.dialog.html',
+  providers: [FolderService]
+})
+export class AddFolderDialog implements OnInit {
+  uploading = false;
+
+  constructor(
+    private dialogRef: MatDialogRef<AddFolderDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: Upload,
+    public folder: FolderService
+  ) { }
+
+  ngOnInit() {
+    this.folder.getExcludedFolders(this.data.file);
+  }
+
+  addUploadFolders = async (a: Folder[]) => {
+    this.uploading = true;
+    const folders = a.map(x => Object.assign(new FolderUpload(), {
+      folderId: x.id,
+      uploadId: this.data.id
+    }));
+
+    const res = await this.folder.addFolderUploads(folders);
+    this.uploading = false;
+    res && this.dialogRef.close(true);
+  }
+}
+```
+
+The `FolderService` is registered with the `providers` array for `AddFolderDialog`.
+
+In the **OnInit** lifecycle hook, `FolderService.getExcludedFolders()` is called and retrieves all of the folders that aren't related to `data.file`, which is injected as an `Upload` object.
+
+The `addUploadFolders()` asynchronous function receives a `Folder[]`. It sets the `uploading` property to `true`, then creates a `FolderUpload[]` based on the received argument. The `FolderUpload[]` is then passed to the `FolderService.AddFolderUploads()` function. When complete, the `uploading` property is set to `false`, and if the operation completed successfully, the dialog is closed with a result of `true`.
+
+**`add-folder.dialog.html`**
+
+```html
+<div class="mat-typography">
+  <h2 mat-dialog-title>Add {{data.file}} to Folders</h2>
+  <mat-dialog-content>
+    <ng-template #loading>
+      <mat-progress-bar mode="indeterminate"
+                        color="accent"></mat-progress-bar>
+    </ng-template>
+    <ng-container *ngIf="folder.folders$ | async as folders else loading">
+      <folder-selector [folders]="folders"
+                      [pending]="uploading"
+                      (select)="addUploadFolders($event)"></folder-selector>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</div>
+```
+
+The meat of this dialog is the `<folder-selector>` component. When the `FolderService.folders$` stream, populated by the `getExcludedFolders()` function called in **OnInit**, contains a value, the array is passed to the `FolderSelectorComponent`. The `pending` input property is managed via the `uploading` property, and when the `select` event is emitted, the resulting `Folder[]` is passed to the `addUploadFolders()` function.
+
+The `AddUploadDialog` functions the same way, just assigning uploads to a folder.
+
+**`add-upload.dialog.ts`**
+
+```ts
+import {
+  Component,
+  Inject,
+  OnInit
+} from '@angular/core';
+
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from '@angular/material';
+
+import {
+  FolderService,
+  UploadService
+} from '../../services';
+
+import {
+  Folder,
+  FolderUpload,
+  Upload
+} from '../../models';
+
+@Component({
+  selector: 'add-upload-dialog',
+  templateUrl: 'add-upload.dialog.html',
+  providers: [FolderService, UploadService]
+})
+export class AddUploadDialog implements OnInit {
+  files: File[];
+  formData: FormData;
+  uploading = false;
+
+  constructor(
+    private dialogRef: MatDialogRef<AddUploadDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: Folder,
+    public folder: FolderService,
+    public upload: UploadService
+  ) { }
+
+  ngOnInit() {
+    this.upload.getExcludedUploads(this.data.name);
+  }
+
+  fileChange = (fileDetails: [File[], FormData]) => {
+    this.files = fileDetails[0];
+    this.formData = fileDetails[1];
+  }
+
+  clearFiles = () => {
+    this.files = null;
+    this.formData = null;
+  }
+
+  addNewUploads = async () => {
+    this.uploading = true;
+    const res = await this.upload.uploadFiles(this.formData);
+    this.uploading = false;
+    res && this.addFolderUploads(res);
+  }
+
+  addFolderUploads = async (u: Upload[]) => {
+    this.uploading = true;
+    const uploads = u.map(x => Object.assign(new FolderUpload(), {
+      folderId: this.data.id,
+      uploadId: x.id
+    }));
+
+    const res = await this.folder.addFolderUploads(uploads);
+    this.uploading = false;
+    res && this.dialogRef.close(true);
+  }
+}
+```
+
+**`add-upload.dialog.html`**
+
+```html
+<div class="mat-typography">
+  <h2 mat-dialog-title>Add Uploads to {{data.name}}</h2>
+  <mat-dialog-content>
+    <ng-template #loading>
+      <mat-progress-bar mode="indeterminate"
+                        color="accent"></mat-progress-bar>
+    </ng-template>
+    <mat-toolbar>
+      <span>Add New Uploads</span>
+      <section [style.margin-left.px]="12">
+        <file-upload (selected)="fileChange($event)"
+                     accept="*/*"></file-upload>
+        <button mat-button
+                color="primary"
+                (click)="addNewUploads()"
+                *ngIf="formData"
+                [disabled]="uploading">Upload New</button>
+        <button mat-button
+                (click)="clearFiles()"
+                *ngIf="formData"
+                [disabled]="uploading">Clear</button>
+      </section>
+    </mat-toolbar>
+    <ng-container *ngIf="files">
+      <file-list [files]="files"></file-list>
+    </ng-container>
+    <ng-container *ngIf="upload.uploads$ | async as uploads else loading">
+      <upload-selector [uploads]="uploads"
+                       [pending]="uploading"
+                       (select)="addFolderUploads($event)"></upload-selector>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</div>
+```
+
+As mentioned above, the `FolderDialog` is used to create a new folder, or update an existing folder based on the `data: Folder` object injected into the constructor of the dialog.
+
+**`folder.dialog.ts`**
+
+```ts
+import {
+  Component,
+  Inject,
+  OnInit
+} from '@angular/core';
+
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from '@angular/material';
+
+import { FolderService } from '../../services';
+import { Folder } from '../../models';
+
+@Component({
+  selector: 'folder-dialog',
+  templateUrl: 'folder.dialog.html',
+  providers: [FolderService]
+})
+export class FolderDialog implements OnInit {
+  dialogTitle = 'Add Folder';
+  folder: Folder;
+
+  constructor(
+    private dialogRef: MatDialogRef<FolderDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: Folder,
+    public service: FolderService
+  ) { }
+
+  ngOnInit() {
+    this.folder = this.data ?
+      this.data :
+      new Folder();
+
+    this.dialogTitle = this.data && this.data.id ?
+      'Update Folder' :
+      'Add Folder';
+  }
+
+  saveFolder = async () => {
+    const res = this.folder.id ?
+      await this.service.updateFolder(this.folder) :
+      await this.service.addFolder(this.folder);
+
+    res && this.dialogRef.close(true);
+  }
+}
+```
+
+The `FolderService` is registered with the `providers` array for `FolderDialog`.
+
+In the **OnInit** lifecycle hook, if the `data: Folder` object injected into the constructor has a value, the `folder: Folder` property is set to the value of `data`. Otherwise, it is initialized as a `new Folder()`. If the `id` of the injected `data: Folder` has a value, then a folder is being updated. Otherwise, a folder is being created.
+
+The `saveFolder()` asynchronous function checks whether the `folder` property has an ID. If so, it is provided to `FolderService.updateFolder()`. Otherwise, it is provided to `FolderService.addFolder()`. If the executed operation completes successfully, the dialog is closed with a result of `true`.
+
+**`folder.dialog.html`**
+
+```html
+<div class="mat-typography">
+  <h2 mat-dialog-title>{{dialogTitle}}</h2>
+  <mat-dialog-content>
+    <section fxLayout="column"
+             fxLayoutAlign="start stretch">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput
+               [(ngModel)]="folder.name">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea matInput
+                  mat-autosize
+                  [(ngModel)]="folder.description"
+                  [matAutosizeMinRows]="4"
+                  [matAutosizeMaxRows]="8"></textarea>
+      </mat-form-field>
+    </section>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            color="accent"
+            (click)="saveFolder()">Save</button>
+    <button mat-button
+            mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</div>
+```
+
+The template for `FolderDialog` binds the `folder.name` and `folder.description` properties to inputs. The **Save** action button calls the `saveFolder()` function when clicked.
+
+The `FolderBinDialog` functions the same as the previously defined `UploadBinDialog`, managing `Folder` objects instead of `Upload` objects.
+
+**`folder-bin.dialog.ts`**
+
+```ts
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+
+import { FolderService } from '../../services';
+import { Folder } from '../../models';
+
+@Component({
+  selector: 'folder-bin-dialog',
+  templateUrl: 'folder-bin.dialog.html',
+  providers: [FolderService]
+})
+export class FolderBinDialog implements OnInit {
+  constructor(
+    public service: FolderService
+  ) { }
+
+  ngOnInit() {
+    this.service.getDeletedFolders();
+  }
+
+  restoreFolder = async (folder: Folder) => {
+    const res = await this.service.toggleFolderDeleted(folder);
+    res && this.service.getDeletedFolders();
+  }
+
+  removeFolder = async (folder: Folder) => {
+    const res = await this.service.removeFolder(folder);
+    res && this.service.getDeletedFolders();
+  }
+}
+```
+
+**`folder-bin.dialog.html`**
+
+```html
+<div class="mat-typography">
+  <h2 mat-dialog-title>Folder Bin</h2>
+  <mat-dialog-content>
+    <ng-template #loading>
+      <p class="mat-title">Loading Folder Bin</p>
+      <mat-progress-bar mode="indeterminate"
+                        color="accent"></mat-progress-bar>
+    </ng-template>
+    <ng-container *ngIf="service.folders$ | async as folders else loading">
+      <section *ngIf="folders.length > 0"
+               fxLayout="column"
+               fxLayoutAlign="start stretch"
+               class="container">
+        <section *ngFor="let a of folders"
+                 class="background card elevated"
+                 fxLayout="column"
+                 fxLayoutAlign="start stretch">
+          <section fxLayout="row"
+                   fxLayoutAlign="start center"
+                   class="container">
+            <p class="mat-title"
+               fxFlex>{{a.name}}</p>
+            <button mat-button
+                    color="warn"
+                    (click)="removeFolder(a)">Delete</button>
+            <button mat-button
+                    (click)="restoreFolder(a)">Restore</button>
+          </section>
+          <section class="container"
+                   [matTooltip]="a.description">
+            <p>{{a.description | truncate}}</p>
+          </section>
+        </section>
+      </section>
+      <p *ngIf="!(folders.length > 0)"
+         class="mat-title">Recycle Bin is Empty</p>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</div>
+```
+
+Make sure to update the `dialogs` TypeScript module with the newly created dialogs:
+
+**`index.ts`**
+
+```ts
+import { ConfirmDialog } from './confirm.dialog';
+
+import { AddUploadDialog } from './folder/add-upload.dialog';
+import { FolderDialog } from './folder/folder.dialog';
+import { FolderBinDialog } from './folder/folder-bin.dialog';
+
+import { AddFolderDialog } from './upload/add-folder.dialog';
+import { UploadBinDialog } from './upload/upload-bin.dialog';
+
+export const Dialogs = [
+  ConfirmDialog,
+  AddUploadDialog,
+  FolderDialog,
+  FolderBinDialog,
+  AddFolderDialog,
+  UploadBinDialog
+];
+
+export * from './confirm.dialog';
+export * from './folder/add-upload.dialog';
+export * from './folder/folder.dialog';
+export * from './folder/folder-bin.dialog';
+export * from './upload/add-folder.dialog';
+export * from './upload/upload-bin.dialog';
+```
 
 #### [Routes](#uploads)
 

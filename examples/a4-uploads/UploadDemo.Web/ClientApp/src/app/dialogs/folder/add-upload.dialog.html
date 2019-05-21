@@ -26,7 +26,7 @@
     </ng-container>
     <ng-container *ngIf="upload.uploads$ | async as uploads else loading">
       <upload-selector [uploads]="uploads"
-                       [selectable]="uploading"
+                       [pending]="uploading"
                        (select)="addFolderUploads($event)"></upload-selector>
     </ng-container>
   </mat-dialog-content>

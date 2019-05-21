@@ -179,7 +179,8 @@ Register `AppDbContext` with the `Startup` class:
 ``` cs
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default"));
+    services.AddDbContext<AppDbContext>(options => 
+      options.UseSqlServer(Configuration.GetConnectionString("Dev"));
 }
 ```
 

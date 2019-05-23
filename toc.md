@@ -219,7 +219,18 @@
 
 ### [Advanced Routing](./a2-advanced-routing.md)
 
-
+* [Overview](./a2-advanced-routing.md#overview)
+    * [base-href](./a2-advanced-routing.md#base-href)
+    * [router-outlet](./a2-advanced-routing.md#router-outlet)
+    * [Router Links](./a2-advanced-routing.md#router-links)
+    * [Active Router Links](./a2-advanced-routing.md#active-router-links)
+    * [Route Parameters](./a2-advanced-routing.md#route-parameters)
+    * [Activated Route](./a2-advanced-routing.md#activated-route)
+    * [Routing Example](./a2-advanced-routing.md#routing-example)
+* [Child Routes](./a2-advanced-routing.md#child-routes)
+    * [Child Routes Example](./a2-advanced-routing.md#child-routes-example)
+* [Secondary Routes](./a2-advanced-routing.md#secondary-routes)
+    * [Secondary Routes Example](./a2-advanced-routing.md#secondary-routes-example)
 
 ### [Dialogs](./a3-dialogs.md)
 

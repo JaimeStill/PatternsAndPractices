@@ -102,7 +102,7 @@ dotnet new -i {path-to-template-folder}
 
 After the command executes, the list of available `dotnet` commands is displayed, along with an updated list of available `dotnet new` templates. The following should closely represent what you see, with the new **stack** template highlighted:
 
-[![readme.01-new-template](./images/readme.01-new-template.png)](./images/readme.01-new-template.png)
+[![new-template](./images/readme/new-template.png)](./images/readme/new-template.png)
 
 ## [Creating an App Stack Project](#patterns-and-practices)  
 

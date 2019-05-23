@@ -48,7 +48,7 @@ export class ExampleComponent {
 
 The dependency injection process can be explained looking at the following diagram:
 
-[![dependency-injection](./images/13.01-dependency-injection.png)](./images/13.01-dependency-injection.png)
+[![dependency-injection](./images/13-services/dependency-injection.png)](./images/13-services/dependency-injection.png)
 
 When a service is injected into the constructor of a component, it will perform the following steps:
 

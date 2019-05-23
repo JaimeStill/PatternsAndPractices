@@ -1,10 +1,4 @@
-# Advanced Routing  
-
-**Child Routes**  
-https://angular.io/guide/router#a-crisis-center-with-child-routes  
-
-**Secondary Routes**  
-https://angular.io/guide/router#displaying-multiple-routes-in-named-outlets  
+# Advanced Routing    
 
 [Table of Contents](./toc.md)
 
@@ -274,7 +268,49 @@ This helps to keep the app more organized and prevent `/routes/index.ts` from be
 
 ### [Child Routes Example](#advanced-routing)
 
+* [StackBlitz - Demo](https://docs-child-routes.stackblitz.io)
+* [StackBlitz - Source](https://stackblitz.com/edit/docs-child-routes)
+
+This example was built using the [JSON Placeholder](https://jsonplaceholder.typicode.com/) API. In the initial route, `/users`, a list of users is retrieved from the API. Whenever a user is selected, the `/user/:id` route is navigated to. This route has two child routes:
+* `/user/:id/posts`
+* `/user/:id/todos`
+
+Both of the child routes retrieve data based on the currently selected user. However, if you attempt to call `param.has('id')` on the resolved `ActivatedRoute.paramMap`, it will return false. This is because, at this scope, `id` does not exist. This is to prevent collisions in URL parameter names.
+
+It is perfectly acceptable to add a child route with a parameter that is named the same as a parameter defined any number of levels above it. In order to access the URL parameter of a route at a higher level, you need to access the `ActivatedRoute.parent.paramMap` Observable.
+
+Given the child routes above, to access the `id` URL parameter, you would need to do this in **OnInit** of the child route component:
+
+```ts
+ngOnInit() {
+    this.route.parent.paramMap.subscribe((param: ParamMap) => {
+        if (param.has('id')) {
+            const id = parseInt(param.get('id'));
+        }
+    });
+}
+```
+
+The remainder of this section will be concerned with showing all of the relevant parts of the example app in the context of child routes.
+
+The service for retrieving data from the API is [app.service.ts](https://stackblitz.com/edit/docs-child-routes?file=src%2Fapp%2Fservices%2Fapp.service.ts).
+
+The `routes/user` TypeScript module is defined at [index.ts](https://stackblitz.com/edit/docs-child-routes?file=src%2Fapp%2Froutes%2Fuser%2Findex.ts).
+
+The `routes` TypeScript module is defined at [index.ts](https://stackblitz.com/edit/docs-child-routes?file=src%2Fapp%2Froutes%2Findex.ts).
+
+**Child Route Components**
+
+* [PostsComponent](https://stackblitz.com/edit/docs-child-routes?file=src%2Fapp%2Froutes%2Fuser%2Fchildren%2Fposts.component.ts)
+* [TodosComponent](https://stackblitz.com/edit/docs-child-routes?file=src%2Fapp%2Froutes%2Fuser%2Fchildren%2Ftodos.component.ts)
+
+**Route Components**
+* [UsersComponent](https://stackblitz.com/edit/docs-child-routes?file=src%2Fapp%2Froutes%2Fuser%2Fusers.component.ts)
+* [UserComponent](https://stackblitz.com/edit/docs-child-routes?file=src%2Fapp%2Froutes%2Fuser%2Fuser.component.ts)
+
 ## [Secondary Routes](#advanced-routing)
+
+> For additional details on secondary routes, see [Displaying Multiple Routes in Named Outlets](https://angular.io/guide/router#displaying-multiple-routes-in-named-outlets) in the Angular router documentation.
 
 ### [Secondary Routes Example](#advanced-routing)
 

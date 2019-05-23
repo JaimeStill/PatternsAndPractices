@@ -181,6 +181,97 @@ Clicking an **Item** in the [HomeComponent](https://stackblitz.com/edit/docs-bas
 
 > For additional details on child routes, see [Milestone 4 - Crisis center feature](https://angular.io/guide/router#milestone-4-crisis-center-feature) in the Angular router documentation.
 
+A child route can be defined by specifying a list of `Route` objects in the `children` array of a `Route`. The component resolved to the route with `children` must define a `<router-outlet>` in its template. This ensures that components resolved at its child routes can be rendered.
+
+Again, it helps to visualize this to understand it better:
+
+[![child-routes](./images/a2-advanced-routing/child-routes.png)](./images/a2-advanced-routing/child-routes.png)
+
+There are two different ways you can go about setting up this route configuration.
+
+**One Route Module**
+
+**index.ts**
+
+```ts
+export const Routes: Route[] = [
+    {
+        path: 'a-component',
+        component: AComponent,
+        children: [
+            { path: 'b-component', component: BComponent },
+            { path: 'c-component', component: CComponent },
+            { path: '', redirectTo: 'b-component', pathMatch: 'prefix' },
+            { path: '**', redirectTo: 'b-component', pathMatch: 'prefix' }
+        ]
+    },
+    { path: '', redirectTo: 'a-component', pathMatch: 'full' },
+    { path: '**', redirectTo: 'a-component', pathMatch: 'full' }
+]
+```
+
+Just as with the base routes, child routes can defined a default route, and a catch-all route. The difference is that the `pathMatch` property should be set to `prefix` instead of `full`. This ensures that routes are only evaluated in the context of the route the children are defined in.
+
+**Multiple Route Modules**
+
+If you start to have a lot of child routes, you can define the folder containing the route with the child routes as a TypeScript module, and define the child routes in a sub-folder. For example:
+
+* routes
+    * a
+        * children
+            * b.component.html
+            * b.component.ts
+            * c.component.html
+            * c.component.ts
+        * a.component.html
+        * a.component.ts
+        * index.ts
+    * index.ts
+
+In this situation, `/routes/a/index.ts` would be defined as follows:
+
+```ts
+import { Route } from '@angular/router';
+import { BComponent } from './children/b.component';
+import { CComponent } from './children/c.component';
+
+export const AComponents = [
+    BComponent,
+    CComponent
+];
+
+export const ARoutes: Route[] = [
+    { path: 'b-component', component: BComponent },
+    { path: 'c-component', component: CComponent },
+    { path: '', redirectTo: 'b-component', pathMatch: 'prefix' },
+    { path: '**', redirectTo: 'b-component', pathMatch: 'prefix' }
+];
+```
+
+Then, `/routes/index.ts` would import the child components, and define the child routes as follows:
+
+```ts
+import { Route } from '@angular/router';
+import { AComponent } from './a/a.component';
+import {
+    AComponents,
+    ARoutes
+} from './a';
+
+export const RouteComponents = [
+    AComponent,
+    ...AComponents
+];
+
+export const Routes: Route[] = [
+    { path: 'a-component', component: AComponent, children: ARoutes },
+    { path: '', redirectTo: 'a-component', pathMatch: 'full' },
+    { path: '**', redirectTo: 'a-component', pathMatch: 'full' }
+];
+```
+
+This helps to keep the app more organized and prevent `/routes/index.ts` from becoming too bulky.
+
 ### [Child Routes Example](#advanced-routing)
 
 ## [Secondary Routes](#advanced-routing)

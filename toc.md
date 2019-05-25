@@ -301,6 +301,7 @@
     * [Route Components](./r2-examples.md#route-components)
 * [Pipes](./r2-examples.md#pipes)
 * [RxJS](./r2-examples.md#rxjs)
+* [Advanced Routing](./r2-examples.md#advanced-routing)
 * [Uploads](./r2-examples.md#uploads)
 
 [Back to Top](#table-of-contents)

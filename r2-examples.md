@@ -7,6 +7,8 @@
     * [Display Components](#display-components)
     * [Route Components](#route-components)
 * [Pipes](#pipes)
+* [RxJS](#rxjs)
+* [Advanced Routing](#advanced-routing)
 * [Uploads](#uploads)
 
 ## [Angular Material](#examples)
@@ -40,6 +42,11 @@
 
 ## [RxJS](#examples)
 * [StackBlitz - RxJS](https://stackblitz.com/edit/docs-rxjs)
+
+## [Advanced Routing](#examples)
+* [StackBlitz - Basic Routing](https://stackblitz.com/edit/docs-basic-routing)
+* [StackBlitz - Child Routes](https://stackblitz.com/edit/docs-child-routes)
+* [StackBlitz - Secondary Routes](https://stackblitz.com/edit/docs-secondary-routes)
 
 ## [Uploads](#examples)
 * [Upload Demo](./examples/a4-uploads)

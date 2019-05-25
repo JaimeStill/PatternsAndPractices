@@ -329,8 +329,74 @@ Secondary routes are very similar to primary routes, with the exception that the
 </section>
 ```
 
-In the above template, all of the primary routes are rendered in the outlet contained in `<section class="app-main">`. If you want to render secondary content in a panel on the right side of the screen, you have to specify the `outlet` in the route definition.
+In the above template, all of the primary routes are rendered in the outlet contained in `<section class="app-main">`. If you want to render secondary content in a panel on the right side of the screen, you have to specify the `outlet` in the route definition:
+
+```ts
+{ path: 'path', component: SecondaryComponent, outlet: 'side' },
+// additional routes
+```
+
+If you want to link to a secondary route, you must define the `routerLink` directive as follows:
+
+```html
+<a [routerLink]="['', { outlets: { side: ['path'] } }]">Open Side</a>
+```
+
+This specifies that, given the current route, resolve the `path` route into `<router-outlet name="side">`.
+
+A URL with a secondary route looks as follows:
+
+```
+http://localhost/home(side:path)
+```
+
+The URL segment contained in parenthesis defines the secondary route by specifying the `outlet` as well as the `path`. In this case `(side:path)`.
+
+> Paths can also include parameters, just as with any valid primary route.
+> ```
+> { path: 'path/:name', component: SecondaryComponent, outlet: 'side' }
+> ```
+> The URL parameters for this secondary route can be specified using `(side:path/name)`.
+
+If you want to remove the secondary route, just set the content of the outlet to `null`:
+
+```ts
+this.router.navigate([{ outlets: { side: null }}]);
+```
+
+An important distinction to understand about secondary routes is that they persist apart from primary routes. This means that if you resolve content to a secondary route, then perform navigation with a primary route, the content rendered into the secondary route will still be present.
 
 ### [Secondary Routes Example](#advanced-routing)
+
+* [StackBlitz - Demo](https://docs-secondary-routes.stackblitz.io/)
+* [StackBlitz - Source](https://stackblitz.com/edit/docs-secondary-routes)
+
+The `AppComponent` template is defined the same way as the example shown above: [app.component.html](https://stackblitz.com/edit/docs-secondary-routes?file=src%2Fapp%2Fapp.component.html).
+
+The app defines two primary routes, and two secondary routes:
+
+**Primary**  
+* `/books`
+* `/weapons`
+
+**Secondary**
+* `/book/:id`
+* `/weapon/:id`
+
+> The data used in this demo is taken from the [Ishtar Collective](https://www.ishtar-collective.net/) lore site for the Destiny game series.
+
+The data in the app consists of [Book](https://stackblitz.com/edit/docs-secondary-routes?file=src%2Fapp%2Fmodels%2Fbook.ts) and [Weapon](https://stackblitz.com/edit/docs-secondary-routes?file=src%2Fapp%2Fmodels%2Fweapon.ts) types. A book is a series of [Chapters](https://stackblitz.com/edit/docs-secondary-routes?file=src%2Fapp%2Fmodels%2Fchapter.ts) pertaining to a story arc, and a weapon defines the characteristics and history surrounding a particular weapon.
+
+In each *primary* route, a list of objects is rendered. When an object is clicked, the details for that object are rendered in a secondary route. If you open the details for an object, then navigate to a different primary route, the details for that object will still be present.
+
+**Primary Route Components**
+* [BooksComponent](https://stackblitz.com/edit/docs-secondary-routes?file=src%2Fapp%2Froutes%2Fbooks%2Fbooks.component.ts)
+* [WeaponsComponent](https://stackblitz.com/edit/docs-secondary-routes?file=src%2Fapp%2Froutes%2Fweapons%2Fweapons.component.ts)
+
+**Secondary Route Components**
+* [BookComponent](https://stackblitz.com/edit/docs-secondary-routes?file=src%2Fapp%2Froutes%2Fbook%2Fbook.component.ts)
+* [WeaponComponent](https://stackblitz.com/edit/docs-secondary-routes?file=src%2Fapp%2Froutes%2Fweapon%2Fweapon.component.ts)
+
+The routes are defined in the `routes` TypeScript module, [index.ts](https://stackblitz.com/edit/docs-secondary-routes?file=src%2Fapp%2Froutes%2Findex.ts).
 
 [Back to Top](#advanced-routing)

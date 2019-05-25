@@ -312,6 +312,25 @@ The `routes` TypeScript module is defined at [index.ts](https://stackblitz.com/e
 
 > For additional details on secondary routes, see [Displaying Multiple Routes in Named Outlets](https://angular.io/guide/router#displaying-multiple-routes-in-named-outlets) in the Angular router documentation.
 
+Secondary routes are very similar to primary routes, with the exception that they specify a non-standard router outlet to resolve their content in. Before you can even define a secondary route, you must have more than one `<router-outlet>` defined within a view, and it must specify a `name` attribute:
+
+**`app.component.html`**
+```html
+<section class="app-body"
+         fxLayout="row"
+         fxLayoutAlign="start start">
+  <section class="app-main"
+           fxFlex>
+    <router-outlet></router-outlet>
+  </section>
+  <section class="app-side">
+    <router-outlet name="side"></router-outlet>
+  </section>
+</section>
+```
+
+In the above template, all of the primary routes are rendered in the outlet contained in `<section class="app-main">`. If you want to render secondary content in a panel on the right side of the screen, you have to specify the `outlet` in the route definition.
+
 ### [Secondary Routes Example](#advanced-routing)
 
 [Back to Top](#advanced-routing)

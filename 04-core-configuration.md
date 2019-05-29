@@ -29,37 +29,37 @@ using System.Threading.Tasks;
 
 namespace Demo.Core.Extensions
 {
-    public static class CoreExtensions
+  public static class CoreExtensions
+  {
+    private static readonly string urlPattern = "[^a-zA-Z0-9-.]";
+
+    public static string UrlEncode(this string url)
     {
-        private static readonly string urlPattern = "[^a-zA-Z0-9-.]";
-
-        public static string UrlEncode(this string url)
-        {
-            var friendlyUrl = Regex.Replace(url, @"\s", "-").ToLower();
-            friendlyUrl = Regex.Replace(friendlyUrl, urlPattern, string.Empty);
-            return friendlyUrl;
-        }
-
-        public static string UrlEncode(this string url, string pattern, string replace = "")
-        {
-            var friendlyUrl = Regex.Replace(url, @"\s", "-").ToLower();
-            friendlyUrl = Regex.Replace(friendlyUrl, pattern, replace);
-            return friendlyUrl;
-        }
-
-        public static string GetExceptionChain(this Exception ex)
-        {
-            var message = new StringBuilder(ex.Message);
-
-            if (ex.InnerException != null)
-            {
-                message.AppendLine();
-                message.AppendLine(GetExceptionChain(ex.InnerException));
-            }
-
-            return message.ToString();
-        }
+      var friendlyUrl = Regex.Replace(url, @"\s", "-").ToLower();
+      friendlyUrl = Regex.Replace(friendlyUrl, urlPattern, string.Empty);
+      return friendlyUrl;
     }
+
+    public static string UrlEncode(this string url, string pattern, string replace = "")
+    {
+      var friendlyUrl = Regex.Replace(url, @"\s", "-").ToLower();
+      friendlyUrl = Regex.Replace(friendlyUrl, pattern, replace);
+      return friendlyUrl;
+    }
+
+    public static string GetExceptionChain(this Exception ex)
+    {
+      var message = new StringBuilder(ex.Message);
+
+      if (ex.InnerException != null)
+      {
+        message.AppendLine();
+        message.AppendLine(GetExceptionChain(ex.InnerException));
+      }
+
+      return message.ToString();
+    }
+  }
 }
 ```  
 
@@ -84,51 +84,51 @@ A useful bit of information to provide to the log file would be the state of the
 ```cs
 public static async Task<string> GetContextDetails(this HttpContext context)
 {
-    var message = new StringBuilder();
-    message.AppendLine($"User: {context.User.Identity.Name}");
-    message.AppendLine($"Local IP: {context.Connection.LocalIpAddress}");
-    message.AppendLine($"Local Port: {context.Connection.LocalPort}");
-    message.AppendLine($"Remote IP: {context.Connection.RemoteIpAddress}");
-    message.AppendLine($"Remote Port: {context.Connection.RemotePort}");
-    message.AppendLine($"Content Type: {context.Request.ContentType}");
-    message.AppendLine($"URL: {context.Request.GetDisplayUrl()}");
+  var message = new StringBuilder();
+  message.AppendLine($"User: {context.User.Identity.Name}");
+  message.AppendLine($"Local IP: {context.Connection.LocalIpAddress}");
+  message.AppendLine($"Local Port: {context.Connection.LocalPort}");
+  message.AppendLine($"Remote IP: {context.Connection.RemoteIpAddress}");
+  message.AppendLine($"Remote Port: {context.Connection.RemotePort}");
+  message.AppendLine($"Content Type: {context.Request.ContentType}");
+  message.AppendLine($"URL: {context.Request.GetDisplayUrl()}");
             
-    if (context.Request.Headers.Count > 0)
-    {
-        message.AppendLine();
-        message.AppendLine("Headers");
+  if (context.Request.Headers.Count > 0)
+  {
+    message.AppendLine();
+    message.AppendLine("Headers");
                 
-        foreach (var h in context.Request.Headers)
-        {
-            message.AppendLine($"{h.Key} : {h.Value}");
-        }
+    foreach (var h in context.Request.Headers)
+    {
+      message.AppendLine($"{h.Key} : {h.Value}");
     }
+  }
 
-    context.Request.EnableBuffering();
+  context.Request.EnableBuffering();
 
-    if (context.Request.Body.Length > 0)
+  if (context.Request.Body.Length > 0)
+  {
+    message.AppendLine();
+    message.AppendLine("Body");
+                
+    var body = await context.Request.ReadFormAsync();
+                
+    foreach (var k in body.Keys)
     {
-        message.AppendLine();
-        message.AppendLine("Body");
-                
-        var body = await context.Request.ReadFormAsync();
-                
-        foreach (var k in body.Keys)
-        {
-            StringValues values;
-            body.TryGetValue(k.ToString(), out values);
+      StringValues values;
+      body.TryGetValue(k.ToString(), out values);
                     
-            if (values.Count > 0)
-            {
-                foreach (var v in values)
-                {
-                    message.AppendLine($"{k.ToString()} : {v.ToString()}");
-                }
-            }
+      if (values.Count > 0)
+      {
+        foreach (var v in values)
+        {
+          message.AppendLine($"{k.ToString()} : {v.ToString()}");
         }
+      }
     }
+  }
             
-    return message.ToString();
+  return message.ToString();
 }
 ```  
 
@@ -137,10 +137,10 @@ Another necessary feature is being able to write the details of the log message 
 ```cs
 public static async Task WriteLog(this StringBuilder message, string path)
 {
-    using (var stream = new StreamWriter(path))
-    {
-        await stream.WriteAsync(message.ToString());
-    }
+  using (var stream = new StreamWriter(path))
+  {
+    await stream.WriteAsync(message.ToString());
+  }
 }
 ```  
 
@@ -149,29 +149,29 @@ Finally, we want to be able to forward the recursive exception message to the ca
 ```cs
 public static void HandleError(this IApplicationBuilder app, LogProvider logger)
 {
-    app.Run(async context =>
-    {
-        var error = context.Features.Get<IExceptionHandlerFeature>();
+  app.Run(async context =>
+  {
+    var error = context.Features.Get<IExceptionHandlerFeature>();
 
      
-        // Log the error to the server using the original context
-        if (error != null)
-        {
-            var ex = error.Error;
-            await logger.CreateLog(context, ex);
-        }
+    // Log the error to the server using the original context
+    if (error != null)
+    {
+      var ex = error.Error;
+      await logger.CreateLog(context, ex);
+    }
 
-        // Update the context to reflect the error
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "application/json";
+    // Update the context to reflect the error
+    context.Response.StatusCode = 500;
+    context.Response.ContentType = "application/json";
 
-        // Send the error response back to the client
-        if (error != null)
-        {
-            var ex = error.Error;
-            await context.Response.WriteAsync(ex.GetExceptionChain(), Encoding.UTF8);
-        }
-    });
+    // Send the error response back to the client
+    if (error != null)
+    {
+      var ex = error.Error;
+      await context.Response.WriteAsync(ex.GetExceptionChain(), Encoding.UTF8);
+    }
+  });
 }
 ```  
 
@@ -187,28 +187,28 @@ using System.Threading.Tasks;
 
 namespace Demo.Core.Logging
 {
-    public class LogProvider
-    {
-        public string LogDirectory { get; set; }
-        public string GetLogName() => $"log-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.txt";
+  public class LogProvider
+  {
+    public string LogDirectory { get; set; }
+    public string GetLogName() => $"log-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.txt";
         
-        public async Task CreateLog(HttpContext context, Exception exception)
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine("ContextDetails");
-            builder.AppendLine();
-            builder.AppendLine(await context.GetContextDetails());
-            builder.AppendLine("Exception Details");
-            builder.AppendLine(exception.GetExceptionChain());
+    public async Task CreateLog(HttpContext context, Exception exception)
+    {
+      var builder = new StringBuilder();
+      builder.AppendLine("ContextDetails");
+      builder.AppendLine();
+      builder.AppendLine(await context.GetContextDetails());
+      builder.AppendLine("Exception Details");
+      builder.AppendLine(exception.GetExceptionChain());
             
-            if (!Directory.Exists(LogDirectory))
-            {
-                Directory.CreateDirectory(LogDirectory);
-            }
+      if (!Directory.Exists(LogDirectory))
+      {
+        Directory.CreateDirectory(LogDirectory);
+      }
             
-            await builder.WriteLog($@"{LogDirectory}\{GetLogName()}");
-        }
+      await builder.WriteLog($@"{LogDirectory}\{GetLogName()}");
     }
+  }
 }
 ```  
 

@@ -4,17 +4,17 @@
 
 * [Overview](#overview)
 * [TypeScript Modules](#typescript-modules)
-    * [Components](#components)
-    * [Dialogs](#dialogs)
-    * [Models](#models)
-    * [Routes](#routes)
-    * [Services](#services)
-    * [Pipes](#pipes)
+  * [Components](#components)
+  * [Dialogs](#dialogs)
+  * [Models](#models)
+  * [Routes](#routes)
+  * [Services](#services)
+  * [Pipes](#pipes)
 * [Angular Modules](#angular-modules)
-    * [App Stack Modules](#app-stack-modules)
-    * [Material Module](#material-module)
-    * [Services Module](#services-module)
-    * [App Module](#app-module)
+  * [App Stack Modules](#app-stack-modules)
+  * [Material Module](#material-module)
+  * [Services Module](#services-module)
+  * [App Module](#app-module)
 
 ## [Overview](#modules)
 
@@ -155,12 +155,12 @@ import { NgModule } from '@angular/core';
 import { Dialogs } from './dialogs';
 
 @NgModule({
-    declarations: [
-        [...Dialogs]
-    ],
-    entryComponents [
-        [...Dialogs]
-    ]
+  declarations: [
+    [...Dialogs]
+  ],
+  entryComponents [
+    [...Dialogs]
+  ]
 })
 export class AppModule { }
 ```  
@@ -225,8 +225,8 @@ import {
 } from '../models';
 
 export class InterfaceA {
-    b: InterfaceB,
-    c: InterfaceC
+  b: InterfaceB,
+  c: InterfaceC
 }
 ```  
 
@@ -237,8 +237,8 @@ import { InterfaceB } from '../interface-b';
 import { InterfaceC } from '../interface-c';
 
 export class InterfaceA {
-    b: InterfaceB,
-    c: InterfaceC
+  b: InterfaceB,
+  c: InterfaceC
 }
 ```
 

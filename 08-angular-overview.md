@@ -4,12 +4,12 @@
 
 * [Overview](#overview)
 * [Integration](#integration)
-    * [Startup](#startup)
-    * [MSBuild](#msbuild)
+  * [Startup](#startup)
+  * [MSBuild](#msbuild)
 * [Bootstrapping](#bootstrapping)
-    * [Index](#index)
-    * [Main](#main)
-    * [AppModule](#appmodule)
+  * [Index](#index)
+  * [Main](#main)
+  * [AppModule](#appmodule)
 * [Managing Dependencies](#managing-dependencies)
 
 ## [Overview](#angular)
@@ -57,28 +57,28 @@ Angular is primarily integrated via the `Startup` class. Below is an example of 
 ```cs
 public class Startup
 {
-    public void ConfigureServices(IServiceCollection services)
+  public void ConfigureServices(IServiceCollection services)
+  {
+    services.AddSpaStaticFiles(configuration =>
     {
-        services.AddSpaStaticFiles(configuration =>
-        {
-            configuration.RootPath = "ClientApp/dist";
-        });
-    }
+      configuration.RootPath = "ClientApp/dist";
+    });
+  }
 
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+  public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+  {
+    app.UseSpaStaticFiles();
+
+    app.UseSpa(spa =>
     {
-        app.UseSpaStaticFiles();
+      spa.Options.SourcePath = "ClientApp";
 
-        app.UseSpa(spa =>
-        {
-            spa.Options.SourcePath = "ClientApp";
-
-            if (env.IsDevelopment())
-            {
-                spa.UseAngularCliServer(npmScript: "start");
-            }
-        });
-    }
+      if (env.IsDevelopment())
+      {
+        spa.UseAngularCliServer(npmScript: "start");
+      }
+    });
+  }
 }
 ```  
 
@@ -207,9 +207,9 @@ Here is the **index.html** file for reference:
 The components that are bootstrapped and available to be loaded into this file are specified as:
 
 * An `AppModule` is bootstrapped using `bootstrapModule` in `main.ts`
-    * Any component that is in the `bootstrap` array of the `AppModule` metadata definition can be rendered in the **index.html** view (in this case, `AppComponent`)
-        * Modules will be covered in the [Modules](./10-modules.md) article
-        * Components (including `AppComponent`) will be covered in the [Components](./14-components.md) through [Routes](./17-routes.md) articles.
+  * Any component that is in the `bootstrap` array of the `AppModule` metadata definition can be rendered in the **index.html** view (in this case, `AppComponent`)
+    * Modules will be covered in the [Modules](./10-modules.md) article
+    * Components (including `AppComponent`) will be covered in the [Components](./14-components.md) through [Routes](./17-routes.md) articles.
 
 ### [Main](#angular)
 

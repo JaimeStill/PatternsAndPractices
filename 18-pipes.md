@@ -5,8 +5,8 @@
 * [Overview](#overview)
 * [Anatomy](#anatomy)
 * [Custom Pipes](#custom-pipes)
-    * [UrlEncodePipe](#urlencodepipe)
-    * [TruncatePipe](#truncatepipe)
+  * [UrlEncodePipe](#urlencodepipe)
+  * [TruncatePipe](#truncatepipe)
 
 ## [Overview](#pipes)
 
@@ -19,9 +19,9 @@ Per the [Angular docs](https://angular.io/guide/pipes#using-pipes), a pipe takes
 Here are some additional rules concerning pipes:
 
 * A pipe can have parameters, separated by a `:` and contained in quotes (either `'` or `"`)
-    * Ex. - `{{now | date:'yyyy MMM dd'}}` renders the `now` date as `2019 Apr 19`
+  * Ex. - `{{now | date:'yyyy MMM dd'}}` renders the `now` date as `2019 Apr 19`
 * Pipes can be chained together, separated by the pipe operator: `|`
-    * Ex. - `{{now | date:'fullDate' | uppercase}}` renders the `now` date as `FRIDAY, APRIL 19, 2019`
+  * Ex. - `{{now | date:'fullDate' | uppercase}}` renders the `now` date as `FRIDAY, APRIL 19, 2019`
 
 ## [Custom Pipes](#pipes)
 

@@ -61,10 +61,8 @@ The simplest component would only have a class definition and its template would
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'example',
-    template: `
-    <p>example variable</p>
-    `
+  selector: 'example',
+  template: `<p>example variable</p>`
 })
 export class ExampleComponent { }
 ```
@@ -136,11 +134,11 @@ Angular evaluates all expressions, called **template expressions**, in double cu
 Template expressions are similar to JavaScript. Many JavaScirpt expressions are legal template expressions, with a few expressions:
 
 * You can't use JavaScript expressions that have or promote side effects
-    * Assignments (`=`, `+=`, `-=`, ...)
-    * Operators such as `new`, `typeof`, `instanceOf`, etc.
-    * Chaining expressions with `;` or `,`
-    * The increment and decrement operators `++` and `--`
-    * Some of the ES2015+ operators
+  * Assignments (`=`, `+=`, `-=`, ...)
+  * Operators such as `new`, `typeof`, `instanceOf`, etc.
+  * Chaining expressions with `;` or `,`
+  * The increment and decrement operators `++` and `--`
+  * Some of the ES2015+ operators
 * No support for the bitwise operators such as `|` and `&`
 * New template expression operators, such as `|`, `?.` and `!`
 
@@ -152,11 +150,11 @@ Template expressions are similar to JavaScript. Many JavaScirpt expressions are 
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'example',
-    templateUrl: 'example.component.html'
+  selector: 'example',
+  templateUrl: 'example.component.html'
 })
 export class ExampleComponent {
-    value = "This is a property of ExampleComponent";
+  value = "This is a property of ExampleComponent";
 }
 ```
 

@@ -58,7 +58,6 @@ namespace UploadDemo.Data.Extensions
                 .OrderByDescending(x => x.UploadDate)
                 .ToListAsync();
 
-            Console.WriteLine(uploads);
             return uploads;
         }
 

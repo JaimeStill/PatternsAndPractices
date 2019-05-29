@@ -4,16 +4,16 @@
 
 * [Overview](#overview)
 * [Dependency Injection](#dependency-injection)
-    * [Dependency Lifetime](#dependency-lifetime)
-    * [Dependency Registration](#dependency-registration)
-    * [Using Registered Services](#using-registered-services)
+  * [Dependency Lifetime](#dependency-lifetime)
+  * [Dependency Registration](#dependency-registration)
+  * [Using Registered Services](#using-registered-services)
 * [Middleware](#middleware)
-    * [Middleware Registration](#middleware-registration)
+  * [Middleware Registration](#middleware-registration)
 * [Custom Services and Middleware](#custom-services-and-middleware)
-    * [Logging](#logging)
-    * [Identity](#identity)
-        * [Active Directory Provider](#active-directory-provider)
-        * [Mock Provider](#mock-provider)
+  * [Logging](#logging)
+  * [Identity](#identity)
+    * [Active Directory Provider](#active-directory-provider)
+    * [Mock Provider](#mock-provider)
 
 ## [Overview](#dependency-injection-and-middleware)
 
@@ -57,37 +57,37 @@ With this said, here is the service registration as defined by the app stack tem
 ```cs
 public void ConfigureServices(IServiceCollection services)
 {
-    services
-        .AddMvc()
-        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-        .AddJsonOptions(options =>
-        {
-            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-        });
-
-    services.AddDbContext<AppDbContext>(options =>
+  services
+    .AddMvc()
+    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+    .AddJsonOptions(options =>
     {
-        if (Environment.IsDevelopment())
-        {
-            options.UseSqlServer(Configuration.GetConnectionString("Dev"));
-            options.EnableSensitiveDataLogging();
-        }
-        else if (Environment.IsStaging())
-        {
-            options.UseSqlServer(Configuration.GetConnectionString("Test"));
-            options.EnableSensitiveDataLogging();
-        }
-        else
-        {
-            options.UseSqlServer(Configuration.GetConnectionString("Project"));
-        }
+      options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+      options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
     });
 
-    services.AddSpaStaticFiles(configuration =>
+  services.AddDbContext<AppDbContext>(options =>
+  {
+    if (Environment.IsDevelopment())
     {
-        configuration.RootPath = "ClientApp/dist";
-    });
+      options.UseSqlServer(Configuration.GetConnectionString("Dev"));
+      options.EnableSensitiveDataLogging();
+    }
+    else if (Environment.IsStaging())
+    {
+      options.UseSqlServer(Configuration.GetConnectionString("Test"));
+      options.EnableSensitiveDataLogging();
+    }
+    else
+    {
+      options.UseSqlServer(Configuration.GetConnectionString("Project"));
+    }
+  });
+
+  services.AddSpaStaticFiles(configuration =>
+  {
+    configuration.RootPath = "ClientApp/dist";
+  });
 }
 ```  
 
@@ -101,27 +101,27 @@ An example of this would be retrieving a `Category` and including all of the `It
 
 ``` js
 {
-    id: 1,
-    name: 'Category A',
-    items: [
-        {
+  id: 1,
+  name: 'Category A',
+  items: [
+    {
+      id: 1,
+      name: 'Item A',
+      category: {
+        id: 1,
+        name: 'Category A',
+        items: [
+          {
             id: 1,
             name: 'Item A',
             category: {
-                id: 1,
-                name: 'Category A',
-                items: [
-                    {
-                        id: 1,
-                        name: 'Item A',
-                        category: {
-                            // you get the idea
-                        }
-                    }
-                ]
+              // you get the idea
             }
-        }
-    ]
+          }
+        ]
+      }
+    }
+  ]
 }
 ```  
 
@@ -129,15 +129,15 @@ Using `ReferenceLoopHandling.Ignore`, the above example would become:
 
 ``` js
 {
-    id: 1,
-    name: 'Category A',
-    items: [
-        {
-            id: 1,
-            name: 'Item A',
-            category: null
-        }
-    ]
+  id: 1,
+  name: 'Category A',
+  items: [
+    {
+      id: 1,
+      name: 'Item A',
+      category: null
+    }
+  ]
 }
 ```  
 
@@ -148,8 +148,8 @@ This C# object:
 ```cs
 var item = new Item
 {
-    Name = "Item A",
-    IsDeleted = false
+  Name = "Item A",
+  IsDeleted = false
 }
 ```
 
@@ -157,8 +157,8 @@ will serialize to this:
 
 ```ts
 {
-    name: "Item A",
-    isDeleted: false
+  name: "Item A",
+  isDeleted: false
 }
 ```  
 
@@ -192,16 +192,16 @@ There are two ways that you can inject a service with <span>ASP.NET</span> Core'
 ```cs
 public class UserController : Controller
 {
-    private AppDbContext db;
-    private IUserProvider userProvider;
+  private AppDbContext db;
+  private IUserProvider userProvider;
 
-    public UserController(AppDbContext db, IUserProvider userProvider)
-    {
-        this.db = db;
-        this.userProvider = userProvider;
-    }
+  public UserController(AppDbContext db, IUserProvider userProvider)
+  {
+    this.db = db;
+    this.userProvider = userProvider;
+  }
 
-    // remaining class definition
+  // remaining class definition
 }
 ```  
 
@@ -212,17 +212,17 @@ In this example, both the `AppDbContext` and `IUserProvider` instance are provid
 ```cs
 public class AdUserMiddleare
 {
-    private readonly RequestDelegate next;
+  private readonly RequestDelegate next;
 
-    public AdUserMiddleware(RequestDelegate next)
-    {
-        this.next = next;
-    }
+  public AdUserMiddleware(RequestDelegate next)
+  {
+    this.next = next;
+  }
 
-    public async Task Invoke(HttpContext context, IUserProvider userProvider, IConfiguration config)
-    {
-        // Invoke implementation
-    }
+  public async Task Invoke(HttpContext context, IUserProvider userProvider, IConfiguration config)
+  {
+    // Invoke implementation
+  }
 }
 ```  
 
@@ -247,28 +247,28 @@ Here is an example middleware pipeline composed entirely of built-in middleware:
 ```cs
 public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
-    app.UseDeveloperExceptionPage();
+  app.UseDeveloperExceptionPage();
 
-    app.UseStaticFiles();
-    app.UseSpaStaticFiles();
+  app.UseStaticFiles();
+  app.UseSpaStaticFiles();
 
-    app.UseMvc(routes =>
+  app.UseMvc(routes =>
+  {
+    routes.MapRoute(
+      name: "default",
+      template: "{controller}/{action=Index}/{id?}"
+    );
+  });
+
+  app.UseSpa(spa =>
+  {
+    spa.Options.SourcePath = "ClientApp";
+
+    if (env.IsDevelopment())
     {
-        routes.MapRoute(
-            name: "default",
-            template: "{controller}/{action=Index}/{id?}"
-        );
-    });
-
-    app.UseSpa(spa =>
-    {
-        spa.Options.SourcePath = "ClientApp";
-
-        if (env.IsDevelopment())
-        {
-            spa.UseAngularCliServer(npmScript: "start");
-        }
-    });
+      spa.UseAngularCliServer(npmScript: "start");
+    }
+  });
 }
 ```  
 
@@ -289,21 +289,21 @@ Middleware in <span>ASP.NET</span> Core has a specific signature it needs to fol
 ```cs
 public class CustomMiddleware
 {
-    private readonly RequestDelegate next;
+  private readonly RequestDelegate next;
 
-    public CustomMiddleware(RequestDelegate next)
-    {
-        this.next = next;
-    }
+  public CustomMiddleware(RequestDelegate next)
+  {
+    this.next = next;
+  }
 
-    public async Task Invoke(HttpContext context)
-    {
-        // Actions to perform up the middleware pipeline
+  public async Task Invoke(HttpContext context)
+  {
+    // Actions to perform up the middleware pipeline
 
-        await next(context);
+    await next(context);
 
-        // Action to perform down the middleware pipeline
-    }
+    // Action to perform down the middleware pipeline
+  }
 }
 ```  
 
@@ -325,8 +325,8 @@ using // namespace where middleware is defined
 
 namespace Microsoft.AspNetCore.Builder
 {
-    public static IApplicationBuilder UseCustomMiddleware(this IApplicationBuilder builder) =>
-        builder.UseMiddleware<CustomMiddleware>();
+  public static IApplicationBuilder UseCustomMiddleware(this IApplicationBuilder builder) =>
+    builder.UseMiddleware<CustomMiddleware>();
 }
 ```  
 
@@ -335,11 +335,11 @@ Then, inside of the `Configure()` method of `Startup.cs`, the middleware can be 
 ```cs
 public void Configure(IApplicationBuilder app)
 {
-    // Middleware called before CustomMiddleware
+  // Middleware called before CustomMiddleware
 
-    app.UseCustomMiddleware();
+  app.UseCustomMiddleware();
 
-    // Middleware called after CustomMiddleware
+  // Middleware called after CustomMiddleware
 }
 ```
 
@@ -354,20 +354,20 @@ First, an instance of `LogProvider` needs to be accessible from `Startup`:
 ```cs
 public class Startup
 {
-    public IConfiguration Configuration { get; }
-    public IHostingEnvironment Environment { get; }
-    public LogProvider Logger { get; }
+  public IConfiguration Configuration { get; }
+  public IHostingEnvironment Environment { get; }
+  public LogProvider Logger { get; }
 
-    public Startup(IConfiguration config, IHostingEnvironment env)
+  public Startup(IConfiguration config, IHostingEnvironment env)
+  {
+    Configuration = config;
+    Environment = env;
+    Logger = new LogProvider
     {
-        Configuration = config;
-        Environment = env;
-        Logger = new LogProvider
-        {
-            LogDirectory = Configuration.GetValue<string>("LogDirectory") ??
-                $@"{Environment.WebRootPath}\logs"
-        };
-    }
+      LogDirectory = Configuration.GetValue<string>("LogDirectory") ??
+        $@"{Environment.WebRootPath}\logs"
+    };
+  }
 }
 ```  
 
@@ -380,25 +380,25 @@ Here's the `HandleError` extension method:
 ```cs
 public static void HandleError(this IApplicationBuilder app, LogProvider logger)
 {
-    app.Run(async context =>
+  app.Run(async context =>
+  {
+    var error = context.Features.Get<IExceptionHandlerFeature>();
+                
+    if (error != null)
     {
-        var error = context.Features.Get<IExceptionHandlerFeature>();
+      var ex = error.Error;
+      await logger.CreateLog(context, ex);
+    }
                 
-        if (error != null)
-        {
-            var ex = error.Error;
-            await logger.CreateLog(context, ex);
-        }
+    context.Response.StatusCode = 500;
+    context.Response.ContentType = "application/json";
                 
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "application/json";
-                
-        if (error != null)
-        {
-            var ex = error.Error;
-            await context.Response.WriteAsync(ex.GetExceptionChain(), Encoding.UTF8);
-        }
-    });
+    if (error != null)
+    {
+      var ex = error.Error;
+      await context.Response.WriteAsync(ex.GetExceptionChain(), Encoding.UTF8);
+    }
+  });
 }
 ```
 
@@ -409,11 +409,11 @@ Here is the middleware registration in `Startup`:
 ```cs
 public void Configure(IApplicationBuilder app)
 {
-    // Middleware called before UseExceptionHandler
+  // Middleware called before UseExceptionHandler
 
-    app.UseExceptionHandler(err => err.HandleError(Logger));
+  app.UseExceptionHandler(err => err.HandleError(Logger));
 
-    // Middleware called after UseExceptionHandler
+  // Middleware called after UseExceptionHandler
 }
 ```  
 
@@ -437,78 +437,78 @@ using Demo.Core.Extensions;
 
 namespace Demo.Identity
 {
-    public class AdUser
+  public class AdUser
+  {
+    public DateTime? AccountExpirationDate { get; set; }
+    public DateTime? AccountLockoutTime { get; set; }
+    public int BadLogonCount { get; set; }
+    public string Description { get; set; }
+    public string DisplayName { get; set; }
+    public string DistinguishedName { get; set; }
+    public string Domain { get; set; }
+    public string EmailAddress { get; set; }
+    public string EmployeeId { get; set; }
+    public bool? Enabled { get; set; }
+    public string GivenName { get; set; }
+    public Guid? Guid { get; set; }
+    public string HomeDirectory { get; set; }
+    public string HomeDrive { get; set; }
+    public DateTime? LastBadPasswordAttempt { get; set; }
+    public DateTime? LastLogon { get; set; }
+    public DateTime? LastPasswordSet { get; set; }
+    public string MiddleName { get; set; }
+    public string Name { get; set; }
+    public bool PasswordNeverExpires { get; set; }
+    public bool PasswordNotRequired { get; set; }
+    public string SamAccountName { get; set; }
+    public string ScriptPath { get; set; }
+    public SecurityIdentifier Sid { get; set; }
+    public string Surname { get; set; }
+    public bool UserCannotChangePassword { get; set; }
+    public string UserPrincipalName { get; set; }
+    public string VoiceTelephoneNumber { get; set; }
+        
+    public static AdUser CastToAdUser(UserPrincipal user)
     {
-        public DateTime? AccountExpirationDate { get; set; }
-        public DateTime? AccountLockoutTime { get; set; }
-        public int BadLogonCount { get; set; }
-        public string Description { get; set; }
-        public string DisplayName { get; set; }
-        public string DistinguishedName { get; set; }
-        public string Domain { get; set; }
-        public string EmailAddress { get; set; }
-        public string EmployeeId { get; set; }
-        public bool? Enabled { get; set; }
-        public string GivenName { get; set; }
-        public Guid? Guid { get; set; }
-        public string HomeDirectory { get; set; }
-        public string HomeDrive { get; set; }
-        public DateTime? LastBadPasswordAttempt { get; set; }
-        public DateTime? LastLogon { get; set; }
-        public DateTime? LastPasswordSet { get; set; }
-        public string MiddleName { get; set; }
-        public string Name { get; set; }
-        public bool PasswordNeverExpires { get; set; }
-        public bool PasswordNotRequired { get; set; }
-        public string SamAccountName { get; set; }
-        public string ScriptPath { get; set; }
-        public SecurityIdentifier Sid { get; set; }
-        public string Surname { get; set; }
-        public bool UserCannotChangePassword { get; set; }
-        public string UserPrincipalName { get; set; }
-        public string VoiceTelephoneNumber { get; set; }
-        
-        public static AdUser CastToAdUser(UserPrincipal user)
-        {
-            return new AdUser
-            {
-                AccountExpirationDate = user.AccountExpirationDate,
-                AccountLockoutTime = user.AccountLockoutTime,
-                BadLogonCount = user.BadLogonCount,
-                Description = user.Description,
-                DisplayName = user.DisplayName,
-                DistinguishedName = user.DistinguishedName,
-                EmailAddress = user.EmailAddress,
-                EmployeeId = user.EmployeeId,
-                Enabled = user.Enabled,
-                GivenName = user.GivenName,
-                Guid = user.Guid,
-                HomeDirectory = user.HomeDirectory,
-                HomeDrive = user.HomeDrive,
-                LastBadPasswordAttempt = user.LastBadPasswordAttempt,
-                LastLogon = user.LastLogon,
-                LastPasswordSet = user.LastPasswordSet,
-                MiddleName = user.MiddleName,
-                Name = user.Name,
-                PasswordNeverExpires = user.PasswordNeverExpires,
-                PasswordNotRequired = user.PasswordNotRequired,
-                SamAccountName = user.SamAccountName,
-                ScriptPath = user.ScriptPath,
-                Sid = user.Sid,
-                Surname = user.Surname,
-                UserCannotChangePassword = user.UserCannotChangePassword,
-                UserPrincipalName = user.UserPrincipalName,
-                VoiceTelephoneNumber = user.VoiceTelephoneNumber
-            };
-        }
-        
-        public string GetDomainPrefix() => DistinguishedName
-            .Split(',')
-            .FirstOrDefault(x => x.ToLower().Contains("dc"))
-            .Split('=')
-            .LastOrDefault()
-            .ToUpper();
+      return new AdUser
+      {
+        AccountExpirationDate = user.AccountExpirationDate,
+        AccountLockoutTime = user.AccountLockoutTime,
+        BadLogonCount = user.BadLogonCount,
+        Description = user.Description,
+        DisplayName = user.DisplayName,
+        DistinguishedName = user.DistinguishedName,
+        EmailAddress = user.EmailAddress,
+        EmployeeId = user.EmployeeId,
+        Enabled = user.Enabled,
+        GivenName = user.GivenName,
+        Guid = user.Guid,
+        HomeDirectory = user.HomeDirectory,
+        HomeDrive = user.HomeDrive,
+        LastBadPasswordAttempt = user.LastBadPasswordAttempt,
+        LastLogon = user.LastLogon,
+        LastPasswordSet = user.LastPasswordSet,
+        MiddleName = user.MiddleName,
+        Name = user.Name,
+        PasswordNeverExpires = user.PasswordNeverExpires,
+        PasswordNotRequired = user.PasswordNotRequired,
+        SamAccountName = user.SamAccountName,
+        ScriptPath = user.ScriptPath,
+        Sid = user.Sid,
+        Surname = user.Surname,
+        UserCannotChangePassword = user.UserCannotChangePassword,
+        UserPrincipalName = user.UserPrincipalName,
+        VoiceTelephoneNumber = user.VoiceTelephoneNumber
+      };
     }
+        
+    public string GetDomainPrefix() => DistinguishedName
+      .Split(',')
+      .FirstOrDefault(x => x.ToLower().Contains("dc"))
+      .Split('=')
+      .LastOrDefault()
+      .ToUpper();
+  }
 }
 ```  
 
@@ -530,19 +530,19 @@ using Microsoft.Extensions.Configuration;
 
 namespace Demo.Identity
 {
-    public interface IUserProvider
-    {
-        AdUser CurrentUser { get; set; }
-        bool Initialized { get; set; }
-        Task Create(HttpContext context, IConfiguration config);
-        Task Create(string samAccountName);
-        Task AddIdentity(HttpContext context);
-        Task<AdUser> GetAdUser(IIdentity identity);
-        Task<AdUser> GetAdUser(string samAccountName);
-        Task<AdUser> GetAdUser(Guid guid);
-        Task<List<AdUser>> GetDomainUsers();
-        Task<List<AdUser>> FindDomainUser(string search);
-    }
+  public interface IUserProvider
+  {
+    AdUser CurrentUser { get; set; }
+    bool Initialized { get; set; }
+    Task Create(HttpContext context, IConfiguration config);
+    Task Create(string samAccountName);
+    Task AddIdentity(HttpContext context);
+    Task<AdUser> GetAdUser(IIdentity identity);
+    Task<AdUser> GetAdUser(string samAccountName);
+    Task<AdUser> GetAdUser(Guid guid);
+    Task<List<AdUser>> GetDomainUsers();
+    Task<List<AdUser>> FindDomainUser(string search);
+  }
 }
 ```  
 
@@ -562,14 +562,14 @@ using System.Linq;
 
 namespace Demo.Identity.Extensions
 {
-    public static class IdentityExtensions
-    {
-        public static IQueryable<UserPrincipal> FilterUsers(this IQueryable<UserPrincipal> principals) =>
-            principals.Where(x => x.Guid.HasValue);
+  public static class IdentityExtensions
+  {
+    public static IQueryable<UserPrincipal> FilterUsers(this IQueryable<UserPrincipal> principals) =>
+      principals.Where(x => x.Guid.HasValue);
             
-        public static IQueryable<AdUser> SelectAdUsers(this IQueryable<UserPrincipal> principals) =>
-            principals.Select(x => AdUser.CastToAdUser(x));
-    }
+    public static IQueryable<AdUser> SelectAdUsers(this IQueryable<UserPrincipal> principals) =>
+      principals.Select(x => AdUser.CastToAdUser(x));
+  }
 }
 ```
 
@@ -597,136 +597,136 @@ using Demo.Identity.Extensions;
 
 namespace Demo.Identity
 {
-    public class AdUserProvider : IUserProvider
+  public class AdUserProvider : IUserProvider
+  {
+    public AdUser CurrentUser { get; set; }
+    public bool Initialized { get; set; }
+        
+    public async Task Create(HttpContext context, IConfiguration config)
     {
-        public AdUser CurrentUser { get; set; }
-        public bool Initialized { get; set; }
-        
-        public async Task Create(HttpContext context, IConfiguration config)
-        {
-            CurrentUser = await GetAdUser(context.User.Identity);
-            Initialized = true;
-        }
-
-        public Task AddIdentity(HttpContext context) => throw new NotImplementedException("Only used for MockIdentity implementation");
-
-        public Task Create(string samAccountName) => throw new NotImplementedException("Use Create(HttpContext context) for UserProvider");
-        
-        public Task<AdUser> GetAdUser(IIdentity identity)
-        {
-            return Task.Run(() =>
-            {
-                try
-                {
-                    PrincipalContext context = new PrincipalContext(ContextType.Domain);
-                    UserPrincipal principal = new UserPrincipal(context);
-                    
-                    if (context != null)
-                    {
-                        principal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, identity.Name);
-                    }
-                    
-                    return AdUser.CastToAdUser(principal);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.GetExceptionChain());
-                }
-            });
-        }
-        
-        public Task<AdUser> GetAdUser(string samAccountName)
-        {
-            return Task.Run(() =>
-            {
-                try
-                {
-                    PrincipalContext context = new PrincipalContext(ContextType.Domain);
-                    UserPrincipal principal = new UserPrincipal(context);
-                    
-                    if (context != null)
-                    {
-                        principal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, samAccountName);
-                    }
-                    
-                    return AdUser.CastToAdUser(principal);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.GetExceptionChain());
-                }
-            });
-        }
-        
-        public Task<AdUser> GetAdUser(Guid guid)
-        {
-            return Task.Run(() =>
-            {
-                try
-                {
-                    PrincipalContext context = new PrincipalContext(ContextType.Domain);
-                    UserPrincipal principal = new UserPrincipal(context);
-                    
-                    if (context != null)
-                    {
-                        principal = UserPrincipal.FindByIdentity(context, IdentityType.Guid, guid.ToString());
-                    }
-                    
-                    return AdUser.CastToAdUser(principal);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.GetExceptionChain());
-                }
-            });
-        }
-        
-        public Task<List<AdUser>> GetDomainUsers()
-        {
-            return Task.Run(() =>
-            {
-                PrincipalContext context = new PrincipalContext(ContextType.Domain);
-                UserPrincipal principal = new UserPrincipal(context);
-                principal.UserPrincipalName = "*@*";
-                principal.Enabled = true;
-                PrincipalSearcher searcher = new PrincipalSearcher(principal);
-                
-                var users = searcher
-                    .FindAll()
-                    .AsQueryable()
-                    .Cast<UserPrincipal>()
-                    .FilterUsers()
-                    .SelectAdUsers()
-                    .OrderBy(x => x.Surname)
-                    .ToList();
-                    
-                return users;
-            });
-        }
-        
-        public Task<List<AdUser>> FindDomainUser(string search)
-        {
-            return Task.Run(() =>
-            {
-                PrincipalContext context = new PrincipalContext(ContextType.Domain);
-                UserPrincipal principal = new UserPrincipal(context);
-                principal.SamAccountName = $"*{search}*";
-                principal.Enabled = true;
-                PrincipalSearcher searcher = new PrincipalSearcher(principal);
-                
-                var users = searcher
-                    .FindAll()
-                    .AsQueryable()
-                    .Cast<UserPrincipal>()
-                    .FilterUsers()
-                    .SelectAdUsers()
-                    .OrderBy(x => x.Surname)
-                    .ToList();
-                    
-                return users;
-            });
-        }
+      CurrentUser = await GetAdUser(context.User.Identity);
+      Initialized = true;
     }
+
+    public Task AddIdentity(HttpContext context) => throw new NotImplementedException("Only used for MockIdentity implementation");
+
+    public Task Create(string samAccountName) => throw new NotImplementedException("Use Create(HttpContext context) for UserProvider");
+        
+    public Task<AdUser> GetAdUser(IIdentity identity)
+    {
+      return Task.Run(() =>
+      {
+        try
+        {
+          PrincipalContext context = new PrincipalContext(ContextType.Domain);
+          UserPrincipal principal = new UserPrincipal(context);
+                    
+          if (context != null)
+          {
+            principal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, identity.Name);
+          }
+                    
+          return AdUser.CastToAdUser(principal);
+        }
+        catch (Exception ex)
+        {
+          throw new Exception(ex.GetExceptionChain());
+        }
+      });
+    }
+        
+    public Task<AdUser> GetAdUser(string samAccountName)
+    {
+      return Task.Run(() =>
+      {
+        try
+        {
+          PrincipalContext context = new PrincipalContext(ContextType.Domain);
+          UserPrincipal principal = new UserPrincipal(context);
+                    
+          if (context != null)
+          {
+            principal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, samAccountName);
+          }
+                    
+          return AdUser.CastToAdUser(principal);
+        }
+        catch (Exception ex)
+        {
+          throw new Exception(ex.GetExceptionChain());
+        }
+      });
+    }
+        
+    public Task<AdUser> GetAdUser(Guid guid)
+    {
+      return Task.Run(() =>
+      {
+        try
+        {
+          PrincipalContext context = new PrincipalContext(ContextType.Domain);
+          UserPrincipal principal = new UserPrincipal(context);
+                    
+          if (context != null)
+          {
+            principal = UserPrincipal.FindByIdentity(context, IdentityType.Guid, guid.ToString());
+          }
+                    
+          return AdUser.CastToAdUser(principal);
+        }
+        catch (Exception ex)
+        {
+          throw new Exception(ex.GetExceptionChain());
+        }
+      });
+    }
+        
+    public Task<List<AdUser>> GetDomainUsers()
+    {
+      return Task.Run(() =>
+      {
+        PrincipalContext context = new PrincipalContext(ContextType.Domain);
+        UserPrincipal principal = new UserPrincipal(context);
+        principal.UserPrincipalName = "*@*";
+        principal.Enabled = true;
+        PrincipalSearcher searcher = new PrincipalSearcher(principal);
+                
+        var users = searcher
+          .FindAll()
+          .AsQueryable()
+          .Cast<UserPrincipal>()
+          .FilterUsers()
+          .SelectAdUsers()
+          .OrderBy(x => x.Surname)
+          .ToList();
+                    
+        return users;
+      });
+    }
+        
+    public Task<List<AdUser>> FindDomainUser(string search)
+    {
+      return Task.Run(() =>
+      {
+        PrincipalContext context = new PrincipalContext(ContextType.Domain);
+        UserPrincipal principal = new UserPrincipal(context);
+        principal.SamAccountName = $"*{search}*";
+        principal.Enabled = true;
+        PrincipalSearcher searcher = new PrincipalSearcher(principal);
+                
+        var users = searcher
+          .FindAll()
+          .AsQueryable()
+          .Cast<UserPrincipal>()
+          .FilterUsers()
+          .SelectAdUsers()
+          .OrderBy(x => x.Surname)
+          .ToList();
+                    
+        return users;
+      });
+    }
+  }
 }
 ```  
 
@@ -756,25 +756,25 @@ using Microsoft.Extensions.Configuration;
 
 namespace Demo.Identity
 {
-    public class AdUserMiddleware
+  public class AdUserMiddleware
+  {
+    private readonly RequestDelegate next;
+        
+    public AdUserMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate next;
-        
-        public AdUserMiddleware(RequestDelegate next)
-        {
-            this.next = next;
-        }
-        
-        public async Task Invoke(HttpContext context, IUserProvider userProvider, IConfiguration config)
-        {
-            if (!(userProvider.Initialized))
-            {
-                await userProvider.Create(context, config);
-            }
-            
-            await next(context);
-        }
+      this.next = next;
     }
+        
+    public async Task Invoke(HttpContext context, IUserProvider userProvider, IConfiguration config)
+    {
+      if (!(userProvider.Initialized))
+      {
+        await userProvider.Create(context, config);
+      }
+            
+      await next(context);
+    }
+  }
 }
 ```
 
@@ -791,11 +791,11 @@ using Demo.Identity;
 
 namespace Microsoft.AspNetCore.Builder
 {
-    public static class MiddlewareExtensions
-    {
-        public static IApplicationBuilder UseAdMiddleware(this IApplicationBuilder builder) =>
-            builder.UseMiddleware<AdUserMiddleware>();
-    }
+  public static class MiddlewareExtensions
+  {
+    public static IApplicationBuilder UseAdMiddleware(this IApplicationBuilder builder) =>
+      builder.UseMiddleware<AdUserMiddleware>();
+  }
 }
 ```  
 
@@ -810,20 +810,20 @@ Now, the service and middleware can be registered in `Startup`.
 ```cs
 public void ConfigureServices(IServiceCollection services)
 {
-    // Services registered before IUserProvider
+  // Services registered before IUserProvider
 
-    services.AddScoped<IUserProvider, AdUserProvider>();
+  services.AddScoped<IUserProvider, AdUserProvider>();
 
-    // Services registered after IUserProvider
+  // Services registered after IUserProvider
 }
 
 public void Configure(IApplicationBuilder app)
 {
-    // Middleware added before AdUserMiddleware
+  // Middleware added before AdUserMiddleware
 
-    app.UseAdMiddleware();
+  app.UseAdMiddleware();
 
-    // Middleware added after AdUserMiddleware
+  // Middleware added after AdUserMiddleware
 }
 ```  
 
@@ -856,113 +856,113 @@ using System.Threading.Tasks;
 
 namespace Demo.Identity.Mock
 {
-    public class MockProvider : IUserProvider
+  public class MockProvider : IUserProvider
+  {
+    public AdUser CurrentUser { get; set; }
+    public bool Initialized { get; set; }
+    public Task Create(HttpContext context, IConfiguration config) => throw new NotImplementedException("Use Create(string samAccountName) for MockProvider");
+
+    public async Task Create(string samAccountName)
     {
-        public AdUser CurrentUser { get; set; }
-        public bool Initialized { get; set; }
-        public Task Create(HttpContext context, IConfiguration config) => throw new NotImplementedException("Use Create(string samAccountName) for MockProvider");
-
-        public async Task Create(string samAccountName)
-        {
-            CurrentUser = await GetAdUser(samAccountName);
-            Initialized = true;
-        }
-
-        public async Task AddIdentity(HttpContext context)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, CurrentUser.SamAccountName),
-                new Claim(ClaimTypes.Email, CurrentUser.UserPrincipalName)
-            };
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var props = new AuthenticationProperties
-            {
-                IsPersistent = true,
-                AllowRefresh = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10)
-            };
-
-            await context.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(identity),
-                props
-            );
-        }
-
-        public Task<AdUser> GetAdUser(IIdentity identity) => throw new NotImplementedException("Use GetAdUser(string samAccountName) for MockProvider");
-
-        public Task<AdUser> GetAdUser(string samAccountName) =>
-            Task.Run(() =>
-                AdUsers.FirstOrDefault(x =>
-                    x.SamAccountName.ToLower().Equals(samAccountName.ToLower())
-                )
-            );
-
-        public Task<AdUser> GetAdUser(Guid guid) =>
-            Task.Run(() =>
-                AdUsers.FirstOrDefault(x => guid.Equals(x.Guid.Value))
-            );
-
-        public Task<List<AdUser>> GetDomainUsers() =>
-            Task.Run(() =>
-                AdUsers.ToList()
-            );
-
-        public Task<List<AdUser>> FindDomainUser(string search)
-        {
-            return Task.Run(() =>
-            {
-                search = search.ToLower();
-
-                var users = AdUsers
-                    .Where(
-                        x => x.SamAccountName.ToLower().Contains(search) ||
-                        x.UserPrincipalName.ToLower().Contains(search) ||
-                        x.DisplayName.ToLower().Contains(search)
-                    )
-                    .OrderBy(x => x.Surname)
-                    .ToList();
-
-                return users;
-            });
-        }
-
-        private static string baseDn = "CN=Users,DC=Mock,DC=Net";
-
-        private static IQueryable<AdUser> AdUsers = new List<AdUser>()
-        {
-            new AdUser
-            {
-                DisplayName = "Graham, Leanne",
-                DistinguishedName = $"CN=lgraham,{baseDn}",
-                EmailAddress = "lgraham@mock.net",
-                Enabled = true,
-                GivenName = "Leanne",
-                Guid = Guid.Parse("c40bcced-28cd-406e-84c0-2d1d446b9a63"),
-                SamAccountName = "lgraham",
-                Surname = "Graham",
-                UserPrincipalName = "lgraham@mock.net",
-                VoiceTelephoneNumber = "555.555.0001"
-            },
-            new AdUser
-            {
-                DisplayName = "Howell, Ervin",
-                DistinguishedName = $"CN=ehowell,{baseDn}",
-                EmailAddress = "ehowell@mock.net",
-                Enabled = true,
-                GivenName = "Ervin",
-                Guid = Guid.Parse("f16f6b21-c2d9-4dcf-a8d2-96906ca49872"),
-                SamAccountName = "ehowell",
-                Surname = "Howell",
-                UserPrincipalName = "ehowell@mock.net",
-                VoiceTelephoneNumber = "555.555.0002"
-            },
-            // Additional users removed for brevity
-        }.AsQueryable();
+      CurrentUser = await GetAdUser(samAccountName);
+      Initialized = true;
     }
+
+    public async Task AddIdentity(HttpContext context)
+    {
+      var claims = new List<Claim>
+      {
+        new Claim(ClaimTypes.Name, CurrentUser.SamAccountName),
+        new Claim(ClaimTypes.Email, CurrentUser.UserPrincipalName)
+      };
+
+      var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+      var props = new AuthenticationProperties
+      {
+        IsPersistent = true,
+        AllowRefresh = true,
+        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10)
+      };
+
+      await context.SignInAsync(
+        CookieAuthenticationDefaults.AuthenticationScheme,
+        new ClaimsPrincipal(identity),
+        props
+      );
+    }
+
+    public Task<AdUser> GetAdUser(IIdentity identity) => throw new NotImplementedException("Use GetAdUser(string samAccountName) for MockProvider");
+
+    public Task<AdUser> GetAdUser(string samAccountName) =>
+      Task.Run(() =>
+        AdUsers.FirstOrDefault(x =>
+          x.SamAccountName.ToLower().Equals(samAccountName.ToLower())
+        )
+      );
+
+    public Task<AdUser> GetAdUser(Guid guid) =>
+      Task.Run(() =>
+        AdUsers.FirstOrDefault(x => guid.Equals(x.Guid.Value))
+      );
+
+    public Task<List<AdUser>> GetDomainUsers() =>
+      Task.Run(() =>
+        AdUsers.ToList()
+      );
+
+    public Task<List<AdUser>> FindDomainUser(string search)
+    {
+      return Task.Run(() =>
+      {
+        search = search.ToLower();
+
+        var users = AdUsers
+          .Where(
+            x => x.SamAccountName.ToLower().Contains(search) ||
+            x.UserPrincipalName.ToLower().Contains(search) ||
+            x.DisplayName.ToLower().Contains(search)
+          )
+          .OrderBy(x => x.Surname)
+          .ToList();
+
+        return users;
+      });
+    }
+
+    private static string baseDn = "CN=Users,DC=Mock,DC=Net";
+
+    private static IQueryable<AdUser> AdUsers = new List<AdUser>()
+    {
+      new AdUser
+      {
+        DisplayName = "Graham, Leanne",
+        DistinguishedName = $"CN=lgraham,{baseDn}",
+        EmailAddress = "lgraham@mock.net",
+        Enabled = true,
+        GivenName = "Leanne",
+        Guid = Guid.Parse("c40bcced-28cd-406e-84c0-2d1d446b9a63"),
+        SamAccountName = "lgraham",
+        Surname = "Graham",
+        UserPrincipalName = "lgraham@mock.net",
+        VoiceTelephoneNumber = "555.555.0001"
+      },
+      new AdUser
+      {
+        DisplayName = "Howell, Ervin",
+        DistinguishedName = $"CN=ehowell,{baseDn}",
+        EmailAddress = "ehowell@mock.net",
+        Enabled = true,
+        GivenName = "Ervin",
+        Guid = Guid.Parse("f16f6b21-c2d9-4dcf-a8d2-96906ca49872"),
+        SamAccountName = "ehowell",
+        Surname = "Howell",
+        UserPrincipalName = "ehowell@mock.net",
+        VoiceTelephoneNumber = "555.555.0002"
+      },
+      // Additional users removed for brevity
+      }.AsQueryable();
+  }
 }
 ```  
 
@@ -993,30 +993,30 @@ using System.Threading.Tasks;
 
 namespace Demo.Identity.Mock
 {
-    public class MockMiddleware
+  public class MockMiddleware
+  {
+    private readonly RequestDelegate next;
+
+    public MockMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate next;
-
-        public MockMiddleware(RequestDelegate next)
-        {
-            this.next = next;
-        }
-
-        public async Task Invoke(HttpContext context, IUserProvider provider, IConfiguration config)
-        {
-            if (!(provider.Initialized))
-            {
-                await provider.Create(config.GetValue<string>("CurrentUser"));
-
-                if (!(context.User.Identity.IsAuthenticated))
-                {
-                    await provider.AddIdentity(context);
-                }
-            }
-
-            await next(context);
-        }
+      this.next = next;
     }
+
+    public async Task Invoke(HttpContext context, IUserProvider provider, IConfiguration config)
+    {
+      if (!(provider.Initialized))
+      {
+        await provider.Create(config.GetValue<string>("CurrentUser"));
+
+        if (!(context.User.Identity.IsAuthenticated))
+        {
+          await provider.AddIdentity(context);
+        }
+      }
+
+      await next(context);
+    }
+  }
 }
 ```  
 
@@ -1033,10 +1033,10 @@ using Demo.Identity.Mock;
 
 namespace Microsoft.AspNetCore.Builder
 {
-    public static class MiddlewareExtensions
-    {
-        public static IApplicationBuilder UseMockMiddleware(this IApplicationBuilder builder) => builder.UseMiddleware<MockMiddleware>();
-    }
+  public static class MiddlewareExtensions
+  {
+    public static IApplicationBuilder UseMockMiddleware(this IApplicationBuilder builder) => builder.UseMiddleware<MockMiddleware>();
+  }
 }
 ```  
 
@@ -1051,42 +1051,42 @@ With the library now complete, it's time to hook everything up in `Startup`. We 
 ```cs
 public class Startup
 {
-    public void ConfigureServices(IServiceCollection services)
+  public void ConfigureServices(IServiceCollection services)
+  {
+    // services registered before IUserProvider
+
+    if (Environment.IsDevelopment())
     {
-        // services registered before IUserProvider
+      services
+        .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
 
-        if (Environment.IsDevelopment())
-        {
-            services
-                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            services.AddScoped<IUserProvider, MockProvider>();
-        }
-        else
-        {
-            services.AddScoped<IUserProvider, AdUserProvider>();
-        }
-
-        // services registered after IUserProvider
+      services.AddScoped<IUserProvider, MockProvider>();
+    }
+    else
+    {
+      services.AddScoped<IUserProvider, AdUserProvider>();
     }
 
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    // services registered after IUserProvider
+  }
+
+  public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+  {
+    // middleware configured before identity
+
+    if (env.IsDevelopment())
     {
-        // middleware configured before identity
-
-        if (env.IsDevelopment())
-        {
-            app.UseAuthentication();
-            app.UseMockMiddleware();
-        }
-        else
-        {
-            app.UseAdMiddleware();
-        }
-
-        // middleware configured after identity
+      app.UseAuthentication();
+      app.UseMockMiddleware();
     }
+    else
+    {
+      app.UseAdMiddleware();
+    }
+
+    // middleware configured after identity
+  }
 }
 ```
 

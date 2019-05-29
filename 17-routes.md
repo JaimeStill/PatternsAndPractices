@@ -4,15 +4,15 @@
 
 * [Angular Routing](#angular-routing)
 * [Route Components](#route-components)
-    * [ItemsComponents](#itemscomponent)
-    * [ItemComponent](#itemcomponent)
+  * [ItemsComponents](#itemscomponent)
+  * [ItemComponent](#itemcomponent)
 
 ## [Angular Routing](#routes)
 
 In Angular, a **route** is resolved to a **Component** which will be rendered at a `<router-outlet>` within the app. To enable routing, the following are needed:
 
 * A **Route Component** must be defined in the **routes** TypeScript module
-    * Located at **{Project}.Web\\ClientApp\\src\\app\\routes**
+  * Located at **{Project}.Web\\ClientApp\\src\\app\\routes**
 * Routes must be defined in the `index.ts` of the **routes** module
 * The `RouterModule` must be imported into the `AppModule`, and the **Routes** exported from the **routes** module must be provided to the `RouterModule.forRoot()` function.
 

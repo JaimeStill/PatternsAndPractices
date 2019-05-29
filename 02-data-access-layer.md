@@ -4,10 +4,10 @@
 
 * [Project Infrastructure](#project-infrastructure)
 * [Building the Data Layer](#building-the-data-layer)
-    * [One to Many](#one-to-many)
-    * [Many to Many](#many-to-many)
-    * [Multiple One to Many Using the Same Table](#multiple-one-to-many-using-the-same-table)
-    * [DbContext](#dbcontext)
+  * [One to Many](#one-to-many)
+  * [Many to Many](#many-to-many)
+  * [Multiple One to Many Using the Same Table](#multiple-one-to-many-using-the-same-table)
+  * [DbContext](#dbcontext)
 * [Registering Entity Framework with .NET Core](#registering-entity-framework-with-net-core)
 * [Database Management Workflow](#database-management-workflow)  
 
@@ -36,21 +36,21 @@ Navigation properties are defined based on their relationship type. Singular nav
 ```cs
 public class Item
 {
-    public int Id { get; set; }
-    public int CategoryId { get; set; }
-    public string Name { get; set; }
-    public bool IsDeleted { get; set; }
+  public int Id { get; set; }
+  public int CategoryId { get; set; }
+  public string Name { get; set; }
+  public bool IsDeleted { get; set; }
 
-    public Category Category { get; set; }
+  public Category Category { get; set; }
 }
 
 public class Category
 {
-    public int Id { get; set; }
-    public string Label { get; set; }
-    public bool IsDeleted { get; set; }
+  public int Id { get; set; }
+  public string Label { get; set; }
+  public bool IsDeleted { get; set; }
 
-    public List<Item> Items { get; set; }
+  public List<Item> Items { get; set; }
 }
 ```
 
@@ -61,27 +61,27 @@ To represent a **Many to Many** relationship, you need to incorporate a **join t
 ```cs
 public class Tag
 {
-    public int Id { get; set; }
-    public string Label { get; set; }
-    public bool IsDeleted { get; set; }
+  public int Id { get; set; }
+  public string Label { get; set; }
+  public bool IsDeleted { get; set; }
 
-    public List<ItemTag> TagItems { get; set; }
+  public List<ItemTag> TagItems { get; set; }
 }
 
 public class Item
 {
-    // Props defined above
-    public List<ItemTag> ItemTags { get; set; }
+  // Props defined above
+  public List<ItemTag> ItemTags { get; set; }
 }
 
 public class ItemTag
 {
-    public int Id { get; set; }
-    public int ItemId { get; set; }
-    public int TagId { get; set; }
+  public int Id { get; set; }
+  public int ItemId { get; set; }
+  public int TagId { get; set; }
 
-    public Item Item { get; set; }
-    public Tag Tag { get; set; }
+  public Item Item { get; set; }
+  public Tag Tag { get; set; }
 }
 ```  
 
@@ -90,13 +90,13 @@ The tags for an item can now be accessed in C# as follows:
 ```cs
 public static async Task<List<Tag>> GetItemTags(this AppDbContext db, int itemId)
 {
-    var model = await db.ItemTags
-        .Include(x => x.Tag)
-        .Where(x => x.ItemId == itemId)
-        .Select(x => x.Tag)
-        .ToListAsync();
+  var model = await db.ItemTags
+    .Include(x => x.Tag)
+    .Where(x => x.ItemId == itemId)
+    .Select(x => x.Tag)
+    .ToListAsync();
 
-    return model;
+  return model;
 }
 ```  
 
@@ -131,22 +131,22 @@ What if you need a single reference to the same table twice in a **One to Many**
 ```cs
 public class Location
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public bool IsDeleted { get; set; }
+  public int Id { get; set; }
+  public string Name { get; set; }
+  public bool IsDeleted { get; set; }
 
-    public List<Item> CurrentItems { get; set; }
-    public List<Item> OriginItems { get; set; }
+  public List<Item> CurrentItems { get; set; }
+  public List<Item> OriginItems { get; set; }
 }
 
 public class Item
 {
-    // Props defined above
-    public int CurrentLocationId { get; set; }
-    public int OriginLocationId { get; set; }
+  // Props defined above
+  public int CurrentLocationId { get; set; }
+  public int OriginLocationId { get; set; }
 
-    public Location CurrentLocation { get; set; }
-    public Location OriginLocation { get; set; }
+  public Location CurrentLocation { get; set; }
+  public Location OriginLocation { get; set; }
 }
 ```  
 
@@ -155,25 +155,25 @@ Use Fluent API in `DbContext.OnModelCreating` to express the details of both **O
 ```cs
 public class AppDbContext : DbContext
 {
-    public DbSet<Location> Locations { get; set; }
-    public DbSet<Item> Items { get; set; }
+  public DbSet<Location> Locations { get; set; }
+  public DbSet<Item> Items { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder
-            .Entity<Item>()
-            .HasOne(x => x.CurrentLocation)
-            .WithMany(x => x.CurrentItems)
-            .HasForeignKey(x => x.CurrentLocationId)
-            .OnDelete(DeleteBehavior.Restrict);
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+  {
+    modelBuilder
+      .Entity<Item>()
+      .HasOne(x => x.CurrentLocation)
+      .WithMany(x => x.CurrentItems)
+      .HasForeignKey(x => x.CurrentLocationId)
+      .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder
-            .Entity<Item>()
-            .HasOne(x => x.OriginLocation)
-            .WithMany(x => x.OriginItems)
-            .HasForeignKey(x => x.OriginLocationId)
-            .OnDelete(DeleteBehavior.Restrict);
-    }
+    modelBuilder
+      .Entity<Item>()
+      .HasOne(x => x.OriginLocation)
+      .WithMany(x => x.OriginItems)
+      .HasForeignKey(x => x.OriginLocationId)
+      .OnDelete(DeleteBehavior.Restrict);
+  }
 }
 ```
 
@@ -197,74 +197,74 @@ using System.Linq;
 
 public class AppDbContext : DbContext
 {
+  /*
+    Get DbContextOptions from the Startup.cs configuration in {Project}.Web
+  */
+  public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+  /*
+    Register entities as DbSet properties
+  */
+  public DbSet<Category> Categories { get; set; }
+  public DbSet<Item> Items { get; set; }
+  public DbSet<ItemTag> ItemTags { get; set; }
+  public DbSet<Location> Locations { get; set; }
+  public DbSet<Tag> Tags { get; set; }
+
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+  {
     /*
-        Get DbContextOptions from the Startup.cs configuration in {Project}.Web
+      Rename tables to their actual class name instead of the DbSet property name.
+      This prevents pluralized table names in SQL.
     */
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    modelBuilder
+      .Model
+      .GetEntityTypes()
+      .ToList()
+      .ForEach(x =>
+      {
+        modelBuilder
+          .Entity(x.Name)
+          .ToTable(x.Name.Split('.').Last());
+      });
 
     /*
-        Register entities as DbSet properties
+      Map the TagItems navigation property.
+      By convention, EF will not understand TagItems because there is
+      not a TagItem class.
     */
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<Item> Items { get; set; }
-    public DbSet<ItemTag> ItemTags { get; set; }
-    public DbSet<Location> Locations { get; set; }
-    public DbSet<Tag> Tags { get; set; }
+    modelBuilder
+      .Entity<Tag>()
+      .HasMany(x => x.TagItems)
+      .WithOne(x => x.Tag)
+      .HasForeignKey(x => x.TagId);
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        /*
-            Rename tables to their actual class name instead of the DbSet property name.
-            This prevents pluralized table names in SQL.
-        */
-        modelBuilder
-            .Model
-            .GetEntityTypes()
-            .ToList()
-            .ForEach(x =>
-            {
-                modelBuilder
-                    .Entity(x.Name)
-                    .ToTable(x.Name.Split('.').Last());
-            });
+    /*
+      Map the OriginLocation and OriginItems navigation properties.
+      By convention, EF will not understand OriginLocation because
+      there is not an OriginLocation class. Also, EF will not
+      understand OriginItems because there is not an OriginItem class.
+    */
+    modelBuilder
+      .Entity<Item>()
+      .HasOne(x => x.OriginLocation)
+      .WithMany(x => x.OriginItems)
+      .HasForeignKey(x => x.OriginLocationId)
+      .OnDelete(DeleteBehavior.Restrict);
 
-        /*
-            Map the TagItems navigation property.
-            By convention, EF will not understand TagItems because there is
-            not a TagItem class.
-        */
-        modelBuilder
-            .Entity<Tag>()
-            .HasMany(x => x.TagItems)
-            .WithOne(x => x.Tag)
-            .HasForeignKey(x => x.TagId);
-
-        /*
-            Map the OriginLocation and OriginItems navigation properties.
-            By convention, EF will not understand OriginLocation because
-            there is not an OriginLocation class. Also, EF will not
-            understand OriginItems because there is not an OriginItem class.
-        */
-        modelBuilder
-            .Entity<Item>()
-            .HasOne(x => x.OriginLocation)
-            .WithMany(x => x.OriginItems)
-            .HasForeignKey(x => x.OriginLocationId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        /*
-            Map the CurrentLocation and CurrentItems navigation properties.
-            By convention, EF will not understand CurrentLocation because
-            there is not a CurrentLocation class. Also, EF will not
-            understand CurrentItems because there is not a CurrentItem class.
-        */
-        modelBuilder
-            .Entity<Item>()
-            .HasOne(x => x.CurrentLocation)
-            .WithMany(x => x.CurrentItems)
-            .HasForeignKey(x => x.CurrentLocationId)
-            .OnDelete(DeleteBehavior.Restrict);
-    }
+    /*
+      Map the CurrentLocation and CurrentItems navigation properties.
+      By convention, EF will not understand CurrentLocation because
+      there is not a CurrentLocation class. Also, EF will not
+      understand CurrentItems because there is not a CurrentItem class.
+    */
+    modelBuilder
+      .Entity<Item>()
+      .HasOne(x => x.CurrentLocation)
+      .WithMany(x => x.CurrentItems)
+      .HasForeignKey(x => x.CurrentLocationId)
+      .OnDelete(DeleteBehavior.Restrict);
+  }
 }
 ```
 
@@ -274,9 +274,9 @@ In `appsettings.Development.json`, create a connection string to the database yo
 
 ``` json
 {
-    "ConnectionStrings": {
-        "Dev": "Server=(localhost)\\ProjectsV13;Database={db-name};Trusted_Connection=True"
-    }
+  "ConnectionStrings": {
+    "Dev": "Server=(localhost)\\ProjectsV13;Database={db-name};Trusted_Connection=True"
+  }
 }
 ```  
 
@@ -285,19 +285,19 @@ Register the `DbContext` in the `ConfigureServices()` method of `Startup.cs` in 
 ```cs
 public class Startup
 {
-    Public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
+  Public Startup(IConfiguration configuration)
+  {
+    Configuration = configuration;
+  }
 
-    public IConfiguration Configuration { get; }
+  public IConfiguration Configuration { get; }
 
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("Dev"))
-        );
-    }
+  public void ConfigureServices(IServiceCollection services)
+  {
+    services.AddDbContext<AppDbContext>(options =>
+      options.UseSqlServer(Configuration.GetConnectionString("Dev"))
+    );
+  }
 }
 ```
 

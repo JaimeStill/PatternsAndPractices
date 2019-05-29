@@ -3,8 +3,8 @@
 [Table of Contents](./toc.md)
 
 * [Overview](#overview)
-    * [Transpiled JavaScript](#transpiled-javascript)
-    * [Mapping Classes](#mapping-classes)
+  * [Transpiled JavaScript](#transpiled-javascript)
+  * [Mapping Classes](#mapping-classes)
 * [Implementation](#implementation)
 
 ## [Overview](#models)
@@ -31,13 +31,13 @@ Suppose I have the following class and interface in TypeScript:
 
 ```ts
 interface IGreeter {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 }
 
 class Greeter {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 }
 ```
 
@@ -45,9 +45,9 @@ Here is the tranpsiled JavaScript:
 
 ```js
 var Greeter = /** @class */ (function () {
-    function Greeter() {
-    }
-    return Greeter;
+  function Greeter() {
+  }
+  return Greeter;
 }());
 ```
 
@@ -70,14 +70,14 @@ Suppose you have the following class:
 
 ```ts
 export class Example {
-    id: number;
-    name: string;
-    label: string;
-    category: string;
+  id: number;
+  name: string;
+  label: string;
+  category: string;
 
-    get filter(): string {
-        return `${this.name} - ${this.label} - ${this.category}`;
-    }
+  get filter(): string {
+    return `${this.name} - ${this.label} - ${this.category}`;
+  }
 }
 ```
 
@@ -85,12 +85,12 @@ You want to be able to filter a collection of `Example` objects by the `filter` 
 
 ```ts
 filterExamples = (examples: Example[], search: string): Example[] =>
-    examples.filter(x => 
-    {
-        search = search.toLowerCase();
-        const f = x.filter.toLowerCase();
-        return f.indexOf(search) !== -1;
-    });
+  examples.filter(x => 
+  {
+    search = search.toLowerCase();
+    const f = x.filter.toLowerCase();
+    return f.indexOf(search) !== -1;
+  });
 ```
 
 This function takes an `Example[]` and a `string`, and returns an array of `Example` objects if the `filter` property contains the search value (case insensitive).
@@ -99,10 +99,10 @@ Suppose you want to filter these objects after receiving the collection from an 
 
 ```ts
 getExamples = () => this.http.get<Example[]>('/api/example/getExamples')
-    .subscribe(
-        data => this.examples.next(data),
-        err => this.snacker.sendErrorMessage(err.error)
-    );
+  .subscribe(
+    data => this.examples.next(data),
+    err => this.snacker.sendErrorMessage(err.error)
+  );
 ```
 
 > Observables will be covered in greater detail in the [Services](./13-services.md) and [RxJS](./a1-rxjs.md) articles.
@@ -113,10 +113,10 @@ In order to access the `filter` property, you need to explicitly assign the obje
 
 ```ts
 getExamples() => this.http.get<Example[]>('/api/example/getExamples')
-    .subscribe(
-        data => this.examples.next(data.map(x => Object.assign(new Example, x))),
-        err => this.snacker.sendErrorMessage(err.error)
-    )
+  .subscribe(
+    data => this.examples.next(data.map(x => Object.assign(new Example, x))),
+    err => this.snacker.sendErrorMessage(err.error)
+  );
 ```
 
 > The app stack provides an `ObjectMapService` for decoupling this logic from your API functions, and it will be covered in the [Services](./13-services.md) article.

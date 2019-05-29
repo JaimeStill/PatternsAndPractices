@@ -3,9 +3,9 @@
 [Table of Contents](./toc.md)
 
 * [Controller Signature](#controller-signature)
-    * [HTTP Conventions](#http-conventions)
-    * [Getting Data](#getting-data)
-    * [Posting Data](#posting-data)
+  * [HTTP Conventions](#http-conventions)
+  * [Getting Data](#getting-data)
+  * [Posting Data](#posting-data)
 * [Item Controller](#item-controller)
 
 The previous two sections took a deep dive on configuration, services, and middleware in <span>ASP.NET</span> Core. This article picks back up where [Business Logic]() left off. That detour needed to happen so that you can understand how constructor injection works and where the `AppDbContext` instance is coming from (in addition to needing a place to put the other wealth of information those sections provide).
@@ -32,12 +32,12 @@ Suppose all of the business logic defined for the `Data` entity type was defined
 [Route("api/[controller]")]
 public class DataController : Controller
 {
-    private AppDbContext db;
+  private AppDbContext db;
 
-    public DataController(AppDbContext db)
-    {
-        this.db = db;
-    }
+  public DataController(AppDbContext db)
+  {
+    this.db = db;
+  }
 }
 ```  
 
@@ -108,43 +108,43 @@ using System.Threading.Tasks;
 
 namespace Demo.Web.Controllers
 {
-    [Route("api/[controller]")]
-    public class ItemController : Controller
+  [Route("api/[controller]")]
+  public class ItemController : Controller
+  {
+    private AppDbContext db;
+
+    public ItemController(AppDbContext db)
     {
-        private AppDbContext db;
-
-        public ItemController(AppDbContext db)
-        {
-            this.db = db;
-        }
-
-        [HttpGet("[action]")]
-        public async Task<List<Item>> GetItems() => await db.GetItems();
-
-        [HttpGet("[action]")]
-        public async Task<List<Item>> GetDeletedItems() => await db.GetItems(true);
-
-        [HttpGet("[action]/{search}")]
-        public async Task<List<Item>> SearchItems([FromRoute]string search) => await db.SearchItems(search);
-
-        [HttpGet("[action]/{search}")]
-        public async Task<List<Item>> SearchDeletedItems([FromRoute]string search) => await db.SearchItems(search, true);
-
-        [HttpGet("[action]/{id}")]
-        public async Task<Item> GetItem([FromRoute]int id) => await db.GetItem(id);
-
-        [HttpPost("[action]")]
-        public async Task AddItem([FromBody]Item item) => await db.AddItem(item);
-
-        [HttpPost("[action]")]
-        public async Task UpdateItem([FromBody]Item item) => await db.UpdateItem(item);
-
-        [HttpPost("[action]")]
-        public async Task ToggleItemDeleted([FromBody]Item item) => await db.ToggleItemDeleted(item);
-
-        [HttpPost("[action]")]
-        public async Task RemoveItem([FromBody]Item item) => await db.RemoveItem(item);
+      this.db = db;
     }
+
+    [HttpGet("[action]")]
+    public async Task<List<Item>> GetItems() => await db.GetItems();
+
+    [HttpGet("[action]")]
+    public async Task<List<Item>> GetDeletedItems() => await db.GetItems(true);
+
+    [HttpGet("[action]/{search}")]
+    public async Task<List<Item>> SearchItems([FromRoute]string search) => await db.SearchItems(search);
+
+    [HttpGet("[action]/{search}")]
+    public async Task<List<Item>> SearchDeletedItems([FromRoute]string search) => await db.SearchItems(search, true);
+
+    [HttpGet("[action]/{id}")]
+    public async Task<Item> GetItem([FromRoute]int id) => await db.GetItem(id);
+
+    [HttpPost("[action]")]
+    public async Task AddItem([FromBody]Item item) => await db.AddItem(item);
+
+    [HttpPost("[action]")]
+    public async Task UpdateItem([FromBody]Item item) => await db.UpdateItem(item);
+
+    [HttpPost("[action]")]
+    public async Task ToggleItemDeleted([FromBody]Item item) => await db.ToggleItemDeleted(item);
+
+    [HttpPost("[action]")]
+    public async Task RemoveItem([FromBody]Item item) => await db.RemoveItem(item);
+  }
 }
 ```  
 

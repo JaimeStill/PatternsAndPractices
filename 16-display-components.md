@@ -4,8 +4,8 @@
 * [BannerComponent](#bannercomponent)
 * [FileUploadComponent](#fileuploadcomponent)
 * [API Components](#api-components)
-    * [ItemCardComponent](#itemcardcomponent)
-    * [ItemListComponent](#itemlistcomponent)
+  * [ItemCardComponent](#itemcardcomponent)
+  * [ItemListComponent](#itemlistcomponent)
 
 ## [Overview](#display-components)
 
@@ -177,7 +177,7 @@ import {
   styleUrls: ['file-upload.component.css']
 })
 export class FileUploadComponent {
-  @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
   @Input() accept = '*/*';
   @Input() color = 'primary';
   @Input() label = 'Browse...';
@@ -204,7 +204,7 @@ export class FileUploadComponent {
 
 **Properties**
 
-* `fileInput` is an `ElementRef` instance of the `<input type="file">` and is obtained using a query via the `@ViewChild('fileInput')` decorator.
+* `fileInput` is an `ElementRef` instance of the `<input type="file">` and is obtained using a query via the `@ViewChild('fileInput', { static: false })` decorator.
 * `accept` is an input property with a default value of **\*/\***, which specifies that any file type can be selected.
 * `color` is an input property with a default value of **primary**, which specifies the color of the `MatButton` component defined in the template.
 * `label` is an input property with a default value of **Browse...**, which specifies the text that will be rendered on the `MatButton` component.
@@ -238,7 +238,7 @@ This section will define, from scratch, display components that render these cap
 
 Before defining what a card for an `Item` should look like, it helps to see what the shape of the data is:
 
-```json
+```js
 {
   id: 1,
   categoryId: 1,

@@ -4,11 +4,11 @@
 
 * [Overview](#overview)
 * [Theming](#theming)
-    * [Material Styles](#material-styles)
-    * [Material Themes](#material-themes)
+  * [Material Styles](#material-styles)
+  * [Material Themes](#material-themes)
 * [Components](#component-usage)
-    * [Menu](#menu)
-    * [Slider](#slider)
+  * [Menu](#menu)
+  * [Slider](#slider)
 
 ## [Overview](#material)
 
@@ -565,8 +565,8 @@ We want to display an image with a slider above it that, when dragged, will adju
 
 * A `size` property that keeps track of the current size of the image
 * A function that is called when the `<mat-slider>` element emits the `(change)` event.
-    * The `(change)` output property emits an event property of type `MatSliderChange`, so we'll need to import this into the component definition.
-    * `(change)` is an **Output property** and output properties emit events. Don't worry about understanding this concept yet. It will be covered in detail in the [Components](./14-components.md) article.
+  * The `(change)` output property emits an event property of type `MatSliderChange`, so we'll need to import this into the component definition.
+  * `(change)` is an **Output property** and output properties emit events. Don't worry about understanding this concept yet. It will be covered in detail in the [Components](./14-components.md) article.
 * An image to display
 
 > This demonstration will also make use of the [Angular Flex Layout](https://github.com/angular/flex-layout/wiki) library, which will also be covered in the [Components](./14-components.md) article.
@@ -628,7 +628,7 @@ The `<mat-slider>` element specifies the following:
 * Whenever the `change` output property executes, it calls our `updateSize` function, passing in the `$event` object.
 * Whenever you click and drag on the slider, the thumb label will show with the current value.
 * The color is set to the **warn** color from the current theme palette
-    * You can change the theme of the app by clicking the paint bucket icon on the right of the top toolbar in the example linked below.
+  * You can change the theme of the app by clicking the paint bucket icon on the right of the top toolbar in the example linked below.
 * The `step` value is set to **10**, meaning that the value represented by the slider can only be adjusted in increments / decrements of 10.
 * The `tickInterval` is set to 1, but this will cause it to be displayed in increments of **10** because of the `step` value.
 * The slider is rendered with a width of `420px`.

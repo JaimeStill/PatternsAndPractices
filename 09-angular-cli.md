@@ -22,7 +22,7 @@ This section will take a look at how important Angular infrastructure is specifi
 * You bring in a dependency on a new style or font to add to the `styles` array
 * You bring in a dependency on a new 3rd party library that isn't related to Angular and need to add it to the `scripts` array
 * You create a new global style file that needs to be added to the `styles` array
-    * Seriously, don't do this. All global styles should be managed through the **{Project}.Web\\ClientApp\\src\\theme** directory, the root of which (**material-themes.scss**) has already been added as part of the template
+  * Seriously, don't do this. All global styles should be managed through the **{Project}.Web\\ClientApp\\src\\theme** directory, the root of which (**material-themes.scss**) has already been added as part of the template
 
 **`angular.json`**
 

@@ -6,12 +6,12 @@
 * [Service Scope](#service-scope)
 * [Observables](#observables)
 * [Core Services](#core-services)
-    * [CoreService](#coreservice)
-    * [ObjectMapService](#objectmapservice)
-    * [ThemeService](#themeservice)
-    * [SnackerService](#snackerservice)
+  * [CoreService](#coreservice)
+  * [ObjectMapService](#objectmapservice)
+  * [ThemeService](#themeservice)
+  * [SnackerService](#snackerservice)
 * [API Services](#api-services)
-    * [ItemService](#itemservice)
+  * [ItemService](#itemservice)
 
 ## [Overview](#services)
 
@@ -35,14 +35,14 @@ import { Component } from '@angular/core';
 import { ExampleService } from '../../services';
 
 @Component({
-    selector: 'example',
-    templateUrl: 'example.component.html',
-    providers: [ ExampleService ]
+  selector: 'example',
+  templateUrl: 'example.component.html',
+  providers: [ ExampleService ]
 })
 export class ExampleComponent {
-    constructor(
-        public service: ExampleService
-    ) { }
+  constructor(
+    public service: ExampleService
+  ) { }
 }
 ```
 
@@ -53,10 +53,10 @@ The dependency injection process can be explained looking at the following diagr
 When a service is injected into the constructor of a component, it will perform the following steps:
 
 * Check its own `providers` array for the requested service
-    * If it is found, use that instance
+  * If it is found, use that instance
 * Traverse up the graph, searching the `providers` array for the requested service
-    * The first instance it encounters is the instance that will be used
-    * If no instance is available, an error is thrown
+  * The first instance it encounters is the instance that will be used
+  * If no instance is available, an error is thrown
 
 With this in mind, the following table expresses how the services in the diagram would be resolved for the components in the diagram:
 
@@ -107,20 +107,20 @@ import { Item } from '../models';
 
 @Injectable()
 export class ItemService {
-    private items = new BehaviorSubject<Item[]>(null);
+  private items = new BehaviorSubject<Item[]>(null);
 
-    items$ = this.items.asObservable();
+  items$ = this.items.asObservable();
 
-    constructor(
-        private http: HttpClient,
-        private snacker: SnackerService
-    ) { }
+  constructor(
+    private http: HttpClient,
+    private snacker: SnackerService
+  ) { }
 
-    getItems = () => this.http.get<Item[]>('/api/item/getItems')
-        .subscribe(
-            data => this.items.next(data),
-            err => this.snacker.sendErrorMessage(err.error)
-        );
+  getItems = () => this.http.get<Item[]>('/api/item/getItems')
+    .subscribe(
+      data => this.items.next(data),
+      err => this.snacker.sendErrorMessage(err.error)
+    );
 }
 ```
 
@@ -130,9 +130,9 @@ Here are the important things to understand about this service:
 * The convention of adding `$` to the end of a property name, in this case `items$`, indicates that it is an Observable stream.
 * `http.get<T>()` returns an Observable that wraps the return value of the function in a stream. Calling `http.get<T>()` does not do anything. It doesn't even make a call to Web API. Calling `.subscribe()` after is what triggers the function to execute.
 * A `.subscribe()` call accepts three arguments:
-    * `success` - a function that provides the value contained by the Observable when execution completes
-    * `error` - a function that provides an error object when the Observable execution fails
-    * `complete` - a function with no arguments that allows you to perform a task when the **Subject** of the Observable completes.
+  * `success` - a function that provides the value contained by the Observable when execution completes
+  * `error` - a function that provides an error object when the Observable execution fails
+  * `complete` - a function with no arguments that allows you to perform a task when the **Subject** of the Observable completes.
 * Calling `this.items.next(data)` pushes the value of `data` into the `items` Behavior Subject, updating its value. Any listener that is subscribed to `items`, and consequently, the read-only `items$` Observable, will trigger the subscription and the listeners will have the updated data.
 
 ## [Core Services](#services)
@@ -214,9 +214,9 @@ If you recall from the [Models](./12-models.md) article, if you want an object r
 
 ```ts
 this.http.get<Item[]>('/api/item/getItems')
-    .subscribe(
-        data => this.items.next(data.map(x => Object.assign(new Item, x)))
-    );
+  .subscribe(
+    data => this.items.next(data.map(x => Object.assign(new Item, x)))
+  );
 ```
 
 The `ObjectMapService` exists so that you can define four different types of functions related to TypeScript classes:
@@ -272,9 +272,9 @@ constructor(
 ) { }
 
 getItems = () => this.http.get<Item[]>('/api/item/getItems')
-    .subscribe(
-        data => this.items.next(this.mapper.mapItems(data))
-    )
+  .subscribe(
+    data => this.items.next(this.mapper.mapItems(data))
+  )
 ```
 
 The `compare` functions you can define deal with optimizing collections bound to a `MatSelect` component to keep it from keeping track of entire object graphs when detecting changes.
@@ -362,8 +362,8 @@ You might have noticed in several service examples the following:
 
 ```ts
 .subscribe(
-    data => // do something
-    err => this.snacker.sendErrorMessage(err.error)
+  data => // do something
+  err => this.snacker.sendErrorMessage(err.error)
 )
 ```
 
@@ -440,83 +440,83 @@ div[class*="dark-"] snack-bar-container.mat-snack-bar-container.snacker {
 
 div[class*="dark-"] simple-snack-bar.mat-simple-snackbar,
 div[class*="dark-"] .snacker div.mat-simple-snackbar-action {
-    color: #e1e1e1;
+  color: #e1e1e1;
 }
 
 div[class*="dark-"] .snacker-red simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-red, 500);
+  color: map-get($mat-red, 500);
 }
 
 div[class*="dark-"] .snacker-pink simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-pink, 200);
+  color: map-get($mat-pink, 200);
 }
 
 div[class*="dark-"] .snacker-purple simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-purple, A100);
+  color: map-get($mat-purple, A100);
 }
 
 div[class*="dark-"] .snacker-deep-purple simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-deep-purple, A100);
+  color: map-get($mat-deep-purple, A100);
 }
 
 div[class*="dark-"] .snacker-indigo simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-indigo, A100);
+  color: map-get($mat-indigo, A100);
 }
 
 div[class*="dark-"] .snacker-blue simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-blue, 500);
+  color: map-get($mat-blue, 500);
 }
 
 div[class*="dark-"] .snacker-light-blue simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-light-blue, A100);
+  color: map-get($mat-light-blue, A100);
 }
 
 div[class*="dark-"] .snacker-cyan simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-cyan, A200);
+  color: map-get($mat-cyan, A200);
 }
 
 div[class*="dark-"] .snacker-teal simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-teal, A200);
+  color: map-get($mat-teal, A200);
 }
 
 div[class*="dark-"] .snacker-green simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-green, A400);
+  color: map-get($mat-green, A400);
 }
 
 div[class*="dark-"] .snacker-light-green simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-light-green, A400);
+  color: map-get($mat-light-green, A400);
 }
 
 div[class*="dark-"] .snacker-lime simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-lime, A400);
+  color: map-get($mat-lime, A400);
 }
 
 div[class*="dark-"] .snacker-yellow simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-yellow, A200);
+  color: map-get($mat-yellow, A200);
 }
 
 div[class*="dark-"] .snacker-amber simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-amber, A200);
+  color: map-get($mat-amber, A200);
 }
 
 div[class*="dark-"] .snacker-orange simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-orange, A200);
+  color: map-get($mat-orange, A200);
 }
 
 div[class*="dark-"] .snacker-deep-orange simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-deep-orange, A200);
+  color: map-get($mat-deep-orange, A200);
 }
 
 div[class*="dark-"] .snacker-brown simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-brown, 300);
+  color: map-get($mat-brown, 300);
 }
 
 div[class*="dark-"] .snacker-grey simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-grey, 300);
+  color: map-get($mat-grey, 300);
 }
 
 div[class*="dark-"] .snacker-blue-grey simple-snack-bar.mat-simple-snackbar {
-    color: map-get($mat-blue-grey, 200);
+  color: map-get($mat-blue-grey, 200);
 }
 
 div[class*="light-"] snack-bar-container.mat-snack-bar-container.snacker {
@@ -525,7 +525,7 @@ div[class*="light-"] snack-bar-container.mat-snack-bar-container.snacker {
 
 div[class*="light-"] simple-snack-bar.mat-simple-snackbar,
 div[class*="light-"] .snacker div.mat-simple-snackbar-action {
-    color: #3e3e3e;
+  color: #3e3e3e;
 }
 
 div[class*="light-"] .snacker-red simple-snack-bar.mat-simple-snackbar {

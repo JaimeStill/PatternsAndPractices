@@ -3,17 +3,17 @@
 [Table of Contents](./toc.md)
 
 * [Overview](#overview)
-    * [base-href](#base-href)
-    * [router-outlet](#router-outlet)
-    * [Router Links](#router-links)
-    * [Active Router Links](#active-router-links)
-    * [Route Parameters](#route-parameters)
-    * [Activated Route](#activated-route)
-    * [Routing Example](#routing-example)
+  * [base-href](#base-href)
+  * [router-outlet](#router-outlet)
+  * [Router Links](#router-links)
+  * [Active Router Links](#active-router-links)
+  * [Route Parameters](#route-parameters)
+  * [Activated Route](#activated-route)
+  * [Routing Example](#routing-example)
 * [Child Routes](#child-routes)
-    * [Child Routes Example](#child-routes-example)
+  * [Child Routes Example](#child-routes-example)
 * [Secondary Routes](#secondary-routes)
-    * [Secondary Routes Example](#secondary-routes-example)
+  * [Secondary Routes Example](#secondary-routes-example)
 
 ## [Overview](#advanced-routing)
 
@@ -27,11 +27,11 @@ Consider the following route definitions:
 
 ```ts
 const routes: Routes = [
-    { path: 'a-component', component: AComponent },
-    { path: 'b-component', component: BComponent },
-    { path: 'c-component', component: CComponent },
-    { path: '', redirectTo: 'a-component', pathMatch: 'full' },
-    { path: '**', redirectTo: 'a-component', pathMatch: 'full' }
+  { path: 'a-component', component: AComponent },
+  { path: 'b-component', component: BComponent },
+  { path: 'c-component', component: CComponent },
+  { path: '', redirectTo: 'a-component', pathMatch: 'full' },
+  { path: '**', redirectTo: 'a-component', pathMatch: 'full' }
 ];
 ```
 
@@ -143,12 +143,12 @@ constructor(
 ) { }
 
 ngOnInit() {
-    this.route.paramMap.subscribe((param: ParamMap) => {
-        if (param.has('name')) {
-            const name = param.get('name');
-            // do something with name
-        }
-    });
+  this.route.paramMap.subscribe((param: ParamMap) => {
+    if (param.has('name')) {
+      const name = param.get('name');
+      // do something with name
+    }
+  });
 }
 ```
 
@@ -189,18 +189,18 @@ There are two different ways you can go about setting up this route configuratio
 
 ```ts
 export const Routes: Route[] = [
-    {
-        path: 'a-component',
-        component: AComponent,
-        children: [
-            { path: 'b-component', component: BComponent },
-            { path: 'c-component', component: CComponent },
-            { path: '', redirectTo: 'b-component', pathMatch: 'prefix' },
-            { path: '**', redirectTo: 'b-component', pathMatch: 'prefix' }
-        ]
-    },
-    { path: '', redirectTo: 'a-component', pathMatch: 'full' },
-    { path: '**', redirectTo: 'a-component', pathMatch: 'full' }
+  {
+    path: 'a-component',
+    component: AComponent,
+    children: [
+      { path: 'b-component', component: BComponent },
+      { path: 'c-component', component: CComponent },
+      { path: '', redirectTo: 'b-component', pathMatch: 'prefix' },
+      { path: '**', redirectTo: 'b-component', pathMatch: 'prefix' }
+    ]
+  },
+  { path: '', redirectTo: 'a-component', pathMatch: 'full' },
+  { path: '**', redirectTo: 'a-component', pathMatch: 'full' }
 ]
 ```
 
@@ -211,16 +211,16 @@ Just as with the base routes, child routes can defined a default route, and a ca
 If you start to have a lot of child routes, you can define the folder containing the route with the child routes as a TypeScript module, and define the child routes in a sub-folder. For example:
 
 * routes
-    * a
-        * children
-            * b.component.html
-            * b.component.ts
-            * c.component.html
-            * c.component.ts
-        * a.component.html
-        * a.component.ts
-        * index.ts
+  * a
+    * children
+      * b.component.html
+      * b.component.ts
+      * c.component.html
+      * c.component.ts
+    * a.component.html
+    * a.component.ts
     * index.ts
+  * index.ts
 
 In this situation, `/routes/a/index.ts` would be defined as follows:
 
@@ -230,15 +230,15 @@ import { BComponent } from './children/b.component';
 import { CComponent } from './children/c.component';
 
 export const AComponents = [
-    BComponent,
-    CComponent
+  BComponent,
+  CComponent
 ];
 
 export const ARoutes: Route[] = [
-    { path: 'b-component', component: BComponent },
-    { path: 'c-component', component: CComponent },
-    { path: '', redirectTo: 'b-component', pathMatch: 'prefix' },
-    { path: '**', redirectTo: 'b-component', pathMatch: 'prefix' }
+  { path: 'b-component', component: BComponent },
+  { path: 'c-component', component: CComponent },
+  { path: '', redirectTo: 'b-component', pathMatch: 'prefix' },
+  { path: '**', redirectTo: 'b-component', pathMatch: 'prefix' }
 ];
 ```
 
@@ -248,19 +248,19 @@ Then, `/routes/index.ts` would import the child components, and define the child
 import { Route } from '@angular/router';
 import { AComponent } from './a/a.component';
 import {
-    AComponents,
-    ARoutes
+  AComponents,
+  ARoutes
 } from './a';
 
 export const RouteComponents = [
-    AComponent,
-    ...AComponents
+  AComponent,
+  ...AComponents
 ];
 
 export const Routes: Route[] = [
-    { path: 'a-component', component: AComponent, children: ARoutes },
-    { path: '', redirectTo: 'a-component', pathMatch: 'full' },
-    { path: '**', redirectTo: 'a-component', pathMatch: 'full' }
+  { path: 'a-component', component: AComponent, children: ARoutes },
+  { path: '', redirectTo: 'a-component', pathMatch: 'full' },
+  { path: '**', redirectTo: 'a-component', pathMatch: 'full' }
 ];
 ```
 
@@ -283,11 +283,11 @@ Given the child routes above, to access the `id` URL parameter, you would need t
 
 ```ts
 ngOnInit() {
-    this.route.parent.paramMap.subscribe((param: ParamMap) => {
-        if (param.has('id')) {
-            const id = parseInt(param.get('id'));
-        }
-    });
+  this.route.parent.paramMap.subscribe((param: ParamMap) => {
+    if (param.has('id')) {
+      const id = parseInt(param.get('id'));
+    }
+  });
 }
 ```
 

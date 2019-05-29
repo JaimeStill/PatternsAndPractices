@@ -24,7 +24,7 @@ Before starting, ensure the following are installed and configured
 
 Software | Notes | Mandatory?
 ---------|-------|-----------
-[Node.js](https://nodejs.org/en/) | N/A | Yes
+[Node.js](https://nodejs.org/en/) | 12.x+ is required for Angular 8 | Yes
 [Git](https://git-scm.com/) | CLI-based source control software | Yes
 [Yarn](https://yarnpkg.com/en/) | Optimized client-side package manager | Yes
 [.NET Core SDK](https://dotnet.microsoft.com/download) | SDK and Runtime for .NET Core | Yes

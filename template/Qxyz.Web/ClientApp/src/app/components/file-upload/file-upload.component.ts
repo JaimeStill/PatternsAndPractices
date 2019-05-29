@@ -13,7 +13,7 @@ import {
   styleUrls: ['file-upload.component.css']
 })
 export class FileUploadComponent {
-  @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
   @Input() accept = '*/*';
   @Input() color = 'primary';
   @Input() label = 'Browse...';

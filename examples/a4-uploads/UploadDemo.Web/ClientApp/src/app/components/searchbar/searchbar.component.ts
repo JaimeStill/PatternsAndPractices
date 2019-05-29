@@ -28,7 +28,7 @@ export class SearchbarComponent implements OnDestroy {
     private core: CoreService
   ) { }
 
-  @ViewChild('searchbar')
+  @ViewChild('searchbar', { static: false })
   set searchbar (input: ElementRef) {
     if (input) {
       this.sub = this.core.generateInputObservable(input)

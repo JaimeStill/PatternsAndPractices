@@ -271,9 +271,13 @@
     * [Updated App Component](./a4-uploads.md#updated-app-component)
 * [Example App](./a4-uploads.md#example-app)
 
-### [Authorization](./a5-authorization.md)
+### [Security](./a5-security.md)
 
-
+* [Overview](./a5-security.md#overview)
+* [Authentication](./a5-security.md#authentication)
+* [Authorization](./a5-security.md#authorization)
+  * [API Guards](./a5-security.md#api-guards)
+  * [Route Guards](./a5-security.md#route-guards)
 
 ### [SignalR](./a6-signalr.md)
 

@@ -88,6 +88,7 @@ Option | Type | Description
 **data** | `any` | The data to be injected into the dialog from the component that opens it.
 **width** | `string` | Any valid CSS unit of measurement, i.e. - `300px`, `80%`, etc.
 **disableClose** | `boolean` | Determines whether or not clicking outside of the modal closes it.
+**autoFocus** | `boolean` | Determines whether or not to focus the first focusable element in the dialog when rendered.
 
 `MatDialog` can be injected in a component in the same way any other service can be.
 
@@ -314,7 +315,231 @@ export class HomeComponent {
 
 ## [Action Dialogs](#dialogs)
 
+Most dialogs that you create will require a degree of user interaction. In these cases, there are two types of action dialogs:
+
+* A dialog is used to request a response from the user
+* A dialog provides a self-contained feature that, when closed, requires the data to be refreshed
+
+The examples that follow will highlight these features. But before we jump into them, there are a few dialog features to discuss that make these features possible.
+
+The `MatDialog.open()` function returns a `MatDialogRef` object, which provides event functions you can react to based on user interaction with the dialog.
+
+> See [MatDialogRef](https://material.angular.io/components/dialog/api#MatDialogRef) for a detailed look at all of the available events.
+
+The important event here is `afterClosed()`, which returns an `Observable<T | undefined>`. A value can be returned when the dialog is closed, which we can then do something with. Here is what this looks like:
+
+```ts
+this.dialog.open(ConfirmDialog)
+  .afterClosed()
+  .subscribe(res => /* do something with the result */);
+```
+
+There are two ways that a value can be returned from a dialog:
+
+* Bind a value to `mat-dialog-close`
+* Inject a `MatDialogRef<T>` into the constructor of the dialog, where `T` is the type of the dialog
+  * Pass the return value to the `close()` function of the `MatDialogRef<T>`.
+
+**Binding a value to `mat-dialog-close`**
+
+```html
+<mat-dialog-actions>
+  <button mat-button
+          [mat-dialog-close]="true">Confirm</button>
+  <button mat-button
+          [mat-dialog-close]="false">Cancel</button>
+</mat-dialog-actions>
+```
+
+**Passing a value to `MatDialogRef.close()`**
+
+```ts
+@Component({
+  selector: 'demo-dialog',
+  providers: [DemoService]
+})
+export class DemoDialog {
+  item = new Item();
+
+  constructor(
+    public dialogRef: MatDialogRef<DemoDialog>,
+    public service: DemoService
+  ) { }
+
+  saveItem = async () => {
+    const res = this.service.saveItem(this.item);
+    res && this.dialogRef.close(true);
+  }
+}
+```
+
 ### [Confirm Dialog](#dialogs)
+
+* [StackBlitz - Demo](https://docs-confirm-dialog.stackblitz.io/home)
+* [StackBlitz - Source](https://stackblitz.com/edit/docs-confirm-dialog)
+
+The intent of this example is to build a confirmation dialog where the following items can be customized:
+
+* Dialog title
+* Prompt to the user
+* Label of the confirm button
+* Label of the cancel button
+
+When the `Confirm` button is clicked, a value of `true` is returned.
+
+When the `Cancel` button is clicked, a value of `false` is returned.
+
+First, an interface is needed to define these customizable properties:
+
+**`confirm.ts`**
+```ts
+export interface Confirm {
+  title: string;
+  prompt: string;
+  confirm: string;
+  cancel: string;
+}
+```
+
+Next, a pretty straightforward dialog is defined:
+
+**`confirm.dialog.ts`**
+
+```ts
+import {
+  Component,
+  Inject
+} from '@angular/core';
+
+import { MAT_DIALOG_DATA } from '@angular/material';
+import { Confirm } from '../models';
+
+@Component({
+  selector: 'confirm-dialog',
+  templateUrl: 'confirm.dialog.html'
+})
+export class ConfirmDialog {
+  confirm: Confirm;
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: Confirm
+  ) {
+    this.confirm = data ?
+      data :
+      {
+        title: 'Confirm Action?',
+        prompt: 'Are you sure you would like to perform this action?',
+        confirm: 'Confirm',
+        cancel: 'Cancel'
+      };
+  }
+}
+```
+
+An object that implements the `Confirm` interface is injected into the dialog. If no object is received, a default object is created.
+
+**`confirm.dialog.html`**
+
+```html
+<div class="mat-typography">
+  <h2 mat-dialog-title>{{confirm.title}}</h2>
+  <mat-dialog-content>
+    <p>{{confirm.prompt}}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            [mat-dialog-close]="true">{{confirm.confirm}}</button>
+    <button mat-button
+            [mat-dialog-close]="false">{{confirm.cancel}}</button>
+  </mat-dialog-actions>
+</div>
+```
+
+The `title` property is rendered as the `mat-dialog-title`.
+
+The `prompt` property is rendered inside fo the `mat-dialog-content`.
+
+If the **Confirm** button is clicked, the dialog is closed returning a value of `true`. The label for the button is the `confirm` property.
+
+If the **Cancel** button is clicked, the dialog is closed returning a value of `false`. The label for the button is the `cancel` property.
+
+All that's left to do now is make use of the dialog.
+
+**`home.component.ts`**
+
+```ts
+import {
+  Component,
+  OnDestroy
+} from '@angular/core';
+
+import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { Confirm } from '../../models';
+import { ConfirmDialog } from '../../dialogs';
+
+@Component({
+  selector: 'home-route',
+  templateUrl: 'home.component.html'
+})
+export class HomeComponent implements OnDestroy {
+  private subs = new Array<Subscription>();
+  result: string;
+
+  confirm: Confirm = {
+    title: 'Umm...',
+    prompt: 'Did you really intend to press the big red button?',
+    confirm: 'Yes',
+    cancel: 'No'
+  }
+
+  constructor(
+    private dialog: MatDialog
+  ) { }
+
+  ngOnDestroy() {
+    this.subs.forEach(x => x && x.unsubscribe());
+  }
+
+  openConfirmationDialog = () => this.subs.push(this.dialog.open(ConfirmDialog, {
+    data: this.confirm,
+    autoFocus: false
+  })
+  .afterClosed()
+  .subscribe(res => 
+    res !== undefined && 
+    (this.result = res ? 
+      `I don't know how you're reading this. The universe is dead now.` : 
+      'Whew. Almost blew up the universe.'
+    )
+  ));
+}
+```
+
+A `confirm: Confirm` property is created to pass into `MatDialogConfig.data` when opening a `ConfirmDialog`.
+
+`MatDialog` is injected into the constructor of the component.
+
+The `openConfirmationDialog()` opens the `ConfirmDialog`, passing the `confirm` property as `data`. The `afterClosed()` function generates an Observable that is subscribed to, passing the result when the dialog closes. This subscription is captured in the `subs` array so it can be disposed of properly in the **OnDestroy** lifecycle hook.
+
+If `res` is not `undefined`, meaning the user actually clicked an action button as opposed to clicking the backdrop to close the dialog, the `result` property is set based on the returned value.
+
+**`home.component.html`**
+
+```html
+<mat-toolbar>Confirmation</mat-toolbar>
+<button mat-raised-button
+        color="warn"
+        [style.margin.px]="12"
+        (click)="openConfirmationDialog()">Big Red Button</button>
+<section *ngIf="result"
+         class="container">
+  <p>{{result}}</p>
+</section>
+```
+
+Clicking **Big Red Button** calls the `openConfirmationDialog()` function.
+
+If `result` has a value, it is rendered below the button.
 
 ### [Editor Dialog](#dialogs)
 

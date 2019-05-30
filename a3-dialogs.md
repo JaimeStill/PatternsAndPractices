@@ -467,13 +467,8 @@ All that's left to do now is make use of the dialog.
 **`home.component.ts`**
 
 ```ts
-import {
-  Component,
-  OnDestroy
-} from '@angular/core';
-
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Subscription } from 'rxjs';
 import { Confirm } from '../../models';
 import { ConfirmDialog } from '../../dialogs';
 
@@ -481,8 +476,7 @@ import { ConfirmDialog } from '../../dialogs';
   selector: 'home-route',
   templateUrl: 'home.component.html'
 })
-export class HomeComponent implements OnDestroy {
-  private subs = new Array<Subscription>();
+export class HomeComponent {
   result: string;
 
   confirm: Confirm = {
@@ -496,11 +490,7 @@ export class HomeComponent implements OnDestroy {
     private dialog: MatDialog
   ) { }
 
-  ngOnDestroy() {
-    this.subs.forEach(x => x && x.unsubscribe());
-  }
-
-  openConfirmationDialog = () => this.subs.push(this.dialog.open(ConfirmDialog, {
+  openConfirmationDialog = () => this.dialog.open(ConfirmDialog, {
     data: this.confirm,
     autoFocus: false
   })
@@ -511,7 +501,7 @@ export class HomeComponent implements OnDestroy {
       `I don't know how you're reading this. The universe is dead now.` : 
       'Whew. Almost blew up the universe.'
     )
-  ));
+  );
 }
 ```
 
@@ -519,7 +509,7 @@ A `confirm: Confirm` property is created to pass into `MatDialogConfig.data` whe
 
 `MatDialog` is injected into the constructor of the component.
 
-The `openConfirmationDialog()` opens the `ConfirmDialog`, passing the `confirm` property as `data`. The `afterClosed()` function generates an Observable that is subscribed to, passing the result when the dialog closes. This subscription is captured in the `subs` array so it can be disposed of properly in the **OnDestroy** lifecycle hook.
+The `openConfirmationDialog()` opens the `ConfirmDialog`, passing the `confirm` property as `data`. The `afterClosed()` function generates an Observable that is subscribed to, passing the result when the dialog closes.
 
 If `res` is not `undefined`, meaning the user actually clicked an action button as opposed to clicking the backdrop to close the dialog, the `result` property is set based on the returned value.
 

@@ -543,6 +543,335 @@ If `result` has a value, it is rendered below the button.
 
 ### [Editor Dialog](#dialogs)
 
+* [StackBlitz - Demo](https://docs-editor-dialog.stackblitz.io/home)
+* [StackBlitz - Source](https://stackblitz.com/edit/docs-editor-dialog)
+
+This section lays the foundation for what will be developed through the [Bin Dialog](#bin-dialog) section that follows. This is the intended behavior for the demo in this section:
+
+* Retrieve and render a list of `Item` objects as cards from a public API
+* Clicking the **Edit** button on the card renders a dialog that allows the `Item` to be edited
+  * Clicking **Save** will persist the changes to the database, close the dialog, and retrieve an updated list of `Item` objects
+* Clicking the **Add Item** button renders a dialog that llows a new `Item` to be edited
+  * Clicking **Save** will add the `Item` to the database, close the dialog, and retrieve an updated list of `Item` objects
+
+> The API for this demo was written using [json-server](https://github.com/typicode/json-server) on [Glitch](https://glitch.com/) at [neon-silkworm.glitch.me/items](https://neon-silkworm.glitch.me/items). The source for the API can be found at [glitch.com/~neon-silkworm](https://glitch.com/~neon-silkworm).
+
+First, we need a class that represents an `Item`:
+
+**`item.ts`**
+```ts
+export class Item {
+  id: number;
+  name: string;
+  description: string;
+  isDeleted: boolean;
+}
+```
+
+The service that interacts with the API is pretty straightforward:
+
+**`item.service.ts`**
+```ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs';
+import { SnackerService } from './snacker.service';
+import { Item } from '../models';
+
+@Injectable()
+export class ItemService {
+  private api = 'https://neon-silkworm.glitch.me/items/';
+  private items = new Subject<Item[]>();
+
+  items$ = this.items.asObservable();
+
+  constructor(
+    private http: HttpClient,
+    private snacker: SnackerService
+  ) { }
+
+  getItems = () => this.http.get<Item[]>(this.api)
+    .subscribe(
+      data => this.items.next(data.filter(x => !x.isDeleted)),
+      err => this.snacker.sendErrorMessage(err.message)
+    );
+
+  getDeletedItems = () => this.http.get<Item[]>(this.api)
+    .subscribe(
+      data => this.items.next(data.filter(x => x.isDeleted)),
+      err => this.snacker.sendErrorMessage(err.message)
+    );
+
+  addItem = (item: Item): Promise<boolean> =>
+    new Promise((resolve) => {
+      item.isDeleted = false;
+      this.http.post(this.api, item)
+        .subscribe(
+          () => {
+            this.snacker.sendSuccessMessage(`${item.name} successfully added`);
+            resolve(true);
+          },
+          err => {
+            this.snacker.sendErrorMessage(err.message);
+            resolve(false);
+          }
+        );
+    });
+
+  updateItem = (item: Item): Promise<boolean> =>
+    new Promise((resolve) => {
+      this.http.put(`${this.api}${item.id}`, item)
+        .subscribe(
+          () => {
+            this.snacker.sendSuccessMessage(`${item.name} successfully updated`);
+            resolve(true);
+          },
+          err => {
+            this.snacker.sendErrorMessage(err.message);
+            resolve(false);
+          }
+        );
+    });
+}
+```
+
+Instead of mapping to a .NET Web API Controller, it interacts with a simple API I wrote on Glitch for supprting this demo.
+
+With this infrastructure in place, a dialog that allows items to be added or updated can be created.
+
+**`item.dialog.ts`**
+```ts
+import { 
+  Component,
+  Inject,
+  OnInit
+} from '@angular/core';
+
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from '@angular/material';
+
+import { ItemService } from '../../services';
+import { Item } from '../../models';
+
+@Component({
+  selector: 'item-dialog',
+  templateUrl: 'item.dialog.html',
+  providers: [ItemService]
+})
+export class ItemDialog implements OnInit {
+  dialogTitle: string;
+  item: Item;
+
+  constructor(
+    private dialogRef: MatDialogRef<ItemDialog>,
+    @Inject (MAT_DIALOG_DATA) private data: Item,
+    private service: ItemService
+  ) { }
+
+  ngOnInit() {
+    this.item = this.data ?
+      this.data :
+      new Item();
+
+    this.dialogTitle = this.item && this.item.id ?
+      'Update Item' :
+      'Add Item';
+  }
+
+  saveItem = async () => {
+    const res = this.item.id ?
+      await this.service.updateItem(this.item) :
+      await this.service.addItem(this.item);
+
+    res && this.dialogRef.close(true);
+  }
+}
+```
+
+The `ItemService` is registered with the `providers` array for `ItemDialog`.
+
+An object of type `Item` can be injected using the `data` property of `MatDialogConfig`.
+
+In the **OnInit** lifecycle hook, `data` is checked to see if a value was provided. If so, the local `item` property is assigned the value of `data`. Otherwise, it is instantiated as a new `Item`. This allows us to determine whether or not an `Item` is being added or updated.
+
+When the `saveItem()` asynchronous function is called, the `id` property of the `Item` is checked for a value. If it has a value, `item` is passed to `ItemService.updateItem()`. Otherwise, it is passed to `ItemService.addItem()`. If the executed operation completes successfully, the dialog is closed with a value of `true`.
+
+Dialogs like this support isolated functionality, so they are allowed to interact with a service. A big reason that dialogs are structured like this is to ensure that if an error occurs when saving an `Item`, the state of the updated `Item` isn't lost.
+
+The template for the dialog is pretty simple:
+
+**`item.dialog.html`**
+```html
+<div class="mat-typography">
+  <h2 mat-dialog-title>{{dialogTitle}}</h2>
+  <mat-dialog-content>
+    <section fxLayout="column"
+             fxLayoutAlign="start stretch">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="item.name">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea matInput
+                  [(ngModel)]="item.description"
+                  mat-autosize
+                  [matAutosizeMinRows]="1"
+                  [matAutosizeMaxRows]="8"></textarea>
+      </mat-form-field>
+    </section>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            color="accent"
+            (click)="saveItem()">Save</button>
+    <button mat-button
+            color="warn"
+            mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</div>
+```
+
+The `dialogTitle` property, set in the **OnInit** lifecycle hook, is rendered as the dialog title.
+
+Input fields are provided for both `Item.name` and `Item.description`. The `description` field is an auto-sized `<textarea>`.
+
+When the **Save** button is clicked, `saveItem()` is called.
+
+When the **Cancel** button is clicked, the dialog is closed without returning a value and discards any updates.
+
+Before writing the route component, a card component should be defined for rendering an `Item`.
+
+**`item-card.component.ts`**
+```ts
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter
+} from '@angular/core';
+
+import { Item } from '../../models';
+
+@Component({
+  selector: 'item-card',
+  templateUrl: 'item-card.component.html'
+})
+export class ItemCardComponent {
+  @Input() item: Item;
+  @Input() size = 420;
+  @Output() edit = new EventEmitter<Item>();
+}
+```
+
+**`item-card.component.html`**
+```html
+<section class="background card static-elevation"
+         fxLayout="column"
+         fxLayoutAlign="start stretch"
+         [style.width.px]="size">
+  <section fxLayout="row"
+           fxLayoutAlign="start center">
+    <p class="mat-subheading-2" 
+       fxFlex>{{item.name}}</p>
+    <button mat-icon-button 
+            (click)="edit.emit(item)">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </section>
+  <section class="container">
+    <p>{{item.description}}</p>
+  </section>
+</section>
+```
+
+Clicking the **Edit** button emits `item: Item` property in the `edit` output event.
+
+All that's left to do is put all of the pieces together with a route component.
+
+**`home.component.ts`**
+```ts
+import {
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+
+import { MatDialog } from '@angular/material';
+import { ItemService } from '../../services';
+import { Item } from '../../models';
+import { ItemDialog } from '../../dialogs';
+
+@Component({
+  selector: 'home-route',
+  templateUrl: 'home.component.html',
+  providers: [ItemService]
+})
+export class HomeComponent implements OnInit {
+  constructor(
+    public service: ItemService,
+    private dialog: MatDialog
+  ) { }
+
+  ngOnInit() {
+    this.service.getItems();
+  }
+
+  newItem = () => this.dialog.open(ItemDialog, {
+    width: '80%',
+    maxWidth: '600px',
+    disableClose: true
+  })
+  .afterClosed()
+  .subscribe(res => res && this.service.getItems());
+
+  editItem = (item: Item) => this.dialog.open(ItemDialog, {
+    width: '80%',
+    maxWidth: '600px',
+    disableClose: true,
+    data: Object.assign(new Item(), item)
+  })
+  .afterClosed()
+  .subscribe(res => res && this.service.getItems());
+}
+```
+
+`HomeComponent` registers `ItemService` with its `providers` array, and calls `ItemService.getItems()` in the **OnInit** lifecycle hook.
+
+The `newItem()` function opens an `ItemDialog`. Notice that no `data` is provided in the associated configuration. The dialog appropriately handles a lack of injected data, so it does not be provided. In the `afterClosed()` Observable, if the result returned is true, `ItemService.getItems()` is called, refreshing the list of items.
+
+The `editItem()` function receives an `item: Item` argument and opens an `ItemDialog`. The `item` is provided to `data` in the configuration and in the `afterClosed()` Observable, if the result returned is true, `ItemService.getItems()` is called, refreshing the list of items.
+
+**`home.component.html`**
+```html
+<mat-toolbar>
+  <span>Items</span>
+  <button mat-button
+          [style.margin-left.px]="8"
+          (click)="newItem()">New Item</button>
+</mat-toolbar>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<section *ngIf="service.items$ | async as items else loading"
+         class="container"
+         fxLayout="row | wrap"
+         fxLayoutAlign="start start">
+  <item-card *ngFor="let i of items"
+             [item]="i"
+             (edit)="editItem($event)"></item-card>
+</section>
+```
+
+Clicking the **New Item** button in the toolbar calls the `newItem()` function.
+
+The `ItemService.items$` Observable is subscribed to using the `async` pipe and renders a progress bar while it is waiting for a value.
+
+When `items$` resolves a value, each of its items are rendered inside of an `<item-card>`. When the `edit` output event is called, the card's `Item` is passed to the `editItem()` function.
+
 ### [Bin Dialog](#dialogs)
 
 [Back to Top](#dialogs)

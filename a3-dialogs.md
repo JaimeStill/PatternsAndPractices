@@ -582,13 +582,7 @@ export class ItemService {
 
   getItems = () => this.http.get<Item[]>(this.api)
     .subscribe(
-      data => this.items.next(data.filter(x => !x.isDeleted)),
-      err => this.snacker.sendErrorMessage(err.message)
-    );
-
-  getDeletedItems = () => this.http.get<Item[]>(this.api)
-    .subscribe(
-      data => this.items.next(data.filter(x => x.isDeleted)),
+      data => this.items.next(data),
       err => this.snacker.sendErrorMessage(err.message)
     );
 
@@ -863,5 +857,242 @@ The `ItemService.items$` Observable is subscribed to using the `async` pipe and 
 When `items$` resolves a value, each of its items are rendered inside of an `<item-card>`. When the `edit` output event is called, the card's `Item` is passed to the `editItem()` function.
 
 ### [Bin Dialog](#dialogs)
+
+* [StackBlitz - Demo](https://docs-bin-dialog.stackblitz.io/home)
+* [StackBlitz - Source](https://stackblitz.com/edit/docs-bin-dialog)
+
+This example is a fork of the example provided in the above [Editor Dialog](#editor-dialog) section. It is extended with the following functionality:
+
+* An `Item` can be deleted by clicking the **Delete** button on an `ItemCardComponent`.
+  * When the item is deleted, the list of items is refreshed.
+* Clicking an **Items Bin** button in the main toolbar opens a dialog with a list of deleted `Item` objects.
+  * Clicking a **Restore** button in the recycle bin restores the `Item` from its deleted state.
+  * When the dialog is closed, the list of items is refreshed to account for an `Item` objects that may have been restored.
+
+The `ItemService` needs to be updated to provide the following:
+* Exclude deleted items in `getItems()`
+* Add a `getDeletedItems()` function
+* Add a `toggleItemDeleted()` function
+
+**`item.service.ts`**
+```ts
+getItems = () => this.http.get<Item[]>(this.api)
+  .subscribe(
+    data => this.items.next(data.filter(x => !x.isDeleted)),
+    err => this.snacker.sendErrorMessage(err.message)
+  );
+
+getDeletedItems = () => this.http.get<Item[]>(this.api)
+  .subscribe(
+    data => this.items.next(data.filter(x => x.isDeleted)),
+    err => this.snacker.sendErrorMessage(err.message)
+  );
+
+toggleItemDeleted = (item: Item): Promise<boolean> =>
+  new Promise((resolve) => {
+    item.isDeleted = !item.isDeleted;
+    this.http.put(`${this.api}${item.id}`, item)
+      .subscribe(
+        () => {
+          const message = item.isDeleted ?
+            `${item.name} successfully deleted` :
+            `${item.name} successfully restored`;
+
+          this.snacker.sendSuccessMessage(message);
+          resolve(true);
+        },
+        err => {
+          this.snacker.sendErrorMessage(err.message);
+          resolve(false);
+        }
+      );
+  });
+```
+
+The `ItemCardComponent` needs to be updated with the following:
+* A `delete` output event that returns the `item` property
+* A **Delete** button that emits the `delete` event
+
+**`item-card.component.ts`**
+```ts
+// below other property definitions
+@Output() delete = new EventEmitter<Item>();
+```
+
+**`item-card.component.html`**
+```html
+<section fxLayout="row"
+         fxLayoutAlign="start center">
+  <p class="mat-subheading-2" 
+     fxFlex>{{item.name}}</p>
+  <button mat-icon-button
+          color="warn"
+          matTooltip="Delete"
+          (click)="delete.emit(item)">
+    <mat-icon>delete</mat-icon>
+  </button>
+  <button mat-icon-button 
+          matTooltip="Edit"
+          (click)="edit.emit(item)">
+    <mat-icon>edit</mat-icon>
+  </button>
+</section>
+```
+
+With these changes in place, the dialog can now be defined.
+
+**`item-bin.dialog.ts`**
+```ts
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+
+import { ItemService } from '../../services';
+import { Item } from '../../models';
+
+@Component({
+  selector: 'item-bin-dialog',
+  templateUrl: 'item-bin.dialog.html',
+  providers: [ItemService]
+})
+export class ItemBinDialog implements OnInit {
+  constructor(
+    public service: ItemService
+  ) { }
+
+  ngOnInit() {
+    this.service.getDeletedItems();
+  }
+
+  restoreItem = async (item: Item) => {
+    const res = await this.service.toggleItemDeleted(item);
+    res && this.service.getDeletedItems();
+  }
+}
+```
+
+The `ItemService` is registered with the `providers` array for `ItemBinDialog`. In the **OnInit** lifecycle hook, `ItemService.getDeletedItems()` is called.
+
+The `restoreItem` asynchronous function receives an `item: Item` argument, which is passed to the `ItemService.toggleItemDeleted()` function. If the operation completes successfully, the list of deleted items is refreshed.
+
+**`item-bin.dialog.html`**
+```html
+<div class="mat-typography">
+  <h2 mat-dialog-title>Item Recycle Bin</h2>
+  <mat-dialog-content>
+    <ng-template #loading>
+      <mat-progress-bar mode="indeterminate"
+                        color="accent"></mat-progress-bar>
+    </ng-template>
+    <ng-container *ngIf="service.items$ | async as items else loading">
+      <mat-list *ngIf="items.length > 0">
+        <mat-list-item *ngFor="let i of items">
+          <h3 fxFlex
+              [matTooltip]="i.description">{{i.name}}</h3>
+          <button mat-button
+                  (click)="restoreItem(i)">Restore</button>
+        </mat-list-item>
+      </mat-list>
+      <p *ngIf="!(items.length > 0)"
+         class="mat-subheading-2">Recycle Bin is Empty</p>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button
+            mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</div>
+```
+
+The meat of the template is inside of the `mat-dialog-content` section. When the `items$` Observable resolves, each `Item` is rendered as a `mat-list-item`. Clicking the **Restore** button passes the relevant `Item` to the `restoreItem()` function.
+
+All that's left to do is tie everything together in `HomeComponent`.
+
+**`home.component.ts`**
+```ts
+import {
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+
+import {
+  ConfirmDialog,
+  ItemDialog,
+  ItemBinDialog
+} from '../../dialogs';
+
+import { MatDialog } from '@angular/material';
+import { ItemService } from '../../services';
+import { Item } from '../../models';
+
+@Component({
+  selector: 'home-route',
+  templateUrl: 'home.component.html',
+  providers: [ItemService]
+})
+export class HomeComponent implements OnInit {
+  constructor(
+    public service: ItemService,
+    private dialog: MatDialog
+  ) { }
+
+  // previously defined functionality removed for brevity
+
+  openBin = () => this.dialog.open(ItemBinDialog, {
+    width: '80%',
+    maxWidth: '600px',
+    disableClose: true,
+    autoFocus: false
+  })
+  .afterClosed()
+  .subscribe(() => this.service.getItems());
+
+  deleteItem = (item: Item) => this.dialog.open(ConfirmDialog, {
+    autoFocus: false
+  })
+  .afterClosed()
+  .subscribe(async (res: boolean) => {
+    if (res) {
+      const result = await this.service.toggleItemDeleted(item);
+      result && this.service.getItems();
+    }
+  });
+}
+```
+
+The `openBin()` function opens an `ItemBinDialog`. After the dialog closes, the `Item` list is refreshed in the event that any items were restored.
+
+The `deleteItem()` function receives an `item: Item` and opens a `ConfirmDialog`. This prompts the user to confirm that they really want to complete the action that they requested. If the result of the closed dialog is `true`, `item` is passed to `ItemService.toggleItemDeleted()`. If the operation completes successfully, the list of items is refreshed.
+
+**`home.component.html`**
+```html
+<mat-toolbar>
+  <span>Items</span>
+  <button mat-button
+          (click)="newItem()">New Item</button>
+  <button mat-button
+          color="warn"
+          (click)="openBin()">Items Bin</button>
+</mat-toolbar>
+<ng-template #loading>
+  <mat-progress-bar mode="indeterminate"
+                    color="accent"></mat-progress-bar>
+</ng-template>
+<section *ngIf="service.items$ | async as items else loading"
+         class="container"
+         fxLayout="row | wrap"
+         fxLayoutAlign="start start">
+  <item-card *ngFor="let i of items"
+             [item]="i"
+             (edit)="editItem($event)"
+             (delete)="deleteItem($event)"></item-card>
+</section>
+```
+
+There are only two changes made to the template:
+* The addition of an **Items Bin** button in the toolbar, which calls the `openBin()` function.
+* The `delete` output event of `<item-card>` is linked to the `deleteItem()` function.
 
 [Back to Top](#dialogs)

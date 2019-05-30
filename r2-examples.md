@@ -51,6 +51,9 @@
 
 ## [Dialogs](#examples)
 * [StackBlitz - Basic Dialog](https://stackblitz.com/edit/docs-dialog)
+* [StackBlitz - Confirm Dialog](https://stackblitz.com/edit/docs-confirm-dialog)
+* [StackBlitz - Editor Dialog](https://stackblitz.com/edit/docs-editor-dialog)
+* [StackBlitz - Bin Dialog](https://stackblitz.com/edit/docs-bin-dialog)
 
 ## [Uploads](#examples)
 * [Upload Demo](./examples/a4-uploads)

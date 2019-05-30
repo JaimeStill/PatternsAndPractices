@@ -242,6 +242,7 @@ A curated list of external links, organized by topic, provided throughout this r
   * [Dialog](https://material.angular.io/components/dialog/overview)
     * [MatDialogConfig](https://material.angular.io/components/dialog/api#MatDialogConfig)
     * [MAT_DIALOG_DATA](https://material.angular.io/components/dialog/api#MAT_DIALOG_DATA)
+    * [MatDialogRef](https://material.angular.io/components/dialog/api#MatDialogRef)
 * [Guides](https://material.angular.io/guides)
 * [Component Development Kit - CDK](https://material.angular.io/cdk/categories)
 * [GitHub - Angular Material](https://github.com/angular/material2)

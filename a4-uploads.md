@@ -18,11 +18,11 @@
 * [Related Data](#related-data)
   * [Folders Back End](#folders-back-end)
   * [Folders Front End](#folders-front-end)
-    * [Models](#models)
-    * [Services](#services)
-    * [Components](#components)
-    * [Dialogs](#dialogs)
-    * [Routes](#routes)
+    * [Folder Models](#folder-models)
+    * [Folder Service](#folder-service)
+    * [Folder Components](#folder-components)
+    * [Folder Dialogs](#folder-dialogs)
+    * [Folder Routes](#folder-routes)
     * [Updated App Component](#updated-app-component)
 * [Example App](#example-app)
 
@@ -2027,7 +2027,7 @@ namespace UploadData.Web.Controllers
 
 Now that the back end provides the necessary functionality for working with `Folder` and `Upload` entities, and ways of relating the two, it's time to create a workflow that makes use of these features.
 
-#### [Models](#uploads)
+#### [Folder Models](#uploads)
 
 As with any feature set, TypeScript classes need to be created which define the shape of the entity models.
 
@@ -2088,7 +2088,7 @@ export * from './theme';
 export * from './upload';
 ```
 
-#### [Services](#uploads)
+#### [Folder Service](#uploads)
 
 Before defining the `FolderService`, lets take a moment to update the `UploadService` with the additional functionality created on the back end. Below is the class with only the updates made:
 
@@ -2373,7 +2373,7 @@ export * from './theme.service';
 export * from './upload.service';
 ```
 
-#### [Components](#uploads)
+#### [Folder Components](#uploads)
 
 Now that the uploads also contain their nested folder data when retrieved, the `UploadCardComponent` template can be updated to render links to the folders that the upload is related to, defaulting to **No Folders** if no relationships exist.
 
@@ -2736,7 +2736,7 @@ export const Components = [
 ];
 ```
 
-#### [Dialogs](#uploads)
+#### [Folder Dialogs](#uploads)
 
 In addition to creating a `FolderBinDialog`, the following dialogs will also be created:
 
@@ -3165,7 +3165,7 @@ export * from './upload/add-folder.dialog';
 export * from './upload/upload-bin.dialog';
 ```
 
-#### [Routes](#uploads)
+#### [Folder Routes](#uploads)
 
 Before defining the `Folder` routes, some adjustments need to be made to the `/upload/:file` route that enables the upload to be added to a folder.
 
@@ -3667,7 +3667,7 @@ The `AppComponent` template can be modified to make use of a `MatMenu` component
 
 Now, just to the left of the toolbar title, a menu is avaiable for navigating between the `/uploads` and `/folders` routes.
 
-## Example App
+## [Example App](#uploads)
 
 An example app has been created for the final app that this article creates. Here are the steps for getting the app running:
 

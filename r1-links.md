@@ -115,6 +115,7 @@ A curated list of external links, organized by topic, provided throughout this r
 * [Routing in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/routing?view=aspnetcore-2.2)
 * [Use cookie authentication without ASP.NET Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-2.2)
 * [Controllers](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/actions?view=aspnetcore-2.2)
+* [Security](https://docs.microsoft.com/en-us/aspnet/core/security/?view=aspnetcore-2.2)
 * [Use the Angular project template with ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/angular?view=aspnetcore-2.2&tabs=visual-studio#additional-resources)
 * [Use JavaScriptServices to Create Single Page Applications in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa-services?view=aspnetcore-2.2)
 * [GitHub - aspnet/AspNetCore](https://github.com/aspnet/AspNetCore)
@@ -224,6 +225,7 @@ A curated list of external links, organized by topic, provided throughout this r
   * [Router Events](https://angular.io/guide/router#router-events)
   * [Child Routes](https://angular.io/guide/router#a-crisis-center-with-child-routes)
   * [Secondary Routes](https://angular.io/guide/router#displaying-multiple-routes-in-named-outlets)
+* [Security](https://angular.io/guide/security)
 * [Animations](https://angular.io/guide/animations)
 * [Style Guide](https://angular.io/guide/styleguide)
 

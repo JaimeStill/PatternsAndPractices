@@ -48,7 +48,7 @@ namespace Qxyz.Core.Extensions
                 }
             }
 
-            if (context.Request.Form.Count > 0)
+            if (context.Request.HasFormContentType && context.Request.Form.Count > 0)
             {
                 message.AppendLine();
                 message.AppendLine("Form");

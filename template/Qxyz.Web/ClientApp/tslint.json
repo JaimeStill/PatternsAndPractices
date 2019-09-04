@@ -124,7 +124,7 @@
     ],
     "component-selector": [
       true,
-      "element",
+      "element"
     ],
     "no-output-on-prefix": true,
     "use-input-property-decorator": true,

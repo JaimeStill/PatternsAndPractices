@@ -80,28 +80,5 @@ namespace Qxyz.Core.Extensions
                 await stream.WriteAsync(message.ToString());
             }
         }
-        
-        public static void HandleError(this IApplicationBuilder app, LogProvider logger)
-        {
-            app.Run(async context =>
-            {
-                var error = context.Features.Get<IExceptionHandlerFeature>();
-                
-                if (error != null)
-                {
-                    var ex = error.Error;
-                    await logger.CreateLog(context, ex);
-                }
-                
-                context.Response.StatusCode = 500;
-                context.Response.ContentType = "application/json";
-                
-                if (error != null)
-                {
-                    var ex = error.Error;
-                    await context.Response.WriteAsync(ex.GetExceptionChain(), Encoding.UTF8);
-                }
-            });
-        }
     }
 }

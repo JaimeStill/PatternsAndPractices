@@ -9,7 +9,17 @@ namespace Qxyz.Core.Logging
 {
     public class LogProvider
     {
-        public string LogDirectory { get; set; }
+        private string logDirectory;
+        public string LogDirectory 
+        {
+            get => logDirectory;
+            set
+            {
+                logDirectory = value;
+                LogDirectory.EnsureDirectoryExists();
+            }
+        }
+
         public string GetLogName() => $"log-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.txt";
         
         public async Task CreateLog(HttpContext context, Exception exception)

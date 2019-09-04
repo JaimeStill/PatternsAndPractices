@@ -83,8 +83,8 @@ namespace Qxyz.Web
             {
                 services.AddSingleton(new UploadConfig
                 {
-                    DirectoryBasePath = $@"{Environment.ContentRootPath}/wwwroot/",
-                    UrlBasePath = "/"
+                    DirectoryBasePath = $@"{Environment.ContentRootPath}/wwwroot/files/",
+                    UrlBasePath = "/files/"
                 });
 
                 services

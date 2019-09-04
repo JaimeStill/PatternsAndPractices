@@ -33,13 +33,13 @@ Some important aspects of the Angular Material source:
 
 File | Importance
 -----|-----------
-[_theming.scss](https://github.com/angular/material2/blob/master/src/lib/core/theming/_theming.scss) | Defines SCSS helper functions for theming in Angular Material
-[_palette.scss](https://github.com/angular/material2/blob/master/src/lib/core/theming/_palette.scss) | Defines the color palettes, including their various shades, contrast values, and theming functions
-[_typography.scss](https://github.com/angular/material2/blob/master/src/lib/core/typography/_typography.scss) | Defines styles, functions, and mixins related to managing app typography
-[_elevation.scss]() | Defines styles, functions, and mixins related to the elevation effects
-[_variables.scss]() | Defines useful global variables used throughout the framework
-[_ripple.scss](https://github.com/angular/material2/blob/master/src/lib/core/ripple/_ripple.scss) | Defines mixins for styling the ripple effect
-[purple-green.scss](https://github.com/angular/material2/blob/master/src/lib/core/theming/prebuilt/purple-green.scss) | A very basic example prebuilt Angular Material theme
+[_theming.scss](https://github.com/angular/components/blob/8.1.x/src/material/core/theming/_theming.scss) | Defines SCSS helper functions for theming in Angular Material
+[_palette.scss](https://github.com/angular/components/blob/8.1.x/src/material/core/theming/_palette.scss) | Defines the color palettes, including their various shades, contrast values, and theming functions
+[_typography.scss](https://github.com/angular/components/blob/8.1.x/src/material/core/typography/_typography.scss) | Defines styles, functions, and mixins related to managing app typography
+[_elevation.scss](https://github.com/angular/components/blob/8.1.x/src/material/core/style/_elevation.scss) | Defines styles, functions, and mixins related to the elevation effects
+[_variables.scss](https://github.com/angular/components/blob/8.1.x/src/material/core/style/_variables.scss) | Defines useful global variables used throughout the framework
+[_ripple.scss](https://github.com/angular/components/blob/8.1.x/src/material/core/ripple/_ripple.scss) | Defines mixins for styling the ripple effect
+[purple-green.scss](https://github.com/angular/components/blob/8.1.x/src/material/core/theming/prebuilt/purple-green.scss) | A very basic example prebuilt Angular Material theme
 
 There are many more files I could have included, and it would be beneficial for you to look through them, but for the scope of understanding the way the app stack is styled and themed, the following files were crucial:
 

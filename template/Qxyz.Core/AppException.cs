@@ -1,6 +1,6 @@
 using System;
 
-namespace Qxzy.Core
+namespace Qxyz.Core
 {
     public enum ExceptionType
     {

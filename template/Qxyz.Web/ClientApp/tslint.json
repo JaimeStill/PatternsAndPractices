@@ -85,7 +85,6 @@
       true,
       "single"
     ],
-    "radix": true,
     "triple-equals": [
       true,
       "allow-null-check"

@@ -1,5 +1,7 @@
 # Patterns and Practices  
 
+> **The base [template](./template) has been updated to .NET Core 3. However, the [examples](./examples) are still in .NET Core 2. Be aware of this, as the documentation has not been updated to reflect these changes.**
+
 [Table of Contents](./toc.md)
 
 * [Format](#format)

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { HubConnectionBuilder } from '@aspnet/signalr';
+import { HubConnectionBuilder } from '@microsoft/signalr';
 import { SnackerService } from '../snacker.service';
 
 @Injectable()

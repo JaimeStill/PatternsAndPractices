@@ -48,7 +48,7 @@
     <Exec Command="yarn --version" ContinueOnError="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
     </Exec>
-    <Error Condition="'$(ErrorCode)' != '0'" Text="Yarn is required to build and run this project. To continue, please install Node.js from https://yarnpkg.com/, and then restart your command prompt or IDE." />
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Yarn is required to build and run this project. To continue, please install Yarn from https://yarnpkg.com/, and then restart your command prompt or IDE." />
     <Message Importance="high" Text="Restoring dependencies using 'yarn'. This may take several minutes..." />
     <Exec WorkingDirectory="$(SpaRoot)" Command="yarn install" />
   </Target>

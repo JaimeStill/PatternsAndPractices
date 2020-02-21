@@ -24,7 +24,7 @@ import { Dialogs } from './dialogs';
     [...Dialogs]
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,

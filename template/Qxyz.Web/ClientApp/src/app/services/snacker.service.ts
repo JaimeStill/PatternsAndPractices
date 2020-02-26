@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {
   MatSnackBar,
   MatSnackBarConfig
-} from '@angular/material';
+} from '@angular/material/snack-bar';
 
 @Injectable()
 export class SnackerService {

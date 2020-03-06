@@ -1160,7 +1160,8 @@ In the event that no photos are available in the resulting data, a message is sh
 
 This example will depart from the picsum photos API and build around the [TV Maze](http://www.tvmaze.com/api) public API. The intent is to be able to type into an input that triggers an Observable to search the API using the text provided. The results will then be provided to the app via an Observable and rendered as a list, with each result rendered as a card.
 
-**Operators Used**
+**Operators Used**  
+
 Operator | Type | Docs
 ---------|------|-----
 `ajax` | Creation | [link](https://rxjs.dev/api/ajax/ajax)
